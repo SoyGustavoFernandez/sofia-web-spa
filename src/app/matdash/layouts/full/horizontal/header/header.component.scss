@@ -1,0 +1,127 @@
+.user-email {
+  display: block;
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-roles {
+  max-width: 280px;
+
+  &__label {
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 140px;
+    overflow-y: auto;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--mat-sys-primary, #1976d2) 8%, white);
+    border: 1px solid
+      color-mix(in srgb, var(--mat-sys-primary, #1976d2) 18%, white);
+  }
+
+  &__item {
+    padding: 4px 10px;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--mat-sys-primary, #1565c0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--mat-sys-primary, #1976d2) 10%, white);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+/* --------------------------------------------------------------- */
+/* Header horizontal: replica exacta del vertical (`header.component
+/* .scss` del vertical) pero adaptado al toolbar horizontal full-
+/* width para que el layout boxed y el navbar full-width se vean
+/* visualmente coherentes (ver regla del Feature D-365).            */
+/* --------------------------------------------------------------- */
+
+:host ::ng-deep .horizontal-topbar {
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .container > * {
+    flex-shrink: 0;
+  }
+
+  .flex-1-auto {
+    min-width: 12px;
+  }
+}
+
+/* Branch wrapper: contenedor del .location-btn. Se muestra siempre
+   (desktop y mobile). En mobile el label se oculta para compactar. */
+.branch-wrapper {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Botón de sucursal: replica del vertical. Línea 1, padding 0 10px,
+   min-width unset (lo deja flexible al contenido). */
+.location-btn {
+  line-height: 1;
+  padding: 0 10px;
+  min-width: unset;
+}
+
+/* En mobile: ocultar el label del branch, dejar solo el icono home +
+   chevron-down para que el botón sea compacto (40x40). */
+@media (max-width: 992px) {
+  .location-btn {
+    padding: 0 8px;
+  }
+
+  .location-btn .location-label,
+  .location-btn .iconify--mdi {
+    display: none;
+  }
+}
+
+/* Fecha: 13px, flex inline, line-height 1 (replica del vertical).
+   El control de visibilidad desktop/mobile se hace con la clase
+   `d-none d-lg-flex` en el template. */
+.date-text {
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Icon buttons (lang, profile) — tamaño consistente con el toolbar. */
+.lang-btn,
+.profile-btn {
+  height: 36px !important;
+}
+
+.profile-btn {
+  min-width: unset;
+  padding: 0 8px;
+}
+
+.profile-btn .icon-35 {
+  width: 28px;
+  height: 28px;
+}

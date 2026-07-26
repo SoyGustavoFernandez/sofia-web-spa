@@ -1,0 +1,553 @@
+$primary-blue: #2563eb;
+$primary-blue-hover: #1d4ed8;
+$primary-blue-light: #dbeafe;
+$selected-date-bg: $primary-blue;
+$selected-date-text: white;
+$button-primary: $primary-blue;
+$button-primary-hover: $primary-blue-hover;
+
+.datetime-input {
+  width: 100%;
+
+  .calendar-icon {
+    cursor: pointer;
+    color: #666;
+
+    &:hover {
+      color: $primary-blue;
+    }
+  }
+}
+
+.picker-overlay {
+  position: absolute;
+  z-index: 10000;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding-top: 4px;
+}
+
+.picker-popup {
+  position: relative;
+  z-index: 10001 !important;
+
+  top: auto;
+  left: auto;
+  right: auto;
+
+  padding: 0;
+  margin: 0;
+  border: 1px solid #e0e0e0;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+  width: 280px;
+  max-width: 90vw;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  flex-direction: column;
+  display: flex;
+
+  &::backdrop {
+    background-color: transparent;
+  }
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-bottom: 1px solid #2563eb;
+  color: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+
+  .month-year-button {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-icon {
+      font-size: 18px;
+      color: white;
+    }
+  }
+
+  .nav-button {
+    width: 32px;
+    height: 32px;
+    color: white;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    mat-icon {
+      font-size: 18px;
+      color: white;
+    }
+  }
+}
+
+.month-picker {
+  padding: 16px;
+
+  .year-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    gap: 16px;
+
+    .year-display {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    button {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+
+    .month-button {
+      padding: 12px 8px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background: white;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background-color: rgba(37, 99, 235, 0.1);
+        border-color: $primary-blue;
+      }
+
+      &.selected {
+        background-color: $selected-date-bg;
+        color: $selected-date-text;
+        border-color: $primary-blue;
+      }
+    }
+  }
+}
+
+.time-section-container {
+  width: 100%;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-controls-horizontal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.time-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .spinner-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+
+    mat-icon {
+      font-size: 14px;
+    }
+  }
+
+  .time-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    background: #f5f5f5;
+    border-radius: 4px;
+    margin: 2px 0;
+  }
+
+  .time-value-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    background: #f5f5f5;
+    border-radius: 4px;
+    margin: 2px 0;
+    border: none;
+    outline: none;
+
+    &:focus {
+      background: #e5e7eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type='number'] {
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+  }
+}
+
+.ampm-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .spinner-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+
+    mat-icon {
+      font-size: 14px;
+    }
+  }
+
+  .ampm-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    background: #f5f5f5;
+    border-radius: 4px;
+    margin: 2px 0;
+  }
+}
+
+.time-separator {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 8px;
+  line-height: 1;
+}
+
+.picker-content {
+  padding: 12px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.calendar-section {
+  width: 100%;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+
+  .weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    padding: 8px 4px;
+  }
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.calendar-day {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: #333;
+  transition: all 0.2s ease;
+
+  &:hover:not(.selected) {
+    background-color: rgba(37, 99, 235, 0.1);
+  }
+
+  &:focus {
+    outline: 2px solid #2196f3;
+    outline-offset: 1px;
+  }
+
+  &.other-month {
+    color: #ccc;
+  }
+
+  &.selected {
+    background-color: $selected-date-bg !important;
+    color: $selected-date-text !important;
+    font-weight: 600;
+    border: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      background-color: $button-primary-hover !important;
+    }
+
+    &::before,
+    &::after {
+      display: none !important;
+    }
+  }
+
+  &.today-highlight:not(.selected) {
+    background-color: rgba(37, 99, 235, 0.08) !important;
+    color: $primary-blue !important;
+    font-weight: 500;
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.2) !important;
+  }
+
+  .day-number {
+    display: block;
+    line-height: 1;
+  }
+}
+
+.today-button-container {
+  text-align: center;
+  margin-bottom: 8px;
+
+  button {
+    font-size: 12px;
+    padding: 2px 12px;
+    min-width: 60px;
+    height: 28px;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+
+  .confirm-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: $primary-blue;
+    color: white;
+    border: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-blue-hover;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+  }
+}
+
+.confirm-action {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+
+  .confirm-btn-square {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    background-color: $primary-blue;
+    color: white;
+    border: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.clear-btn {
+      color: $primary-blue;
+
+      &:hover {
+        background-color: rgba(37, 99, 235, 0.1);
+      }
+    }
+
+    &:hover {
+      background-color: $primary-blue-hover;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      background-color: #e0e0e0 !important; /* light grey */
+      color: #bdbdbd !important; /* grey for icon/text */
+      border-color: #e0e0e0 !important;
+      cursor: not-allowed;
+    }
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+
+      &:disabled mat-icon {
+        color: #bdbdbd !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .picker-popup {
+    width: 260px;
+    max-width: calc(100vw - 16px);
+  }
+
+  .calendar-day {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .months-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .month-button {
+    padding: 10px 6px;
+    font-size: 12px;
+  }
+
+  .time-controls-horizontal {
+    gap: 10px;
+  }
+
+  .time-separator {
+    font-size: 18px;
+    margin-top: 24px;
+  }
+}
+
+.datetime-picker-wrapper {
+  position: relative;
+  width: 100%;
+
+  .datetime-input {
+    .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        .mat-mdc-form-field-input-control {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+:global(.picker-overlay-portal) {
+  position: fixed !important;
+  z-index: 10000 !important;
+  pointer-events: auto;
+
+  .picker-popup {
+    position: relative;
+    z-index: 10001 !important;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #e0e0e0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+    width: 280px;
+    max-width: 90vw;
+    height: auto;
+    overflow: visible;
+    flex-direction: column;
+    display: flex;
+  }
+}

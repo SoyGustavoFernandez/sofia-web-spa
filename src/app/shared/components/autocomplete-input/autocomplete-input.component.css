@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+mat-form-field.csw-autocomplete--external-error .mdc-notched-outline__leading,
+mat-form-field.csw-autocomplete--external-error .mdc-notched-outline__notch,
+mat-form-field.csw-autocomplete--external-error .mdc-notched-outline__trailing {
+  border-color: var(
+    --mat-form-field-error-text-color,
+    var(--mat-sys-error, #ba1a1a)
+  ) !important;
+}
+/* Refuerzo de borde cuando el error viene de `errorSource` (control externo al input interno). */

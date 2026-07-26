@@ -1,0 +1,32 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@include mat.checkbox-overrides(
+  (
+    unselected-focus-icon-color: var(
+        --mat-checkbox-unselected-hover-state-layer-color
+      ),
+  )
+);
+
+//   styles
+html {
+  .mdc-checkbox__background {
+    border-radius: 4px;
+    width: 21px;
+    height: 21px;
+    border: 2px solid var(--mat-sys-outline);
+  }
+
+  .mdc-checkbox .mdc-checkbox__native-control:focus ~ .mdc-checkbox__ripple {
+    background-color: var(--mat-checkbox-unselected-hover-state-layer-color);
+  }
+
+  .mat-mdc-checkbox.mat-mdc-checkbox-disabled {
+    .mdc-checkbox__background {
+      border-color: #b9c3cc;
+      background-color: #eef2f6;
+      box-shadow: none;
+    }
+  }
+}

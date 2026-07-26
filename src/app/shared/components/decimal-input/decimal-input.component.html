@@ -1,0 +1,19 @@
+<mat-form-field
+  [class.mat-form-field-invalid]="invalid"
+  appearance="outline"
+  class="{{ class }}">
+  <input
+    matInput
+    appDecimalPrecision
+    [beforeDot]="wholePart"
+    [afterDot]="decimalPart"
+    placeholder="{{ placeholder }}"
+    [attr.maxlength]="inputLength"
+    [attr.aria-required]="required || null"
+    [attr.aria-invalid]="invalid || null"
+    [value]="displayedValue"
+    [disabled]="disabled"
+    (input)="handleInputChange($event)"
+    (blur)="onBlur()"
+    (focus)="onFocus()" />
+</mat-form-field>

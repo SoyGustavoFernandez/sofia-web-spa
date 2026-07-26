@@ -1,0 +1,26 @@
+<mat-form-field appearance="outline" style="width: 100%">
+  <input
+    type="search"
+    matInput
+    [formControl]="inputCtrl"
+    [matAutocomplete]="auto"
+    [placeholder]="placeholder!"
+    [attr.maxLength]="maxLength || null"
+    inputmode="text"
+    autocomplete="off"
+    (blur)="onInputBlur()"
+    (input)="onInputChange()" />
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    [displayWith]="displayValue"
+    (optionSelected)="onOptionSelected($event.option.value)">
+    <mat-option *ngIf="loading" disabled>
+      <span>Cargando...</span>
+    </mat-option>
+    <ng-container *ngIf="filtered$ | async as options">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{ displayValue(option) }}
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+</mat-form-field>

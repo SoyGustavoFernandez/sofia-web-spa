@@ -1,0 +1,45 @@
+// Custom Checkbox Styles - Estilos compartidos para checkboxes
+.custom-checkbox {
+  .mat-checkbox {
+    .mat-checkbox-frame {
+      border: 2px solid #d1d5db;
+      border-radius: 3px;
+      width: 16px;
+      height: 16px;
+    }
+
+    .mat-checkbox-background {
+      background-color: #4285f4;
+      border-radius: 3px;
+      width: 16px;
+      height: 16px;
+    }
+
+    .mat-checkbox-checkmark {
+      fill: white;
+      width: 16px;
+      height: 16px;
+    }
+
+    .mat-checkbox-checkmark-path {
+      stroke-width: 2.5px;
+    }
+
+    .mat-checkbox-mixedmark {
+      background-color: white;
+      height: 2px;
+    }
+
+    &.mat-checkbox-checked {
+      .mat-checkbox-frame {
+        border-color: #4285f4;
+      }
+    }
+
+    &:not(.mat-checkbox-disabled) {
+      &:hover .mat-checkbox-frame {
+        border-color: #4285f4;
+      }
+    }
+  }
+}

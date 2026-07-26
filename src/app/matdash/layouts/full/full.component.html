@@ -1,0 +1,46 @@
+<mat-sidenav-container
+  class="mainWrapper"
+  autosize
+  autoFocus
+  [ngClass]="{
+    'sidebarNav-mini':
+      options.sidenavCollapsed && options.navPos !== 'top' && !resView,
+    'sidebarNav-horizontal': options.horizontal && !resView,
+    cardBorder: options.cardBorder
+  }"
+  [dir]="options.dir!">
+  @if (resView) {
+    <mat-sidenav
+      #leftsidenav
+      mode="over"
+      [opened]="false"
+      class="sidebarNav"
+      (closedStart)="onSidenavClosedStart()"
+      (openedChange)="onSidenavOpenedChange($event)">
+      <app-sidebar
+        [showToggle]="false"
+        (toggleMobileNav)="leftsidenav.toggle()"
+        (toggleCollapsed)="toggleCollapsed()">
+      </app-sidebar>
+    </mat-sidenav>
+  }
+
+  <mat-sidenav-content class="contentWrapper" #content>
+    @if (options.horizontal && !resView) {
+      <app-horizontal-header (toggleMobileNav)="onToggleMobileNav()"></app-horizontal-header>
+      <app-horizontal-sidebar></app-horizontal-sidebar>
+    } @else {
+      <app-header
+        (toggleMobileNav)="onToggleMobileNav()"
+        (toggleCollapsed)="toggleCollapsed()">
+      </app-header>
+    }
+
+    <div class="body-wrapper">
+      <main class="pageWrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

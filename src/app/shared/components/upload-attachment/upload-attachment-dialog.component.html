@@ -1,0 +1,185 @@
+<mat-card-header class="modal-header" style="position: relative">
+  <button mat-icon-button (click)="close()" class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+  <div style="margin-left: 16px" *ngIf="!areFieldsDisabled">
+    <button
+      mat-flat-button
+      color="primary"
+      class="upload-btn"
+      (click)="triggerFileInput()">
+      <mat-icon>cloud_upload</mat-icon>
+      {{ 'attachment.upload' | transloco }}
+    </button>
+  </div>
+</mat-card-header>
+<mat-card-header style="margin-left: 16px">
+  <mat-card-title>
+    {{
+      areFieldsDisabled
+        ? ('attachment.title-disabled' | transloco)
+        : ('attachment.title' | transloco)
+    }}
+  </mat-card-title>
+  <mat-card-subtitle *ngIf="attachments.length > 0">
+    {{ attachments.length }} file{{ attachments.length !== 1 ? 's' : '' }}
+  </mat-card-subtitle>
+</mat-card-header>
+<!-- Hidden File Input -->
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<mat-dialog-content class="modal-content">
+  <input
+    #fileInput
+    type="file"
+    multiple
+    accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp"
+    (change)="onFilesSelected($event)"
+    style="display: none" />
+  <!-- Empty State -->
+  <div *ngIf="attachments.length === 0" class="upload-area">
+    <mat-card class="upload-card" (click)="triggerFileInput()">
+      <mat-card-content class="upload-content">
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        <h3>{{ 'attachment.upload-content' | transloco }}</h3>
+        <p>{{ 'attachment.upload-placeholder' | transloco }}</p>
+        <button mat-stroked-button color="primary">
+          <mat-icon>add</mat-icon>
+          {{ 'attachment.upload-instructions' | transloco }}
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Attachments Table -->
+
+  <div>
+    <div
+      *ngIf="attachments.length > 0"
+      class="custom-table"
+      style="overflow-x: auto">
+      <!-- Table -->
+      <table mat-table [dataSource]="attachments">
+        <!-- Checkbox -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              (change)="toggleAllRows()"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [disabled]="areFieldsDisabled">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(row) : null"
+              (keydown)="onCheckboxKeyDown($event, row)"
+              (keyup)="onCheckboxKeyUp($event)"
+              [disabled]="areFieldsDisabled"
+              [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- File -->
+        <ng-container matColumnDef="file">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'attachment.file' | transloco }}
+          </th>
+          <td mat-cell *matCellDef="let attachment" class="file-cell">
+            <div class="file-info">
+              <mat-icon class="file-icon">{{
+                getFileIcon(attachment)
+              }}</mat-icon>
+              <div class="file-details">
+                <div class="file-name" [matTooltip]="attachment.fileName">
+                  {{ attachment.fileName }}
+                </div>
+                <div class="file-size">
+                  {{ formatFileSize(attachment.size) }}
+                </div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Date -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'attachment.date' | transloco }}
+          </th>
+          <td mat-cell *matCellDef="let attachment">
+            {{ attachment.uploadDate | timezone: 'dd/MM/yyyy HH:mm' }}
+          </td>
+        </ng-container>
+
+        <!-- User -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'attachment.user' | transloco }}
+          </th>
+          <td mat-cell *matCellDef="let attachment">
+            <mat-chip-set>
+              <mat-chip>
+                <mat-icon matChipAvatar>person</mat-icon>
+                {{
+                  attachment.createUser ||
+                    attachment.user ||
+                    ('attachment.default-user' | transloco)
+                }}
+              </mat-chip>
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'attachment.actions' | transloco }}
+          </th>
+          <td mat-cell *matCellDef="let attachment">
+            <div>
+              <button
+                mat-icon-button
+                (click)="download(attachment)"
+                color="primary"
+                [matTooltip]="'attachment.download' | transloco">
+                <mat-icon>download</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+
+<!-- Footer -->
+<div>
+  <mat-dialog-actions class="modal-actions" *ngIf="!areFieldsDisabled">
+    <button
+      mat-flat-button
+      color="warn"
+      (click)="deleteSelected()"
+      [disabled]="selection.selected.length === 0">
+      <mat-icon>delete</mat-icon>
+      {{ 'actions.delete' | transloco }}
+    </button>
+    <button mat-flat-button class="bg-error text-white m-l-8" (click)="close()">
+      {{ 'actions.cancel' | transloco }}
+    </button>
+    <button
+      mat-flat-button
+      type="button"
+      color="primary"
+      [disabled]="isLoading"
+      (click)="saveAttachments()">
+      <mat-icon>save</mat-icon>
+      {{ 'actions.save' | transloco }}
+    </button>
+  </mat-dialog-actions>
+</div>

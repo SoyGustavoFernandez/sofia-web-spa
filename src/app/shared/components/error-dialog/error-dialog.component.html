@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>{{ 'error-dialog.title' | transloco }}</h2>
+<mat-dialog-content>
+  <ul>
+    <li *ngFor="let error of data.errors">{{ error }}</li>
+  </ul>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{ 'error-dialog.actions.close' | transloco }}</button>
+</mat-dialog-actions>

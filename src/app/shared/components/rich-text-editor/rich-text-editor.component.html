@@ -1,0 +1,215 @@
+<div
+  class="rich-text-editor-container"
+  [class.disabled]="disabled"
+  [class.invalid]="invalid">
+  <!-- Toolbar -->
+  <div class="editor-toolbar">
+    <!-- Formato de texto -->
+    <div class="toolbar-group">
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="toggleBold()"
+        [disabled]="disabled"
+        matTooltip="Negrita">
+        <mat-icon>format_bold</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="toggleItalic()"
+        [disabled]="disabled"
+        matTooltip="Cursiva">
+        <mat-icon>format_italic</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="toggleUnderline()"
+        [disabled]="disabled"
+        matTooltip="Subrayado">
+        <mat-icon>format_underlined</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="toggleStrikethrough()"
+        [disabled]="disabled"
+        matTooltip="Tachado">
+        <mat-icon>format_strikethrough</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider [vertical]="true"></mat-divider>
+
+    <!-- Encabezados -->
+    <div class="toolbar-group">
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn toolbar-btn-text"
+        (click)="formatHeading('h1')"
+        [disabled]="disabled"
+        matTooltip="Encabezado 1">
+        <span class="toolbar-text">H1</span>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn toolbar-btn-text"
+        (click)="formatHeading('h2')"
+        [disabled]="disabled"
+        matTooltip="Encabezado 2">
+        <span class="toolbar-text">H2</span>
+      </button>
+    </div>
+
+    <mat-divider [vertical]="true"></mat-divider>
+
+    <!-- Listas -->
+    <div class="toolbar-group">
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="toggleOrderedList()"
+        [disabled]="disabled"
+        matTooltip="Lista numerada">
+        <mat-icon>format_list_numbered</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="toggleUnorderedList()"
+        [disabled]="disabled"
+        matTooltip="Lista con viñetas">
+        <mat-icon>format_list_bulleted</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider [vertical]="true"></mat-divider>
+
+    <!-- Cita y Código -->
+    <div class="toolbar-group">
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="toggleBlockquote()"
+        [disabled]="disabled"
+        matTooltip="Cita">
+        <mat-icon>format_quote</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="toggleCode()"
+        [disabled]="disabled"
+        matTooltip="Código">
+        <mat-icon>code</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="insertLink()"
+        [disabled]="disabled"
+        matTooltip="Insertar enlace">
+        <mat-icon>link</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider [vertical]="true"></mat-divider>
+
+    <!-- Alineación -->
+    <div class="toolbar-group">
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="alignLeft()"
+        [disabled]="disabled"
+        matTooltip="Alinear izquierda">
+        <mat-icon>format_align_left</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="alignCenter()"
+        [disabled]="disabled"
+        matTooltip="Centrar">
+        <mat-icon>format_align_center</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="alignRight()"
+        [disabled]="disabled"
+        matTooltip="Alinear derecha">
+        <mat-icon>format_align_right</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="alignJustify()"
+        [disabled]="disabled"
+        matTooltip="Justificar">
+        <mat-icon>format_align_justify</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider [vertical]="true"></mat-divider>
+
+    <!-- Deshacer/Rehacer -->
+    <div class="toolbar-group">
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="undo()"
+        [disabled]="disabled"
+        matTooltip="Deshacer">
+        <mat-icon>undo</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="toolbar-btn"
+        (click)="redo()"
+        [disabled]="disabled"
+        matTooltip="Rehacer">
+        <mat-icon>redo</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Editor Area -->
+  <div
+    #editor
+    class="editor-content"
+    contenteditable="true"
+    [attr.contenteditable]="!disabled"
+    (input)="onInput()"
+    (blur)="onBlur()"
+    [attr.placeholder]="placeholder"></div>
+</div>

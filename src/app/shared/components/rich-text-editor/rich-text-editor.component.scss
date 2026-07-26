@@ -1,0 +1,236 @@
+.rich-text-editor-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #fff;
+  overflow: hidden;
+
+  &.disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+
+    .editor-toolbar {
+      background-color: #fafafa;
+    }
+
+    .editor-content {
+      color: #9e9e9e;
+    }
+  }
+
+  &.invalid {
+    border-color: #f44336;
+  }
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  mat-divider {
+    height: 24px;
+    margin: 0 4px;
+  }
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.toolbar-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  line-height: 36px;
+  color: rgba(0, 0, 0, 0.7);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  &:disabled {
+    color: rgba(0, 0, 0, 0.26);
+    cursor: not-allowed;
+  }
+
+  &.toolbar-btn-text {
+    .toolbar-text {
+      font-size: 14px;
+      font-weight: 600;
+      font-family:
+        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+        Cantarell, sans-serif;
+    }
+  }
+}
+
+.editor-content {
+  min-height: 150px;
+  max-height: 400px;
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.87);
+  overflow-y: auto;
+  outline: none;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
+
+  &[contenteditable='true']:empty:before {
+    content: attr(placeholder);
+    color: rgba(0, 0, 0, 0.38);
+    pointer-events: none;
+  }
+
+  &[contenteditable='false'] {
+    cursor: not-allowed;
+  }
+
+  // Estilos para el contenido del editor
+  h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0.67em 0;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0.75em 0;
+  }
+
+  h3 {
+    font-size: 1.17em;
+    font-weight: bold;
+    margin: 0.83em 0;
+  }
+
+  p {
+    margin: 0.5em 0;
+  }
+
+  blockquote {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    border-left: 4px solid #e0e0e0;
+    background-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.6);
+    font-style: italic;
+  }
+
+  code {
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+  }
+
+  ul,
+  ol {
+    margin: 0.5em 0;
+    padding-left: 2em;
+  }
+
+  li {
+    margin: 0.25em 0;
+  }
+
+  a {
+    color: #1976d2;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      color: #1565c0;
+    }
+  }
+
+  strong,
+  b {
+    font-weight: bold;
+  }
+
+  em,
+  i {
+    font-style: italic;
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  strike,
+  s {
+    text-decoration: line-through;
+  }
+
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+
+    &:hover {
+      background: #555;
+    }
+  }
+}
+
+// Focus styles
+.rich-text-editor-container:focus-within:not(.disabled) {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 1px #1976d2;
+
+  .editor-toolbar {
+    border-bottom-color: #1976d2;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .editor-toolbar {
+    padding: 6px 8px;
+  }
+
+  .toolbar-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}

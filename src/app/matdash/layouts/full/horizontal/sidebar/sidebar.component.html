@@ -1,0 +1,43 @@
+@if (mobileQuery.matches) {
+  <div class="horizontal-sidebar p-y-8">
+    <div class="container">
+      <div>
+        <div class="horizontal-navbar hstack align-items-center" #navbarEl>
+          <!-- Items que caben en el viewport (SidebarGroups transformados por
+               MenuService.sidebarAsNavItems). Cada uno es un parentBox con
+               su propio dropdown / mega-menu / link directo. -->
+          @for (item of visibleItems(); track item) {
+            <app-horizontal-nav-item [item]="item" [depth]="0">
+            </app-horizontal-nav-item>
+          }
+
+          <!-- Botón "More" — solo aparece cuando hay items desbordados. Es
+               estructuralmente idéntico a un parentBox (mismo SCSS), solo que
+               su .menuLink es un botón con icono de 3 puntos. Su .childBox
+               contiene los items que no cupieron en el viewport. -->
+          @if (overflowItems().length > 0) {
+            <div class="parentBox more-button">
+              <span class="menuLink menuLink--group" tabindex="0">
+                <span
+                  class="iconify routeIcon"
+                  data-icon="solar:menu-dots-bold"></span>
+              </span>
+              <div class="childBox">
+                <ul class="ddmenu">
+                  @for (item of overflowItems(); track item) {
+                    <li>
+                      <app-horizontal-nav-item
+                        [item]="item"
+                        [depth]="1">
+                      </app-horizontal-nav-item>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

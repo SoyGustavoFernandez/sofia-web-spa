@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+mat-dialog-content,
+.mat-mdc-dialog-content {
+  min-width: 200px;
+  max-height: 500px;
+  padding-top: 8px;
+  box-sizing: border-box;
+}
+
+.custom-table {
+  margin-top: 0;
+}
+
+.bl-filter-field {
+  padding-top: 5px;
+  width: 100%;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-ok {
+  color: #2e7d32;
+}
+
+.status-blocked {
+  color: #c62828;
+  cursor: help;
+}
+
+tr.row-blocked {
+  background-color: rgba(198, 40, 40, 0.04);
+}

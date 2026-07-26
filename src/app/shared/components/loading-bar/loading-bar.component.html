@@ -1,0 +1,7 @@
+@if (show) {
+  @if (mode === 'determinate') {
+    <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+  } @else {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+}

@@ -1,0 +1,35 @@
+<mat-toolbar class="topbar">
+  <!-- Mobile Toggle -->
+  <button
+    mat-icon-button
+    (click)="toggleMobileNav.emit()"
+    class="d-flex d-lg-none"
+  >
+    <i class="iconify" data-icon="solar:hamburger-menu-line-duotone"></i>
+  </button>
+
+  <!-- Desktop Toggle -->
+  <button
+    mat-icon-button
+    (click)="toggleCollapsed.emit()"
+    class="d-none d-lg-flex"
+  >
+    <i class="iconify" data-icon="solar:hamburger-menu-line-duotone"></i>
+  </button>
+
+  <span class="flex-spacer"></span>
+
+  <!-- Version Badging -->
+  <span class="text-muted text-sm px-2">SOFIA v{{ appVersion }}</span>
+
+  <!-- Profile Menu -->
+  <button mat-icon-button [matMenuTriggerFor]="profilemenu">
+    <i class="iconify" data-icon="solar:user-circle-line-duotone" style="font-size: 26px;"></i>
+  </button>
+  <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
+    <div class="p-x32 p-y16">
+      <h6 class="mat-subtitle-1 f-s-16 f-w-600">Usuario SOFIA</h6>
+      <p class="mat-body-2 text-muted">desarrollo&#64;sofia.com</p>
+    </div>
+  </mat-menu>
+</mat-toolbar>

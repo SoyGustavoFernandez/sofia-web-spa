@@ -1,0 +1,197 @@
+<div class="datetime-picker-wrapper">
+  <mat-form-field
+    appearance="outline"
+    class="datetime-input w-100 hide-wrapper"
+    [class.mat-form-field-invalid]="invalid">
+    <input
+      matInput
+      [value]="getDisplayValue()"
+      [placeholder]="placeholder"
+      (click)="togglePicker()"
+      (blur)="onDisplayBlur()"
+      (keydown.escape)="isPickerOpen = false; onTouched()"
+      [attr.aria-required]="required || null"
+      [attr.aria-invalid]="invalid || null"
+      readonly
+      [disabled]="disabled" />
+
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="togglePicker()"
+      [disabled]="disabled"
+      type="button">
+      <mat-icon class="calendar-icon">event</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <div class="picker-overlay" *ngIf="isPickerOpen">
+    <dialog class="picker-popup" open aria-label="Date and time picker">
+      <div class="dialog-content">
+        <div class="calendar-header">
+          <button
+            mat-icon-button
+            (click)="previousMonth()"
+            class="month-nav-button nav-button">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button
+            class="month-year-button"
+            (click)="toggleMonthPicker()"
+            type="button">
+            {{ getMonthYearDisplay() }}
+            <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            (click)="nextMonth()"
+            class="month-nav-button nav-button">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <div class="picker-content">
+          <div class="month-picker" *ngIf="showMonthPicker">
+            <div class="year-selector">
+              <button
+                mat-icon-button
+                (click)="previousYear()"
+                type="button"
+                class="year-nav-button nav-button">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <span class="year-display">{{
+                currentDate().getFullYear()
+              }}</span>
+              <button
+                mat-icon-button
+                (click)="nextYear()"
+                type="button"
+                class="year-nav-button nav-button">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+            <div class="months-grid">
+              <button
+                *ngFor="let month of months; let i = index"
+                class="month-button"
+                [class.selected]="i === currentDate().getMonth()"
+                (click)="selectMonth(i)"
+                type="button">
+                {{ month }}
+              </button>
+            </div>
+          </div>
+
+          <div class="calendar-section" *ngIf="!showMonthPicker">
+            <div class="calendar-weekdays">
+              <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
+            </div>
+
+            <div class="calendar-days">
+              <button
+                *ngFor="let day of calendarDays"
+                class="calendar-day"
+                [class.other-month]="!day.isCurrentMonth"
+                [class.selected]="isSelectedDate(day.date)"
+                [class.today-highlight]="isTodayDate(day.date)"
+                (click)="selectDate(day.date)"
+                (keydown.enter)="selectDate(day.date)"
+                (keydown.space)="selectDate(day.date)"
+                [attr.aria-label]="'Select ' + day.date.toDateString()"
+                type="button">
+                <span class="day-number">{{ day.day }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="time-section-container" *ngIf="!showMonthPicker">
+            <div class="time-controls-horizontal">
+              <div class="time-control">
+                <div class="time-spinner-container">
+                  <button
+                    mat-icon-button
+                    (click)="incrementHour()"
+                    type="button"
+                    aria-label="Increase hour"
+                    class="spinner-btn">
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                  </button>
+                  <input
+                    type="text"
+                    [value]="hourDisplay"
+                    (input)="onHourTextChange($event); onHourInput($event)"
+                    (blur)="onHourBlur()"
+                    (focus)="onHourFocus($event)"
+                    class="time-value-input"
+                    maxlength="2"
+                    pattern="[0-9]*" />
+                  <button
+                    mat-icon-button
+                    (click)="decrementHour()"
+                    type="button"
+                    aria-label="Decrease hour"
+                    class="spinner-btn">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="time-separator">:</div>
+
+              <div class="time-control">
+                <div class="time-spinner-container">
+                  <button
+                    mat-icon-button
+                    (click)="incrementMinute()"
+                    type="button"
+                    aria-label="Increase minute"
+                    class="spinner-btn">
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                  </button>
+                  <input
+                    type="text"
+                    [value]="minuteDisplay"
+                    (input)="onMinuteTextChange($event); onMinuteInput($event)"
+                    (blur)="onMinuteBlur()"
+                    (focus)="onMinuteFocus($event)"
+                    class="time-value-input"
+                    maxlength="2"
+                    pattern="[0-9]*" />
+                  <button
+                    mat-icon-button
+                    (click)="decrementMinute()"
+                    type="button"
+                    aria-label="Decrease minute"
+                    class="spinner-btn">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="confirm-action">
+                <button
+                  type="button"
+                  [disabled]="!isDateSelected"
+                  (click)="confirmSelection()"
+                  class="confirm-btn-square">
+                  <mat-icon>check</mat-icon>
+                </button>
+              </div>
+
+              <div class="confirm-action">
+                <button
+                  type="button"
+                  [disabled]="!isDateSelected"
+                  (click)="clearSelection()"
+                  class="confirm-btn-square bg-error">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</div>

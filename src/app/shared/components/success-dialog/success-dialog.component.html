@@ -1,0 +1,31 @@
+<div class="success-dialog">
+  <div class="dialog-icon">
+    <mat-icon style="color: #4285f4; font-size: 48px; width: 48px; height: 48px"
+      >check_circle</mat-icon
+    >
+  </div>
+
+  <h2
+    mat-dialog-title
+    style="text-align: center; color: #4285f4; margin-bottom: 16px">
+    {{ data.title }}
+  </h2>
+
+  <mat-dialog-content style="text-align: center; padding: 0 24px 24px 24px">
+    <p style="margin: 0; font-size: 16px; color: #6b7280">{{ data.message }}</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="center" style="padding-bottom: 24px">
+    <button
+      mat-flat-button
+      style="
+        background: #4285f4;
+        color: #fff;
+        padding: 8px 32px;
+        border-radius: 8px;
+      "
+      (click)="onClose()">
+      {{ data.buttonText || ('actions.accept' | transloco) }}
+    </button>
+  </mat-dialog-actions>
+</div>

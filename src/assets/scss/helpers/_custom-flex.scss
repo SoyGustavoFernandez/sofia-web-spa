@@ -1,0 +1,79 @@
+@media (min-width: 1200px) {
+  body {
+    .d-lg-flex {
+      display: flex !important;
+    }
+
+    .d-lg-block {
+      display: block !important;
+    }
+    
+    .d-lg-none {
+      display: none !important;
+    }
+    .align-items-lg-center {
+      align-items: center !important;
+    }
+  }
+}
+
+/* --------------------------------------------------------------- */
+/* Feature D-365: utility `d-h-mon-none` para el header horizontal. */
+/* Equivalente a `d-lg-none` pero con breakpoint elevado a 1600px.   */
+/* Razón: la regla de producto "10 menús o sidebar" define que el   */
+/* horizontal se muestra a `min-width: 1600px` (MONITOR_VIEW). Por   */
+/* debajo de eso, debe haber un botón hamburguesa para acceder al   */
+/* vertical sidebar mobile. El `d-lg-none` original (1200px)        */
+/* dejaba un rango muerto de 1200-1599px sin menú ni acceso al      */
+/* sidebar. Esta utility cierra ese gap.                            */
+/* --------------------------------------------------------------- */
+@media (min-width: 1600px) {
+  body {
+    .d-h-mon-none {
+      display: none !important;
+    }
+  }
+}
+
+@media (min-width: 960px) {
+  .d-md-none {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    .d-sm-flex {
+      display: flex !important;
+    }
+    .justify-content-lg-end {
+      justify-content: flex-end !important;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .p-xs-6 {
+    padding: 0 6px !important;
+  }
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.flex-1-auto {
+  flex: 1 1 0%;
+}
+
+.hstack {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+@media (max-width: 767px) {
+  .hstack {
+    flex-direction: column;
+  }
+}

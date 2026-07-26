@@ -1,0 +1,117 @@
+.topbar {
+  height: 56px;
+  padding: 0 12px;
+  background: #fff;
+  border-bottom: 1px solid #eceff4;
+}
+
+.location-btn {
+  line-height: 1;
+  padding: 0 10px;
+  min-width: unset;
+}
+
+.date-text {
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.left-group {
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+.role-branch-field {
+  width: 280px;
+  margin-bottom: 0;
+}
+
+.role-branch-field .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .role-branch-field {
+    width: 220px;
+  }
+
+  .date-text {
+    display: none;
+  }
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  min-width: 320px;
+  border-radius: 12px;
+  background: #f4f7fb; /* tu color claro */
+  border: 1px solid #eef2f7;
+  overflow: hidden;
+
+  i {
+    opacity: 0.7;
+  }
+
+  input {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0 12px;
+    width: 100%;
+    font-size: 14px;
+  }
+}
+
+.profile-btn {
+  min-width: unset;
+  padding: 0 8px;
+}
+
+.user-email {
+  display: block;
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-roles {
+  max-width: 280px;
+
+  &__label {
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 140px;
+    overflow-y: auto;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--mat-sys-primary, #1976d2) 8%, white);
+    border: 1px solid
+      color-mix(in srgb, var(--mat-sys-primary, #1976d2) 18%, white);
+  }
+
+  &__item {
+    padding: 4px 10px;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--mat-sys-primary, #1565c0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--mat-sys-primary, #1976d2) 10%, white);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}

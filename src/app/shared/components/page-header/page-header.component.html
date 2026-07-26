@@ -1,0 +1,39 @@
+<div class="custom-title-card">
+  <div class="custom-title-card-container">
+    <div class="d-flex align-items-center justify-content-between">
+      <!-- Título y botón de retorno -->
+      <div class="d-flex align-items-center">
+        <button
+          *ngIf="showBackButton"
+          mat-icon-button
+          (click)="onBack()"
+          class="back-button"
+          aria-label="Volver">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span
+          *ngIf="!showBackButton"
+          style="display: inline-block; height: 40px; width: 25px"></span>
+        <h4 class="breadcrumb-title">{{ title | transloco }}</h4>
+      </div>
+
+      <!-- Breadcrumb -->
+      <nav *ngIf="breadcrumbItems.length > 0" class="breadcrumb-nav">
+        <ng-container *ngFor="let item of breadcrumbItems; let last = last">
+          <a
+            [style.cursor]="!last ? 'pointer' : 'default'"
+            (click)="onBreadcrumbClick(item)"
+            (keyup.enter)="onBreadcrumbClick(item)"
+            tabindex="0"
+            [ngClass]="{ active: item.isActive || last }"
+            class="breadcrumb-item">
+            {{ item.label | transloco }}
+          </a>
+          <span class="breadcrumb-item">
+            {{ !last ? ' / ' : '' }}
+          </span>
+        </ng-container>
+      </nav>
+    </div>
+  </div>
+</div>

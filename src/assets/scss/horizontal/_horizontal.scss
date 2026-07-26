@@ -1,0 +1,405 @@
+@use "../variables" as *;
+
+.sidebarNav-horizontal {
+  .childBox {
+    background: var(--mat-sys-surface);
+  }
+
+  // El contenedor .horizontal-sidebar DEBE permitir que los dropdowns
+  // (.childBox) salgan verticalmente hacia abajo, pero NO debe permitir
+  // scroll horizontal residual cuando el More (3 puntos) se posiciona
+  // con margin-left: auto más allá del viewport.
+  //
+  // Solución: `overflow-x: clip` recorta horizontalmente SIN crear un
+  // block formatting context (a diferencia de `overflow-x: hidden`),
+  // por lo que los childBox siguen siendo visibles verticalmente.
+  // Si el navegador no soporta `clip` (Safari <16), fallback a `hidden`.
+  .horizontal-sidebar {
+    overflow-x: clip;
+    overflow-y: visible;
+    max-width: 100%;
+    position: relative; // anclaje para el more-button (position: absolute)
+    @supports not (overflow-x: clip) {
+      overflow-x: hidden;
+    }
+
+    // Override del `.container` global (max-width: 1200px) SOLO dentro
+    // del horizontal-sidebar. Razón: el navbar debe usar TODO el ancho
+    // del viewport para que los 10 items quepan a 1600px+. El header y
+    // la página siguen usando el `.container` boxed original.
+    .container {
+      max-width: 100%;
+    }
+  }
+
+  // header
+  .horizontal-topbar {
+    box-shadow: var(--mat-sys-level2);
+
+    .branding {
+      padding-left: 0;
+    }
+
+    // El container del header debe ocupar TODO el viewport (no boxed a
+    // 1200px). Razón: cuando el layout horizontal está activo, la página
+    // también es full-width (ver FullComponent.pageWrapper.maxWidth que
+    // ahora solo aplica boxed cuando NO es horizontal). Header y navbar
+    // comparten el mismo ancho para que se vean visualmente coherentes.
+    .container {
+      max-width: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  // sidebar
+  // El navbar horizontal DEBE mantenerse en una sola fila siempre Y los
+  // dropdowns deben poder salir verticalmente del contenedor. Patrón
+  // matdash original (stylish): nowrap + overflow VISIBLE — los items que
+  // no caben se mueven a un menú "More" (3 puntos) al final, NO se hace
+  // scroll horizontal. Razón: `overflow-x: auto/horizontal` crea un block
+  // formatting context que recorta verticalmente (overflow-y: hidden
+  // implícito), matando los childBox/dropdown que viven debajo del navbar.
+  .horizontal-navbar {
+    position: relative;
+    gap: 2px !important;
+    flex-wrap: nowrap;
+    align-items: center !important;
+    overflow: visible;
+
+    // Captions ya NO se renderizan como <div class="nav-caption"> planos; ahora
+    // cada caption vive dentro de un <app-horizontal-nav-item class="parentBox
+    // parentBox--caption"> y se ve como <a class="menuLink menuLink--caption">.
+    // El estilo visual vive en .parentBox--caption / .menuLink--caption más
+    // abajo, no aquí.
+
+    .parentBox {
+      position: relative;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+
+      // Elevar el parentBox sobre sus hermanos al hacer hover. Sin esto, el
+      // .childBox (position:absolute) se pinta "debajo" de los parentBox
+      // posteriores en el orden DOM, causando el bug visual donde el
+      // dropdown se solapa con el siguiente menú. z-index: 9 es mayor que
+      // el z-index: 5 base de cualquier parentBox hermano.
+      &:hover,
+      &:focus-within {
+        z-index: 9;
+      }
+
+      // ---- Variantes de layout (ddType inferido por MenuService) ----
+      // 'mega-menu' y 'two-column' NO vienen del BE; las calcula
+      // MenuService.sidebarAsNavItems a partir del children.length del
+      // árbol que ya entrega el SP. El SCSS solo decide el ancho del
+      // contenedor .childBox y la disposición de los .ddmenu hijos.
+      //
+      // Patrón del template matdash original: las reglas de `display` SOLO
+      // se aplican dentro de `&:hover > .childBox > .ddmenu`. Si se aplican
+      // fuera (como hacíamos antes), el dropdown queda visible sin hover,
+      // sobre todo en mega-menu / two-column. Por eso mega-menu y
+      // two-column especifican el layout del contenedor (.childBox) y el
+      // tamaño de los hijos (.ddmenu width:X%) FUERA del hover, y solo el
+      // `display` se activa con hover.
+      &.mega-menu {
+        position: static;
+
+        >.childBox {
+          width: 100%;
+          left: 0;
+
+          >.ddmenu {
+            width: 23%;
+          }
+        }
+
+        &:hover>.childBox>.ddmenu {
+          display: inline-block;
+        }
+      }
+
+      &.two-column {
+        >.childBox {
+          width: 600px;
+
+          >.ddmenu {
+            width: 46%;
+            border-radius: $border-radius;
+          }
+        }
+
+        &:hover>.childBox>.ddmenu {
+          display: inline-block;
+        }
+      }
+
+      // Cada parentBox ES un MENU padre (el SidebarGroup del BE, cuyo label
+      // viene del iconMenu lateral). No hay captions en el árbol horizontal —
+      // la transformación del MenuService.sidebarAsNavItems() ya los filtra.
+
+      .menuLink {
+        padding: 10px;
+        border-radius: $border-radius;
+        display: flex;
+        align-items: center;
+        height: 40px;
+        gap: 10px;
+        font-size: 14px;
+        text-decoration: none;
+        color: inherit;
+        white-space: nowrap;
+
+        .routeIcon {
+          font-size: 20px;
+        }
+      }
+
+      // Variante del .menuLink para MENU padres / group-selectors L0 (PDA,
+      // Agenciamiento, Documentación, etc.). Se renderiza como <span> para no
+      // ser link directo cuando tiene 2+ hijos, pero igual muestra el icono
+      // del grupo + label + ▼ down-icon. El hover sobre el .parentBox abre
+      // el dropdown.
+      //
+      // Normalización (defecto 2 — 2026-06-24): el `.menuLink--group` debe
+      // verse igual que el `.menuLink` regular (link directo a una hoja).
+      // Antes tenía `font-weight: 600` y `background-color: transparent`
+      // que lo hacían ver más grueso y diferente de los L0 con route propia
+      // (Tarifa, Tesorería, Dashboard). Ahora hereda todo de `.menuLink`.
+      .menuLink--group {
+        cursor: pointer;
+      }
+
+      &:hover>.menuLink {
+        background-color: var(--mat-sys-surface-bright);
+      }
+
+      // active state del padre: solo aplica al .menuLink directo (no a
+      // descendientes). El bug original usaba `.pactive .menuLink` que
+      // pintaba de azul TODOS los descendientes cuando cualquier item
+      // anidado estaba activo. Limitamos a `>` para que solo el L0
+      // clickeado quede activo, no sus hijos.
+      &.pactive>.menuLink,
+      &.pactive>span.menuLink {
+        color: $white !important;
+        background-color: $primary;
+      }
+
+      // Marca visual sutil para el padre/caption L0 que tiene un
+      // descendiente activo. Se aplica al `.menuLink` directo del
+      // parentBox. No es el azul sólido del item clickeado, sino un
+      // fondo ligeramente resaltado + un underline inferior. Esto
+      // identifica la sección padre sin confundirla con el item activo.
+      //
+      // Aplica tanto al L0 (Documentación) como a un sub-caption L1
+      // (Importación) cuando un nieto está activo.
+      & .menuLink--ancestor {
+        background-color: var(--mat-sys-surface-bright);
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 10px;
+          right: 10px;
+          bottom: 4px;
+          height: 2px;
+          background-color: $primary;
+          border-radius: 1px;
+        }
+      }
+
+      .down-icon .mat-icon {
+        width: 18px;
+        height: 18px;
+        font-size: 18px;
+      }
+
+      // Contenedor del dropdown: siempre posicionado pero con sus hijos ocultos
+      // hasta el hover. Patrón del template matdash original (stylish).
+      //
+      // z-index: 9 elevado explícitamente para que el childBox se pinte
+      // ENCIMA del .parentBox siguiente en el orden DOM (que tiene z-index: 5).
+      // Esto complementa el `&:hover { z-index: 9 }` del parentBox y elimina
+      // el solapamiento visual.
+      .childBox {
+        border-radius: $border-radius;
+        box-shadow: var(--mat-sys-level1);
+        position: absolute;
+        width: 250px;
+        background-color: var(--mat-sys-surface);
+        top: 100%;
+        left: 0;
+        z-index: 9;
+
+        .ddmenu {
+          display: none;
+          margin: 6px;
+          position: relative;
+          border-radius: $border-radius;
+
+          .menuLink {
+            width: 100%;
+            padding: 10px;
+          }
+        }
+      }
+
+      // nivel 1: al hacer hover sobre el padre, se muestran los ddmenu hijos.
+      // Patrón recursivo multinivel del template original (stylish) — cada
+      // nivel de anidación se abre con el hover del padre correspondiente.
+      &:hover>.childBox>.ddmenu {
+        display: block;
+        padding: 0;
+
+        &:hover>.childBox>.ddmenu {
+          display: block;
+          padding: 0;
+
+          &:hover>.childBox>.ddmenu {
+            display: block;
+            padding: 0;
+          }
+        }
+      }
+
+      // nivel 2 (nieto): al hacer hover sobre un ddmenu hijo, su .childBox
+      // interno aparece anclado a la derecha. Solo aplica si el nieto también
+      // tiene children (recursión del template).
+      &:hover>.childBox>.ddmenu:hover>.childBox {
+        left: 230px;
+        top: 0;
+        z-index: 9;
+
+        >.ddmenu:hover>.childBox {
+          left: 235px;
+          top: 0;
+        }
+      }
+
+      &:hover>.childBox>.ddmenu:hover {
+        background-color: var(--mat-sys-surface-bright);
+
+        &:hover>.childBox>.ddmenu:hover {
+          background-color: var(--mat-sys-surface-bright);
+        }
+      }
+    }
+
+    // Captions anidados dentro de un nav-item (sub-captions).
+    .nav-caption {
+      padding: 8px 12px;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      user-select: none;
+      cursor: default;
+      opacity: 0.85;
+    }
+  }
+}
+
+// Active state del parentBox: aplica tanto para <a class="menuLink">
+// (link directo) como para <span class="menuLink menuLink--group">
+// (group-selector). Patrón del template matdash original (stylish).
+.sidebarNav-horizontal {
+  .topbar,
+  .mainWrapper {
+    width: 100%;
+  }
+
+  .horizontal-navbar {
+    .parentBox {
+      &.pactive > .menuLink,
+      &.pactive > .menuLink:hover,
+      &.pactive:hover > .menuLink {
+        background-color: var(--mat-sys-primary);
+        color: $white !important;
+        border-radius: $border-radius;
+      }
+    }
+
+    // ---- Botón "More" ----
+    // Solo aparece cuando hay items desbordados (ver sidebar.component.ts
+    // recomputeOverflow). Estructuralmente es un parentBox más: hereda
+    // todo el comportamiento hover/dropdown. Solo se diferencia en el
+    // .menuLink (botón con icono 3 puntos en vez de label).
+    //
+    // Estrategia de posicionamiento:
+    // - El contenedor .horizontal-sidebar tiene position: relative (lo
+    //   agregamos abajo). El more-button se ancla a `right: 0` del
+    //   sidebar, NO del navbar. Esto evita que se salga del viewport
+    //   cuando el navbar es más estrecho que el sidebar.
+    // - El navbar interno sigue siendo flex normal; los items visibles
+    //   fluyen de izquierda a derecha hasta donde caben.
+    .more-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      > .menuLink {
+        // El botón More NO muestra label, solo el icono de 3 puntos.
+        padding: 10px 12px;
+
+        .routeIcon {
+          font-size: 22px;
+        }
+      }
+
+      // El dropdown del More es vertical (lista de items). Como vive
+      // dentro de un ul > li > app-horizontal-nav-item, hay que aplanar
+      // los estilos del li para que el nav-item sea el bloque visual.
+      > .childBox > .ddmenu {
+        list-style: none;
+        padding: 0;
+        margin: 6px;
+        min-width: 240px;
+
+        > li {
+          display: block;
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          // Reset del host del nav-item: que el parentBox interno ocupe
+          // todo el ancho del li sin flex shrink.
+          > app-horizontal-nav-item {
+            display: block;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Ajuste RTL/LTR para el último item de la barra (evita que el childBox
+// se salga del viewport).
+.ltr {
+  .sidebarNav-horizontal {
+    .horizontal-navbar {
+      .parentBox {
+        &:last-child:hover>.childBox {
+          right: 0;
+          left: unset;
+        }
+      }
+    }
+  }
+}
+
+.rtl {
+  .sidebarNav-horizontal {
+    .horizontal-navbar {
+      .parentBox {
+        &:last-child:hover>.childBox {
+          left: 0;
+          right: unset;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+@if (pageInfo['breadcrumb']) {
+  <div class="bg-white rounded p-20 m-b-30">
+    <div class="row align-items-center">
+      <div class="col-sm-8">
+        <h4 class="page-title m-0 f-s-18 f-w-600">
+          {{
+            pageInfo['titleKey']
+              ? (pageInfo['titleKey'] | transloco)
+              : pageInfo['title']
+          }}
+        </h4>
+      </div>
+      <div class="col-sm-4">
+        <div class="d-flex align-items-center justify-content-lg-end">
+          <div class="breadcrumb-container">
+            @for (
+              url of pageInfo['urls'];
+              track url.url;
+              let index = $index, last = $last
+            ) {
+              @if (!last) {
+                <span class="breadcrumb-link">
+                  <a
+                    (click)="navigateTo(url.url)"
+                    [style.cursor]="'pointer'"
+                    tabindex="0"
+                    (keydown.enter)="navigateTo(url.url)">
+                    {{ url.titleKey ? (url.titleKey | transloco) : url.title }}
+                  </a>
+                </span>
+                <span class="breadcrumb-separator">/</span>
+              } @else {
+                <span class="breadcrumb-current">
+                  {{ url.titleKey ? (url.titleKey | transloco) : url.title }}
+                </span>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
