@@ -1,0 +1,35 @@
+# Carpetas de salida
+dist/
+out-tsc/
+
+# Dependencias
+node_modules/
+
+# Configuración de Angular
+.angular/
+
+# Archivos de sistema y logs
+package-lock.json
+yarn.lock
+.pnpm-lock.yaml
+*.log
+
+# Archivos de configuración del IDE
+.vscode/
+.idea/
+
+# Archivos temporales
+tmp/
+temp/
+coverage/
+.husky/_/husky.sh
+
+# Archivos de control de versiones
+.git/
+
+# Archivos de configuración del entorno
+.env
+.env.*
+
+# Ignorar la plantilla matdash heredada para no entorpecer los commits con auto-formato
+src/app/matdash/

@@ -6,7 +6,12 @@
     "ng": "ng",
     "start": "ng serve -o",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "lint": "ng lint --fix",
+    "precommit:lint": "lint-staged",
+    "lint:fast": "eslint --cache --cache-location node_modules/.cache/eslint --fix",
+    "lint:ci": "ESLINT_TYPEAWARE=true eslint --max-warnings=0 .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@angular/animations": "~19.2.19",
@@ -30,9 +35,31 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~19.2.22",
+    "@angular-eslint/eslint-plugin": "^19.8.1",
+    "@angular-eslint/eslint-plugin-template": "^19.8.1",
     "@angular/cli": "~19.2.22",
     "@angular/compiler-cli": "~19.2.19",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@types/node": "^22.0.0",
-    "typescript": "~5.8.3"
+    "angular-eslint": "^19.8.1",
+    "eslint": "^9.39.3",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^16.3.1",
+    "prettier": "^3.8.3",
+    "prettier-eslint": "^16.4.2",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.56.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs}": [
+      "eslint --cache --cache-location node_modules/.cache/eslint --fix"
+    ],
+    "*.{html,css,scss,md,json,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }

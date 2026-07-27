@@ -1,5 +1,11 @@
-export const environment = {
+import { resolveEnvironment } from './environment.model';
+
+export const builtInEnvironment = {
   production: true,
-  apiUrl: '/api/v1',
-  appVersion: '1.0.0'
+  appVersion: '1.0.0',
+  api: {
+    baseurl: '',
+  },
 };
+
+export const environment = resolveEnvironment(builtInEnvironment);
