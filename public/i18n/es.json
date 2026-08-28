@@ -101,5 +101,12 @@
   },
   "messages": {
     "enter-mandatory-field": "Por favor, ingrese un campo obligatorio"
+  },
+  "carga-masiva": {
+    "download-template": "Descargar plantilla",
+    "upload-file": "Subir archivo",
+    "upload-success": "Archivo cargado correctamente.",
+    "upload-error": "Error al cargar el archivo. Verifique el formato e intente de nuevo.",
+    "download-error": "Error al descargar la plantilla. Intente de nuevo."
   }
 }

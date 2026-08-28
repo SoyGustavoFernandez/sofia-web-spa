@@ -688,3 +688,118 @@ button:not([disabled]) .iconify.icon-delete {
   overflow: hidden !important;
   max-height: none;
 }
+
+// ── SOFIA page layout ────────────────────────────────────────────────────────
+
+.sofia-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+// Shared base for all sofia cards
+%sofia-card-base {
+  background: #f4f7fb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+// Card 2 — filters + action buttons
+.sofia-filter-card {
+  @extend %sofia-card-base;
+
+  .sofia-filter-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .sofia-filter-top-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+  }
+}
+
+// Card 3 — results table
+.sofia-results-card {
+  @extend %sofia-card-base;
+
+  .sofia-results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sofia-results-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+// Card for detail pages (view and edit mode)
+.sofia-detail-card {
+  @extend %sofia-card-base;
+
+  .sofia-detail-top-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .sofia-detail-bottom-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .sofia-detail-bottom-left {
+      display: flex;
+      gap: 8px;
+    }
+
+    .sofia-detail-bottom-right {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .sofia-page {
+    padding: 8px;
+    gap: 12px;
+  }
+
+  .sofia-filter-card .sofia-filter-actions,
+  .sofia-results-card .sofia-results-footer,
+  .sofia-detail-card .sofia-detail-bottom-actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .sofia-detail-card .sofia-detail-bottom-actions .sofia-detail-bottom-right {
+    margin-left: 0;
+    flex-direction: column;
+  }
+}

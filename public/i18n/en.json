@@ -101,5 +101,12 @@
   },
   "messages": {
     "enter-mandatory-field": "Please enter a mandatory field"
+  },
+  "carga-masiva": {
+    "download-template": "Download template",
+    "upload-file": "Upload file",
+    "upload-success": "File uploaded successfully.",
+    "upload-error": "Error uploading the file. Please check the format and try again.",
+    "download-error": "Error downloading the template. Please try again."
   }
 }
