@@ -1,8 +1,8 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, map, catchError, EMPTY } from 'rxjs';
+import { environment } from '@environment/environment';
 
 interface JwtPayload {
   sub: string;
@@ -14,9 +14,10 @@ interface JwtPayload {
 }
 
 interface LoginRequest { usuario: string; password: string; }
-interface LoginResponse { token: string; }
+interface AuthResponse { accessToken: string; }
 
 const TOKEN_KEY = 'sofia_token';
+const BASE = `${environment.api.baseurl}/api/v1/auth`;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -43,21 +44,33 @@ export class AuthService {
   readonly currentUser = computed(() => this._payload());
   readonly empresaId = computed(() => this._payload()?.empresaId ?? null);
 
-  login(req: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/v1/auth/login', req).pipe(
-      tap(res => this.storeToken(res.token))
+  login(req: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${BASE}/login`, req, { withCredentials: true }).pipe(
+      tap(res => this.storeToken(res.accessToken))
+    );
+  }
+
+  // Called by the interceptor on 401 — returns the new access token
+  refreshAccessToken(): Observable<string> {
+    return this.http.post<AuthResponse>(`${BASE}/refresh`, {}, { withCredentials: true }).pipe(
+      tap(res => this.storeToken(res.accessToken)),
+      map(res => res.accessToken)
     );
   }
 
   logout(): void {
+    // Best-effort: tell the server to revoke the refresh token cookie
+    this.http.post(`${BASE}/logout`, {}, { withCredentials: true }).pipe(
+      catchError(() => EMPTY)
+    ).subscribe();
+
     localStorage.removeItem(TOKEN_KEY);
     this._token.set(null);
-    this.router.navigate(['/auth/login']);
+    void this.router.navigate(['/auth/login']);
   }
 
   hasRole(role: string): boolean {
-    const roles = this._payload()?.roles ?? [];
-    return roles.includes(role);
+    return (this._payload()?.roles ?? []).includes(role);
   }
 
   hasAnyRole(...roles: string[]): boolean {
