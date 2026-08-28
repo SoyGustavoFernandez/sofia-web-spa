@@ -1,0 +1,67 @@
+{
+  "title": "UoM Hierarchy Management",
+  "searchPlaceholder": "Search by medicine or unit...",
+  "add": "Add UoM Hierarchy",
+  "cols": {
+    "producto": "Medicine",
+    "unidadMayor": "Larger Unit",
+    "unidadMenor": "Smaller Unit",
+    "multiplicador": "Multiplier",
+    "acciones": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "view": "Details",
+    "delete": "Delete"
+  },
+  "form": {
+    "titleNew": "New UoM Hierarchy",
+    "titleEdit": "Edit UoM Hierarchy",
+    "titleView": "UoM Hierarchy Details",
+    "producto": "Medicine",
+    "unidadMayor": "Larger Unit",
+    "unidadMenor": "Smaller Unit",
+    "multiplicador": "Multiplier",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "required": "This field is required",
+    "sameUnitsError": "Larger unit and smaller unit cannot be the same",
+    "positiveNumberError": "Multiplier must be greater than zero"
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete the conversion hierarchy for \"{{name}}\"?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "UoM Hierarchy created successfully",
+    "updated": "UoM Hierarchy updated successfully",
+    "deleted": "UoM Hierarchy deleted successfully"
+  },
+  "help": {
+    "producto": "Medicament to which this unit conversion rule is applied.",
+    "unidadMayor": "Larger packaging or volume unit (e.g. Box, Blister).",
+    "unidadMenor": "Base or smaller unit (e.g. Unit, Tablet).",
+    "multiplicador": "Quantity of smaller units contained in the larger unit (e.g., if a box has 30 tablets, the multiplier is 30)."
+  },
+  "import": {
+    "title": "Bulk UoM Hierarchy Upload",
+    "downloadTemplate": "Download Template",
+    "selectFile": "Select File",
+    "dragDrop": "Drag and drop your Excel file here or click to browse",
+    "fileSelected": "File selected: {{name}}",
+    "errorsFound": "Errors were found in the file. Please fix them before saving.",
+    "saveValid": "Save Valid Records ({{count}})",
+    "noValid": "No valid records",
+    "saving": "Saving...",
+    "previewTitle": "Records Preview",
+    "success": "Successfully imported {{count}} UoM hierarchies.",
+    "errors": "Errors",
+    "status": "Status",
+    "valid": "Valid",
+    "invalid": "With error",
+    "button": "Bulk Upload"
+  }
+}

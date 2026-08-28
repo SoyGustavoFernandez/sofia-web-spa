@@ -1,0 +1,63 @@
+{
+  "title": "Mantenimiento de Sucursales",
+  "searchPlaceholder": "Buscar por nombre, dirección o licencia...",
+  "add": "Agregar Sucursal",
+  "cols": {
+    "nombre": "Nombre de Sucursal",
+    "direccionFisica": "Dirección Física",
+    "numeroLicencia": "Número de Licencia",
+    "gerenteNombre": "Gerente/Encargado"
+  },
+  "form": {
+    "titleNew": "Nueva Sucursal",
+    "titleEdit": "Editar Sucursal",
+    "titleView": "Detalle de la Sucursal",
+    "nombre": "Nombre",
+    "direccionFisica": "Dirección Física",
+    "numeroLicencia": "Número de Licencia",
+    "gerente": "Gerente/Encargado",
+    "noGerente": "Sin Asignar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "required": "Este campo es obligatorio",
+    "maxLength100": "Máximo 100 caracteres",
+    "maxLength255": "Máximo 255 caracteres",
+    "maxLength50": "Máximo 50 caracteres"
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar la sucursal \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Sucursal creada correctamente",
+    "updated": "Sucursal actualizada correctamente",
+    "deleted": "Sucursal eliminada correctamente"
+  },
+  "help": {
+    "nombre": "Nombre descriptivo de la sucursal (ej. Sucursal Principal, Sede Norte).",
+    "direccionFisica": "Dirección física detallada de la sucursal.",
+    "numeroLicencia": "Número de licencia comercial o autorización sanitaria otorgada por la entidad reguladora.",
+    "gerente": "Empleado asignado como gerente o administrador responsable de la sucursal."
+  },
+  "import": {
+    "title": "Carga Masiva de Sucursales",
+    "downloadTemplate": "Descargar Plantilla",
+    "selectFile": "Seleccionar Archivo",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "errorsFound": "Se encontraron errores en el archivo. Por favor, corrígelos antes de guardar.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "noValid": "No hay registros válidos",
+    "saving": "Guardando...",
+    "previewTitle": "Vista Previa de Registros",
+    "success": "Se han importado {{count}} sucursales correctamente.",
+    "errors": "Errores",
+    "status": "Estado",
+    "valid": "Válido",
+    "invalid": "Con error",
+    "button": "Carga Masiva"
+  }
+}

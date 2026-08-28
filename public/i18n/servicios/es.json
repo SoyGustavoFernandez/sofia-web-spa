@@ -1,0 +1,83 @@
+{
+  "title": "Mantenimiento de Servicios",
+  "searchPlaceholder": "Buscar servicio por código o nombre...",
+  "add": "Agregar Servicio",
+  "showingCount": "Mostrando {{current}} de {{total}} servicios",
+  "noData": "No se encontraron servicios registrados.",
+  "cols": {
+    "nombrePaciente": "Paciente / Cliente",
+    "nombreServicio": "Servicio / Producto",
+    "codigoServicio": "Código",
+    "categoria": "Categoría",
+    "precio": "Precio",
+    "estadoCita": "Estado",
+    "fechaHoraProgramada": "Fecha Programada",
+    "clienteId": "ID de Cliente",
+    "productoId": "ID de Producto/Servicio",
+    "acciones": "Acciones"
+  },
+  "actions": {
+    "edit": "Editar",
+    "view": "Detalle",
+    "delete": "Eliminar"
+  },
+  "form": {
+    "titleNew": "Nuevo Servicio",
+    "titleEdit": "Editar Servicio",
+    "titleView": "Detalle del Servicio",
+    "pacienteLabel": "Paciente / Cliente (Buscar por Nombre o DNI)",
+    "pacientePlaceholder": "Escriba nombre o número de DNI...",
+    "pacienteRequired": "Debe seleccionar un paciente de la lista",
+    "servicioLabel": "Servicio / Producto (Buscar por Nombre o Código)",
+    "servicioPlaceholder": "Escriba nombre o código del servicio...",
+    "servicioRequired": "Debe seleccionar un servicio del catálogo",
+    "fechaProgramadaLabel": "Fecha Programada",
+    "horaProgramadaLabel": "Hora Programada",
+    "nombreServicio": "Nombre del Servicio",
+    "codigoServicio": "Código del Servicio",
+    "categoria": "Categoría",
+    "precio": "Precio (S/)",
+    "fechaHoraProgramada": "Fecha y Hora Programada",
+    "estadoCita": "Estado de Cita",
+    "descripcion": "Descripción / Indicaciones",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "required": "Este campo es obligatorio",
+    "maxLength150": "Máximo 150 caracteres",
+    "maxLength50": "Máximo 50 caracteres"
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar el servicio \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Servicio registrado correctamente",
+    "updated": "Servicio actualizado correctamente",
+    "deleted": "Servicio eliminado correctamente"
+  },
+  "help": {
+    "nombreServicio": "Nombre comercial o descriptivo del servicio asistencial (ej. Inyectables, Presión arterial).",
+    "codigoServicio": "Código interno o catálogo de servicio."
+  },
+  "import": {
+    "title": "Carga Masiva de Servicios",
+    "downloadTemplate": "Descargar Plantilla",
+    "selectFile": "Seleccionar Archivo",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "errorsFound": "Se encontraron errores en el archivo. Por favor, corrígelos antes de guardar.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "noValid": "No hay registros válidos",
+    "saving": "Guardando...",
+    "previewTitle": "Vista Previa de Registros",
+    "success": "Se han importado {{count}} servicios correctamente.",
+    "errors": "Errores",
+    "status": "Estado",
+    "valid": "Válido",
+    "invalid": "Con error",
+    "button": "Carga Masiva"
+  }
+}

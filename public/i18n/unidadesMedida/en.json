@@ -1,0 +1,61 @@
+{
+  "title": "Unit of Measure Management",
+  "searchPlaceholder": "Search by code or description...",
+  "add": "Add Unit of Measure",
+  "cols": {
+    "codigo": "Code",
+    "descripcion": "Description",
+    "acciones": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "view": "Details",
+    "delete": "Delete"
+  },
+  "form": {
+    "titleNew": "New Unit of Measure",
+    "titleEdit": "Edit Unit of Measure",
+    "titleView": "Unit of Measure Details",
+    "codigo": "Code",
+    "descripcion": "Description",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "required": "This field is required",
+    "maxLength10": "Maximum 10 characters",
+    "maxLength50": "Maximum 50 characters"
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete the unit of measure \"{{name}}\"?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Unit of Measure created successfully",
+    "updated": "Unit of Measure updated successfully",
+    "deleted": "Unit of Measure deleted successfully"
+  },
+  "help": {
+    "codigo": "Unique abbreviation of the unit of measurement (e.g. KG, G, UN, LT).",
+    "descripcion": "Full descriptive name of the unit of measurement (e.g. Kilogram, Gram, Unit, Liter)."
+  },
+  "import": {
+    "title": "Bulk Unit of Measure Upload",
+    "downloadTemplate": "Download Template",
+    "selectFile": "Select File",
+    "dragDrop": "Drag and drop your Excel file here or click to browse",
+    "fileSelected": "File selected: {{name}}",
+    "errorsFound": "Errors were found in the file. Please fix them before saving.",
+    "saveValid": "Save Valid Records ({{count}})",
+    "noValid": "No valid records",
+    "saving": "Saving...",
+    "previewTitle": "Records Preview",
+    "success": "Successfully imported {{count}} units of measure.",
+    "errors": "Errors",
+    "status": "Status",
+    "valid": "Valid",
+    "invalid": "With error",
+    "button": "Bulk Upload"
+  }
+}

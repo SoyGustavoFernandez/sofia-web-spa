@@ -1,0 +1,72 @@
+{
+  "title": "Supplier Management",
+  "searchPlaceholder": "Search by business name or tax ID...",
+  "add": "Add Supplier",
+  "cols": {
+    "razonSocial": "Business Name",
+    "taxId": "Tax ID / RUC",
+    "terminosFinancieros": "Financial Terms",
+    "calificacionEsg": "ESG Rating",
+    "tasaCumplimiento": "Compliance Rate",
+    "acciones": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "view": "Details",
+    "delete": "Delete"
+  },
+  "form": {
+    "titleNew": "New Supplier",
+    "titleEdit": "Edit Supplier",
+    "titleView": "Supplier Details",
+    "razonSocial": "Business Name",
+    "taxId": "Tax ID / RUC",
+    "terminosFinancieros": "Financial Terms",
+    "calificacionEsg": "ESG Rating (0-100)",
+    "tasaCumplimiento": "Compliance Rate (0-100)",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "required": "This field is required",
+    "maxLength200": "Maximum 200 characters",
+    "maxLength50": "Maximum 50 characters",
+    "maxLength100": "Maximum 100 characters",
+    "range0to100": "Must be between 0 and 100"
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete supplier \"{{name}}\"?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Supplier created successfully",
+    "updated": "Supplier updated successfully",
+    "deleted": "Supplier deleted successfully"
+  },
+  "help": {
+    "razonSocial": "Official legal name of the supplier company.",
+    "taxId": "Official tax identification number of the supplier.",
+    "terminosFinancieros": "Agreed payment deadlines and conditions (e.g., Net 30, Cash on Delivery).",
+    "calificacionEsg": "Supplier rating based on Environmental, Social, and Governance criteria.",
+    "tasaCumplimiento": "Historical percentage of orders delivered on time and in correct quantities."
+  },
+  "import": {
+    "title": "Bulk Supplier Upload",
+    "downloadTemplate": "Download Template",
+    "selectFile": "Select File",
+    "dragDrop": "Drag and drop your Excel file here or click to browse",
+    "fileSelected": "File selected: {{name}}",
+    "errorsFound": "Errors were found in the file. Please fix them before saving.",
+    "saveValid": "Save Valid Records ({{count}})",
+    "noValid": "No valid records",
+    "saving": "Saving...",
+    "previewTitle": "Records Preview",
+    "success": "Successfully imported {{count}} suppliers.",
+    "errors": "Errors",
+    "status": "Status",
+    "valid": "Valid",
+    "invalid": "With error",
+    "button": "Bulk Upload"
+  }
+}

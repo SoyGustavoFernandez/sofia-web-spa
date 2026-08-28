@@ -1,0 +1,61 @@
+{
+  "title": "Mantenimiento de Unidades de Medida",
+  "searchPlaceholder": "Buscar por código o descripción...",
+  "add": "Agregar Unidad de Medida",
+  "cols": {
+    "codigo": "Código",
+    "descripcion": "Descripción",
+    "acciones": "Acciones"
+  },
+  "actions": {
+    "edit": "Editar",
+    "view": "Detalle",
+    "delete": "Eliminar"
+  },
+  "form": {
+    "titleNew": "Nueva Unidad de Medida",
+    "titleEdit": "Editar Unidad de Medida",
+    "titleView": "Detalle de Unidad de Medida",
+    "codigo": "Código",
+    "descripcion": "Descripción",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "required": "Este campo es obligatorio",
+    "maxLength10": "Máximo 10 caracteres",
+    "maxLength50": "Máximo 50 caracteres"
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar la unidad de medida \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Unidad de Medida creada correctamente",
+    "updated": "Unidad de Medida actualizada correctamente",
+    "deleted": "Unidad de Medida eliminada correctamente"
+  },
+  "help": {
+    "codigo": "Abreviatura única de la unidad de medida (ej. KG, G, UN, LT).",
+    "descripcion": "Nombre descriptivo completo de la unidad de medida (ej. Kilogramo, Gramo, Unidad, Litro)."
+  },
+  "import": {
+    "title": "Carga Masiva de Unidades de Medida",
+    "downloadTemplate": "Descargar Plantilla",
+    "selectFile": "Seleccionar Archivo",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "errorsFound": "Se encontraron errores en el archivo. Por favor, corrígelos antes de guardar.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "noValid": "No hay registros válidos",
+    "saving": "Guardando...",
+    "previewTitle": "Vista Previa de Registros",
+    "success": "Se han importado {{count}} unidades de medida correctamente.",
+    "errors": "Errores",
+    "status": "Estado",
+    "valid": "Válido",
+    "invalid": "Con error",
+    "button": "Carga Masiva"
+  }
+}

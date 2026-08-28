@@ -1,0 +1,61 @@
+{
+  "title": "Laboratory Management",
+  "searchPlaceholder": "Search by name or code...",
+  "add": "Add Laboratory",
+  "cols": {
+    "nombreCompania": "Company Name",
+    "codigoIdentificador": "Identifier Code",
+    "acciones": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "view": "Details",
+    "delete": "Delete"
+  },
+  "form": {
+    "titleNew": "New Laboratory",
+    "titleEdit": "Edit Laboratory",
+    "titleView": "Laboratory Details",
+    "nombreCompania": "Company Name",
+    "codigoIdentificador": "Identifier Code",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "required": "This field is required",
+    "maxLength150": "Maximum 150 characters",
+    "maxLength50": "Maximum 50 characters"
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete the laboratory \"{{name}}\"?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Laboratory created successfully",
+    "updated": "Laboratory updated successfully",
+    "deleted": "Laboratory deleted successfully"
+  },
+  "help": {
+    "nombreCompania": "Commercial or legal name of the pharmaceutical laboratory.",
+    "codigoIdentificador": "Unique identification code of the laboratory (e.g., sanitary registry or internal code)."
+  },
+  "import": {
+    "title": "Bulk Laboratory Upload",
+    "downloadTemplate": "Download Template",
+    "selectFile": "Select File",
+    "dragDrop": "Drag and drop your Excel file here or click to browse",
+    "fileSelected": "File selected: {{name}}",
+    "errorsFound": "Errors were found in the file. Please fix them before saving.",
+    "saveValid": "Save Valid Records ({{count}})",
+    "noValid": "No valid records",
+    "saving": "Saving...",
+    "previewTitle": "Records Preview",
+    "success": "Successfully imported {{count}} laboratories.",
+    "errors": "Errors",
+    "status": "Status",
+    "valid": "Valid",
+    "invalid": "With error",
+    "button": "Bulk Upload"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "title": "Mantenimiento de Medicamentos",
+  "searchPlaceholder": "Buscar por código, nombre comercial o laboratorio...",
+  "showing": "Mostrando {{count}} de {{total}} medicamentos",
+  "showServicios": "Mostrar Servicios Asistenciales",
+  "noData": "No se encontraron medicamentos.",
+  "cols": {
+    "codigoNacional": "Código Nacional",
+    "nombreComercial": "Nombre Comercial",
+    "laboratorioNombre": "Laboratorio",
+    "unidadBaseNombre": "Unidad Base",
+    "condicionVenta": "Condición de Venta",
+    "stockTotal": "Stock"
+  },
+  "form": {
+    "titleNew": "Nuevo Medicamento",
+    "titleEdit": "Editar Medicamento",
+    "titleView": "Detalle de Medicamento",
+    "general": "Información General",
+    "codeRequired": "El código nacional es obligatorio",
+    "nameRequired": "El nombre comercial es obligatorio",
+    "labRequired": "Debe seleccionar un laboratorio",
+    "unitRequired": "Debe seleccionar una unidad de medida",
+    "conditionRequired": "Debe seleccionar una condición de venta",
+    "back": "Volver"
+  },
+  "help": {
+    "codigoNacional": "Código de identificación registrado en la DIGEMID para el medicamento.",
+    "nombreComercial": "Nombre de marca registrado con el que se comercializa el medicamento.",
+    "laboratorio": "Laboratorio fabricante o titular del registro sanitario.",
+    "unidadBase": "Unidad mínima de dispensación del medicamento (ej. Tableta, Frasco, Caja).",
+    "condicionVenta": "Requisito legal de receta para la venta (ej. Venta Libre, Receta Médica Retenida)."
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar el medicamento \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Medicamento registrado correctamente",
+    "updated": "Medicamento actualizado correctamente",
+    "deleted": "Medicamento eliminado correctamente"
+  },
+  "import": {
+    "title": "Carga Masiva de Medicamentos",
+    "button": "Carga Masiva",
+    "downloadTemplate": "Descargar Plantilla",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "selectFile": "Seleccionar Archivo",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "saving": "Procesando archivo...",
+    "previewTitle": "Vista Previa de Registros",
+    "errorsFound": "Se encontraron errores en el archivo. Solo se importarán las filas válidas.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "success": "Se importaron {{count}} medicamentos correctamente.",
+    "status": "Estado",
+    "errors": "Observaciones",
+    "valid": "Válido",
+    "invalid": "Con error"
+  }
+}

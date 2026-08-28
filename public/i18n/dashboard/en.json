@@ -1,0 +1,86 @@
+{
+  "title": "Operational Dashboard",
+  "actions": {
+    "viewServices": "View Services Schedule",
+    "viewInventory": "View Inventory Batches",
+    "viewMedicaments": "View Product Catalog",
+    "viewPOS": "View POS Register",
+    "viewRecetas": "View Prescriptions",
+    "viewProveedores": "View Suppliers",
+    "viewSucursales": "View Branches",
+    "notificar": "NOTIFY"
+  },
+  "kpi": {
+    "ventasHoy": "Today's Sales",
+    "ventasMes": "Monthly Sales",
+    "ticketPromedio": "Average Ticket",
+    "transacciones": "Transactions Today"
+  },
+  "pos": {
+    "title": "POS Cash Status & Payment Breakdown",
+    "statusOpen": "Register Open",
+    "statusClosed": "Register Closed",
+    "efectivo": "Cash",
+    "yapePlin": "Digital Yape / Plin",
+    "tarjeta": "Debit/Credit Card"
+  },
+  "citas": {
+    "title": "Daily Schedule",
+    "colPaciente": "Patient / Client",
+    "colServicio": "Service / Product",
+    "colHora": "Scheduled Time",
+    "colEstado": "Status",
+    "colAcciones": "Actions",
+    "noData": "No appointments scheduled for today."
+  },
+  "lotes": {
+    "title": "Expiring Batches",
+    "colProducto": "Product / Medicine",
+    "colLote": "Batch No.",
+    "colFechaCaducidad": "Expiration Date",
+    "noData": "No batches expiring within the next 30 days."
+  },
+  "stock": {
+    "title": "Low Stock",
+    "colProducto": "Medicine / Supply",
+    "colCodigo": "Code",
+    "colStock": "Current Stock",
+    "noData": "No medicines with low stock alerts."
+  },
+  "recetas": {
+    "title": "Pending Prescriptions",
+    "colPaciente": "Patient",
+    "colMedico": "Prescribing Doctor",
+    "colFecha": "Issue Date",
+    "colEstado": "Dispense Status",
+    "noData": "No pending prescriptions to dispense."
+  },
+  "topProducts": {
+    "title": "Top Selling Products",
+    "colProducto": "Medicine / Item",
+    "colCategoria": "Sale Condition",
+    "colVendidos": "Rotation",
+    "noData": "No medicines registered in rotation ranking."
+  },
+  "sucursalesSales": {
+    "title": "Branch Sales Summary",
+    "colSucursal": "Branch / Location",
+    "colLicencia": "License",
+    "colVentas": "Today's Sales (S/)",
+    "noData": "No branches registered in system."
+  },
+  "delivery": {
+    "title": "Today's Deliveries",
+    "colCliente": "Client / Address",
+    "colRepartidor": "Courier",
+    "colHora": "Departure Time",
+    "colEstado": "Delivery Status",
+    "noData": "No delivery orders scheduled for today."
+  },
+  "notifications": {
+    "whatsappOpened": "Opening WhatsApp to send appointment reminder to {{name}}.",
+    "whatsappMessageTemplate": "Dear {{paciente}}, this is a reminder for your appointment for '{{servicio}}' scheduled for today at {{hora}}. Please visit our branch - Boticas Multifer.",
+    "defaultPaciente": "Dear Patient",
+    "defaultServicio": "Scheduled Service"
+  }
+}

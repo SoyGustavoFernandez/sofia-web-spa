@@ -52,6 +52,18 @@ export const navItems: NavItem[] = [
     ],
   },
   {
+    id: 4,
+    name: 'Sistema',
+    children: [
+      { navCap: 'Multi-tenant' },
+      {
+        displayName: 'Empresas',
+        iconName: 'solar:buildings-line-duotone',
+        route: '/empresas',
+      },
+    ],
+  },
+  {
     id: 3,
     name: 'Administración',
     children: [

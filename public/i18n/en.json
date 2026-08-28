@@ -1,0 +1,105 @@
+{
+  "actions": {
+    "new": "New",
+    "search": "Search",
+    "clear": "Clear",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "update": "Update",
+    "create": "Create",
+    "clean": "Clean",
+    "export": "Export",
+    "return": "Back",
+    "add": "Add",
+    "close": "Close",
+    "ok": "OK",
+    "accept": "Accept",
+    "reject": "Reject",
+    "confirm": "Confirm",
+    "continue": "Keep editing",
+    "upload-files": "Upload Files",
+    "download": "Download",
+    "select": "Select",
+    "back": "Back"
+  },
+  "general": {
+    "errors": {
+      "required": "This field is required",
+      "minValue": "Minimum value is {{min}}",
+      "maxLength": "Maximum length is {{max}} characters"
+    }
+  },
+  "generic-labels": {
+    "yes": "Yes",
+    "no": "No",
+    "results": "Results"
+  },
+  "header.logout": "Sign Out",
+  "header.reloadPermissions": "Reload permissions",
+  "header.roles": "Roles",
+  "header.noNotifications": "No notifications",
+  "pagination": {
+    "itemsPerPage": "Items per page",
+    "nextPage": "Next page",
+    "previousPage": "Previous page",
+    "firstPage": "First page",
+    "lastPage": "Last page",
+    "range": "{{current}} of {{total}}"
+  },
+  "CONFIRMATION": {
+    "CHANGE_LANGUAGE_TITLE": "Confirm Language Change",
+    "CHANGE_LANGUAGE_MESSAGE": "Changing the language will reload the page. Any unsaved data will be lost. Do you want to continue?",
+    "RELOAD_PERMISSIONS_TITLE": "Reload permissions",
+    "RELOAD_PERMISSIONS_MESSAGE": "This will refresh your permissions and menus from the server. The app will reload. Do you want to continue?"
+  },
+  "attachment": {
+    "upload-error-file": "Error uploading file. Please check the file size and type.",
+    "upload": "Upload Files",
+    "upload-singular": "Upload File",
+    "file": "File",
+    "user": "User",
+    "date": "Date",
+    "actions": "Actions",
+    "download": "Download",
+    "download-failed": "Error downloading the file",
+    "title": "Upload Files",
+    "title-disabled": "Files Uploaded",
+    "default-user": "User",
+    "upload-content": "Upload PDF files and images to get started",
+    "upload-content-pdf": "Upload PDF files to get started",
+    "upload-content-image": "Upload image files to get started",
+    "upload-content-excel": "Upload Excel files to get started",
+    "upload-placeholder": "Upload files to get started",
+    "upload-instructions": "Choose Files",
+    "upload-instructions-singular": "Choose File",
+    "messages": {
+      "confirmDeleteTitle": "Confirm deletion",
+      "confirmDeleteMessage": "Are you sure you want to delete the selected file?",
+      "fileNameLength": "There are filenames that contain more than 80 characters.",
+      "upload-success": "Files uploaded successfully",
+      "no-attachments": "Must upload at least one file to proceed",
+      "only-one-file-allowed": "Only one file is allowed"
+    }
+  },
+  "errors": {
+    "forbidden": "You do not have permission for this operation.",
+    "unauthorized": "Your session has expired. Please log in again.",
+    "notFound": "The requested resource was not found.",
+    "serverError": "An unexpected server error occurred. Please try again later.",
+    "networkError": "A network error occurred. Please check your internet connection and try again.",
+    "unknownError": "An unknown error occurred. Please try again later.",
+    "alert": {
+      "denied_access": "Access denied",
+      "session": "Session",
+      "warning": "Warning",
+      "error": "Error",
+      "notFound": "Not Found"
+    }
+  },
+  "messages": {
+    "enter-mandatory-field": "Please enter a mandatory field"
+  }
+}

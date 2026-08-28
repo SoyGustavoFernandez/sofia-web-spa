@@ -1,0 +1,81 @@
+{
+  "title": "Maintenance of Roles & Security",
+  "rolesTitle": "Roles & Permissions",
+  "usuariosTitle": "User Accounts",
+  "searchPlaceholder": "Search role by name...",
+  "searchUserPlaceholder": "Search account by username or employee...",
+  "showingUsers": "Showing {{count}} of {{total}} users",
+  "noUsersData": "No user accounts found.",
+  "status": {
+    "active": "Active"
+  },
+  "cols": {
+    "nombreRol": "Role Name",
+    "nivelJerarquia": "Hierarchy Level",
+    "descripcion": "Description",
+    "createdAt": "Created",
+    "nombreUsuario": "Username",
+    "empleado": "Associated Employee",
+    "roles": "Assigned Roles",
+    "estado": "Status"
+  },
+  "nivel": {
+    "label": "Level",
+    "tooltip": "The hierarchy level determines the role's priority. A higher level indicates greater authority (e.g.: 100 = Admin, 10 = Operator)."
+  },
+  "form": {
+    "titleNew": "New Role",
+    "titleEdit": "Edit Role",
+    "titleView": "Role Details",
+    "titleUserNew": "New User Account",
+    "titleUserView": "User Account Details",
+    "nombreRol": "Role Name",
+    "descripcion": "Description",
+    "nivelJerarquia": "Hierarchy Level",
+    "required": "This field is required",
+    "maxLength100": "Maximum 100 characters",
+    "maxLength200": "Maximum 200 characters",
+    "minLevelError": "Level must be at least 1",
+    "maxLevelError": "Level cannot exceed 100",
+    "back": "Back",
+    "tabs": {
+      "datosRol": "Role Data",
+      "permisos": "Role Permissions"
+    }
+  },
+  "help": {
+    "nombreRol": "Unique name identifying the role in the system (e.g.: Administrator, Pharmacist, Cashier).",
+    "descripcion": "Optional description explaining the role's responsibilities.",
+    "nivelJerarquia": "Number representing the role hierarchy. Higher number = greater authority. E.g.: Admin = 100, Supervisor = 50, Operator = 10."
+  },
+  "permisos": {
+    "title": "Assigned Permissions",
+    "emptyMessage": "This role has no assigned permissions.",
+    "addTitle": "Add Permission",
+    "modulo": "System Module",
+    "accion": "Action",
+    "selectModulo": "Select a module",
+    "selectAccion": "Select an action",
+    "add": "Add",
+    "revoke": "Revoke",
+    "revokeConfirm": "Do you want to revoke the permission {{modulo}} / {{accion}}?",
+    "cols": {
+      "modulo": "Module",
+      "accion": "Action",
+      "acciones": "Actions"
+    },
+    "added": "Permission assigned successfully",
+    "revoked": "Permission revoked successfully"
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete the role \"{{name}}\"? This will remove the role from all users who have it assigned.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Role created successfully",
+    "updated": "Role updated successfully",
+    "deleted": "Role deleted successfully"
+  }
+}

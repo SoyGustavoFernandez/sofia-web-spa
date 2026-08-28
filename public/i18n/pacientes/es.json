@@ -1,0 +1,69 @@
+{
+  "title": "Mantenimiento de Pacientes",
+  "searchPlaceholder": "Buscar por nombre o documento de identidad...",
+  "add": "Agregar Paciente",
+  "cols": {
+    "docIdentidadGub": "Doc. Identidad",
+    "nombreApellidos": "Nombre y Apellidos",
+    "fechaNacimiento": "Fecha Nacimiento",
+    "contactoPrimario": "Contacto Primario"
+  },
+  "actions": {
+    "edit": "Editar",
+    "view": "Detalle",
+    "delete": "Eliminar"
+  },
+  "form": {
+    "titleNew": "Nuevo Paciente",
+    "titleEdit": "Editar Paciente",
+    "titleView": "Detalle de Paciente",
+    "docIdentidadGub": "Documento de Identidad",
+    "nombreApellidos": "Nombre y Apellidos",
+    "fechaNacimiento": "Fecha de Nacimiento",
+    "contactoPrimario": "Contacto Primario",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "required": "Este campo es obligatorio",
+    "maxLength50": "Máximo 50 caracteres",
+    "maxLength100": "Máximo 100 caracteres",
+    "maxLength200": "Máximo 200 caracteres",
+    "futureDateError": "La fecha de nacimiento no puede estar en el futuro",
+    "phoneInvalid": "Solo se permiten números y el símbolo + al inicio"
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar al paciente \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Paciente creado correctamente",
+    "updated": "Paciente actualizado correctamente",
+    "deleted": "Paciente eliminado correctamente"
+  },
+  "help": {
+    "docIdentidadGub": "Documento nacional de identidad oficial del paciente (ej. DNI, RUC, Pasaporte, Cédula).",
+    "nombreApellidos": "Nombres y apellidos completos del paciente tal como figuran en su documento oficial.",
+    "fechaNacimiento": "Fecha de nacimiento del paciente, utilizada para el cálculo automático de dosis de medicamentos y validaciones clínicas.",
+    "contactoPrimario": "Teléfono, celular o correo electrónico principal del paciente para notificaciones de recetas y citas."
+  },
+  "import": {
+    "title": "Carga Masiva de Pacientes",
+    "downloadTemplate": "Descargar Plantilla",
+    "selectFile": "Seleccionar Archivo",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "errorsFound": "Se encontraron errores en el archivo. Por favor, corrígelos antes de guardar.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "noValid": "No hay registros válidos",
+    "saving": "Guardando...",
+    "previewTitle": "Vista Previa de Registros",
+    "success": "Se han importado {{count}} pacientes correctamente.",
+    "errors": "Errores",
+    "status": "Estado",
+    "valid": "Válido",
+    "invalid": "Con error",
+    "button": "Carga Masiva"
+  }
+}

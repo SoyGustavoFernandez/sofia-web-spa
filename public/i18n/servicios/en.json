@@ -1,0 +1,83 @@
+{
+  "title": "Services Maintenance",
+  "searchPlaceholder": "Search service by code or name...",
+  "add": "Add Service",
+  "showingCount": "Showing {{current}} of {{total}} services",
+  "noData": "No services found.",
+  "cols": {
+    "nombrePaciente": "Patient / Client",
+    "nombreServicio": "Service / Product",
+    "codigoServicio": "Code",
+    "categoria": "Category",
+    "precio": "Price",
+    "estadoCita": "Status",
+    "fechaHoraProgramada": "Scheduled Date",
+    "clienteId": "Patient ID",
+    "productoId": "Product/Service ID",
+    "acciones": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "view": "Detail",
+    "delete": "Delete"
+  },
+  "form": {
+    "titleNew": "New Service",
+    "titleEdit": "Edit Service",
+    "titleView": "Service Detail",
+    "pacienteLabel": "Patient / Client (Search by Name or ID)",
+    "pacientePlaceholder": "Type name or ID number...",
+    "pacienteRequired": "You must select a patient from the list",
+    "servicioLabel": "Service / Product (Search by Name or Code)",
+    "servicioPlaceholder": "Type service name or code...",
+    "servicioRequired": "You must select a service from the catalog",
+    "fechaProgramadaLabel": "Scheduled Date",
+    "horaProgramadaLabel": "Scheduled Time",
+    "nombreServicio": "Service Name",
+    "codigoServicio": "Service Code",
+    "categoria": "Category",
+    "precio": "Price",
+    "fechaHoraProgramada": "Scheduled Date & Time",
+    "estadoCita": "Appointment Status",
+    "descripcion": "Description / Instructions",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "required": "This field is required",
+    "maxLength150": "Maximum 150 characters",
+    "maxLength50": "Maximum 50 characters"
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete the service \"{{name}}\"?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Service registered successfully",
+    "updated": "Service updated successfully",
+    "deleted": "Service deleted successfully"
+  },
+  "help": {
+    "nombreServicio": "Commercial or descriptive name of the care service (e.g. Injectables, Blood pressure).",
+    "codigoServicio": "Internal code or catalog item."
+  },
+  "import": {
+    "title": "Bulk Upload Services",
+    "downloadTemplate": "Download Template",
+    "selectFile": "Select File",
+    "dragDrop": "Drag and drop your Excel file here or click to browse",
+    "fileSelected": "File selected: {{name}}",
+    "errorsFound": "Errors were found in the file. Please fix them before saving.",
+    "saveValid": "Save valid records ({{count}})",
+    "noValid": "No valid records",
+    "saving": "Saving...",
+    "previewTitle": "Records Preview",
+    "success": "{{count}} services imported successfully.",
+    "errors": "Errors",
+    "status": "Status",
+    "valid": "Valid",
+    "invalid": "With error",
+    "button": "Bulk Upload"
+  }
+}
