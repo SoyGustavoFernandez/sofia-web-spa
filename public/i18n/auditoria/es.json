@@ -1,0 +1,13 @@
+{
+  "title": "Auditoría del Sistema",
+  "searchPlaceholder": "Buscar por acción, entidad o usuario...",
+  "cols": {
+    "fecha": "Fecha",
+    "usuario": "Usuario",
+    "accion": "Acción",
+    "entidad": "Entidad",
+    "detalle": "Detalle"
+  },
+  "noData": "No se encontraron registros de auditoría.",
+  "showing": "Mostrando {{count}} de {{total}} registros"
+}

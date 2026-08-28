@@ -1,0 +1,61 @@
+{
+  "title": "Mantenimiento de Laboratorios",
+  "searchPlaceholder": "Buscar por nombre o código...",
+  "add": "Agregar Laboratorio",
+  "cols": {
+    "nombreCompania": "Nombre de Compañía",
+    "codigoIdentificador": "Código Identificador",
+    "acciones": "Acciones"
+  },
+  "actions": {
+    "edit": "Editar",
+    "view": "Detalle",
+    "delete": "Eliminar"
+  },
+  "form": {
+    "titleNew": "Nuevo Laboratorio",
+    "titleEdit": "Editar Laboratorio",
+    "titleView": "Detalle del Laboratorio",
+    "nombreCompania": "Nombre de Compañía",
+    "codigoIdentificador": "Código Identificador",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "required": "Este campo es obligatorio",
+    "maxLength150": "Máximo 150 caracteres",
+    "maxLength50": "Máximo 50 caracteres"
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar el laboratorio \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Laboratorio creado correctamente",
+    "updated": "Laboratorio actualizado correctamente",
+    "deleted": "Laboratorio eliminado correctamente"
+  },
+  "help": {
+    "nombreCompania": "Nombre comercial o legal del laboratorio farmacéutico.",
+    "codigoIdentificador": "Código único de identificación del laboratorio (ej. Registro sanitario o código interno)."
+  },
+  "import": {
+    "title": "Carga Masiva de Laboratorios",
+    "downloadTemplate": "Descargar Plantilla",
+    "selectFile": "Seleccionar Archivo",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "errorsFound": "Se encontraron errores en el archivo. Por favor, corrígelos antes de guardar.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "noValid": "No hay registros válidos",
+    "saving": "Guardando...",
+    "previewTitle": "Vista Previa de Registros",
+    "success": "Se han importado {{count}} laboratorios correctamente.",
+    "errors": "Errores",
+    "status": "Estado",
+    "valid": "Válido",
+    "invalid": "Con error",
+    "button": "Carga Masiva"
+  }
+}

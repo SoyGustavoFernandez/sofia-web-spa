@@ -1,0 +1,72 @@
+{
+  "title": "Mantenimiento de Proveedores",
+  "searchPlaceholder": "Buscar por razón social o RUC...",
+  "add": "Agregar Proveedor",
+  "cols": {
+    "razonSocial": "Razón Social",
+    "taxId": "RUC / Tax ID",
+    "terminosFinancieros": "Términos Financieros",
+    "calificacionEsg": "Calificación ESG",
+    "tasaCumplimiento": "Tasa de Cumplimiento",
+    "acciones": "Acciones"
+  },
+  "actions": {
+    "edit": "Editar",
+    "view": "Detalle",
+    "delete": "Eliminar"
+  },
+  "form": {
+    "titleNew": "Nuevo Proveedor",
+    "titleEdit": "Editar Proveedor",
+    "titleView": "Detalle del Proveedor",
+    "razonSocial": "Razón Social",
+    "taxId": "RUC / Tax ID",
+    "terminosFinancieros": "Términos Financieros",
+    "calificacionEsg": "Calificación ESG (0-100)",
+    "tasaCumplimiento": "Tasa de Cumplimiento (0-100)",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "required": "Este campo es obligatorio",
+    "maxLength200": "Máximo 200 caracteres",
+    "maxLength50": "Máximo 50 caracteres",
+    "maxLength100": "Máximo 100 caracteres",
+    "range0to100": "Debe estar entre 0 y 100"
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar al proveedor \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Proveedor creado correctamente",
+    "updated": "Proveedor actualizado correctamente",
+    "deleted": "Proveedor eliminado correctamente"
+  },
+  "help": {
+    "razonSocial": "Nombre legal y oficial de la empresa proveedora.",
+    "taxId": "Identificación tributaria oficial del proveedor (ej. RUC en Perú).",
+    "terminosFinancieros": "Acuerdos y plazos de pago pactados (ej. Crédito a 30 días, Pago contra entrega).",
+    "calificacionEsg": "Calificación del proveedor en base a criterios Ambientales, Sociales y de Gobernanza.",
+    "tasaCumplimiento": "Porcentaje histórico de pedidos entregados a tiempo y con las cantidades correctas."
+  },
+  "import": {
+    "title": "Carga Masiva de Proveedores",
+    "downloadTemplate": "Descargar Plantilla",
+    "selectFile": "Seleccionar Archivo",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "errorsFound": "Se encontraron errores en el archivo. Por favor, corrígelos antes de guardar.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "noValid": "No hay registros válidos",
+    "saving": "Guardando...",
+    "previewTitle": "Vista Previa de Registros",
+    "success": "Se han importado {{count}} proveedores correctamente.",
+    "errors": "Errores",
+    "status": "Estado",
+    "valid": "Válido",
+    "invalid": "Con error",
+    "button": "Carga Masiva"
+  }
+}

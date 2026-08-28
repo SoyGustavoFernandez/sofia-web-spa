@@ -1,0 +1,149 @@
+<ng-container *transloco="let t; scope: 'empresa'; read: 'empresa'">
+  <div class="auth-layout">
+    <!-- Panel izquierdo de marca -->
+    <div class="brand-panel">
+      <div class="brand-content">
+        <div class="brand-logo">
+          <span class="logo-icon">⚕</span>
+          <span class="logo-text">SOFIA</span>
+        </div>
+        <h2 class="brand-headline">Gestión farmacéutica inteligente</h2>
+        <p class="brand-sub">
+          Una plataforma completa para administrar tu farmacia con precisión y
+          eficiencia.
+        </p>
+
+        <ul class="feature-list">
+          <li>
+            <span class="feature-icon">✓</span>
+            <span>1 mes de prueba gratuita, sin tarjeta</span>
+          </li>
+          <li>
+            <span class="feature-icon">✓</span>
+            <span>Multi-sucursal desde el primer día</span>
+          </li>
+          <li>
+            <span class="feature-icon">✓</span>
+            <span>Control de inventario y ventas en tiempo real</span>
+          </li>
+          <li>
+            <span class="feature-icon">✓</span>
+            <span>Soporte dedicado durante la incorporación</span>
+          </li>
+        </ul>
+      </div>
+      <div class="brand-footer">
+        © {{ currentYear }} SOFIA · Todos los derechos reservados
+      </div>
+    </div>
+
+    <!-- Panel derecho con formulario -->
+    <div class="form-panel">
+      <div class="form-container">
+        <div class="form-header">
+          <h1>{{ t('register.title') }}</h1>
+          <p>{{ t('register.subtitle') }}</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('register.nombreEmpresa') }}</mat-label>
+            <mat-icon matPrefix>business</mat-icon>
+            <input
+              matInput
+              formControlName="nombreEmpresa"
+              autocomplete="organization" />
+            @if (
+              form.get('nombreEmpresa')?.hasError('required') &&
+              form.get('nombreEmpresa')?.touched
+            ) {
+              <mat-error>{{ t('form.required') }}</mat-error>
+            }
+            @if (form.get('nombreEmpresa')?.hasError('maxlength')) {
+              <mat-error>{{ t('form.maxLength200') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('register.usuario') }}</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="usuario" autocomplete="username" />
+            @if (
+              form.get('usuario')?.hasError('required') &&
+              form.get('usuario')?.touched
+            ) {
+              <mat-error>{{ t('form.required') }}</mat-error>
+            }
+            @if (form.get('usuario')?.hasError('minlength')) {
+              <mat-error>{{ t('form.usuarioMin') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('register.password') }}</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input
+              matInput
+              formControlName="password"
+              [type]="hidePassword() ? 'password' : 'text'"
+              autocomplete="new-password" />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="'Toggle password'">
+              <mat-icon>{{
+                hidePassword() ? 'visibility_off' : 'visibility'
+              }}</mat-icon>
+            </button>
+            @if (
+              form.get('password')?.hasError('required') &&
+              form.get('password')?.touched
+            ) {
+              <mat-error>{{ t('form.required') }}</mat-error>
+            }
+            @if (form.get('password')?.hasError('minlength')) {
+              <mat-error>{{ t('form.passwordMin') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('register.ruc') }}</mat-label>
+            <mat-icon matPrefix>badge</mat-icon>
+            <input
+              matInput
+              formControlName="ruc"
+              maxlength="11"
+              inputmode="numeric" />
+            @if (
+              form.get('ruc')?.hasError('pattern') && form.get('ruc')?.touched
+            ) {
+              <mat-error>{{ t('form.rucFormat') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            class="submit-btn"
+            [disabled]="submitting()">
+            @if (submitting()) {
+              <mat-spinner diameter="20" color="accent" />
+              <span>Procesando...</span>
+            } @else {
+              <mat-icon>rocket_launch</mat-icon>
+              <span>{{ t('register.submit') }}</span>
+            }
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <span>{{ t('register.hasAccount') }}</span>
+          <a routerLink="/auth/login">{{ t('register.login') }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

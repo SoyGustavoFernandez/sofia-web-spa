@@ -1,0 +1,67 @@
+{
+  "title": "Mantenimiento de Jerarquías UoM",
+  "searchPlaceholder": "Buscar por medicamento o unidad...",
+  "add": "Agregar Jerarquía UoM",
+  "cols": {
+    "producto": "Medicamento",
+    "unidadMayor": "Unidad Mayor",
+    "unidadMenor": "Unidad Menor",
+    "multiplicador": "Multiplicador",
+    "acciones": "Acciones"
+  },
+  "actions": {
+    "edit": "Editar",
+    "view": "Detalle",
+    "delete": "Eliminar"
+  },
+  "form": {
+    "titleNew": "Nueva Jerarquía UoM",
+    "titleEdit": "Editar Jerarquía UoM",
+    "titleView": "Detalle de Jerarquía UoM",
+    "producto": "Medicamento",
+    "unidadMayor": "Unidad Mayor",
+    "unidadMenor": "Unidad Menor",
+    "multiplicador": "Multiplicador",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "required": "Este campo es obligatorio",
+    "sameUnitsError": "La unidad mayor y menor no pueden ser iguales",
+    "positiveNumberError": "El multiplicador debe ser mayor a cero"
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar la jerarquía de conversión para \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Jerarquía UoM creada correctamente",
+    "updated": "Jerarquía UoM actualizada correctamente",
+    "deleted": "Jerarquía UoM eliminada correctamente"
+  },
+  "help": {
+    "producto": "Medicamento al cual se le aplica esta regla de conversión de unidades.",
+    "unidadMayor": "Unidad de medida de empaque o volumen mayor (ej. Caja, Blíster).",
+    "unidadMenor": "Unidad de medida base o menor (ej. Unidad, Tableta).",
+    "multiplicador": "Cantidad de unidades menores contenidas en la unidad mayor (ej. Si una caja tiene 30 tabletas, el multiplicador es 30)."
+  },
+  "import": {
+    "title": "Carga Masiva de Jerarquías UoM",
+    "downloadTemplate": "Descargar Plantilla",
+    "selectFile": "Seleccionar Archivo",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "errorsFound": "Se encontraron errores en el archivo. Por favor, corrígelos antes de guardar.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "noValid": "No hay registros válidos",
+    "saving": "Guardando...",
+    "previewTitle": "Vista Previa de Registros",
+    "success": "Se han importado {{count}} jerarquías UoM correctamente.",
+    "errors": "Errores",
+    "status": "Estado",
+    "valid": "Válido",
+    "invalid": "Con error",
+    "button": "Carga Masiva"
+  }
+}

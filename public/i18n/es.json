@@ -1,0 +1,105 @@
+{
+  "actions": {
+    "new": "Nuevo",
+    "search": "Buscar",
+    "clear": "Limpiar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "update": "Actualizar",
+    "create": "Crear",
+    "clean": "Limpiar",
+    "export": "Exportar",
+    "return": "Volver",
+    "add": "Agregar",
+    "close": "Cerrar",
+    "ok": "OK",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "confirm": "Confirmar",
+    "continue": "Seguir editando",
+    "upload-files": "Cargar archivos",
+    "download": "Descargar",
+    "select": "Seleccionar",
+    "back": "Volver"
+  },
+  "general": {
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "minValue": "El valor mínimo es {{min}}",
+      "maxLength": "La longitud máxima es de {{max}} caracteres"
+    }
+  },
+  "generic-labels": {
+    "yes": "Sí",
+    "no": "No",
+    "results": "Resultados"
+  },
+  "header.logout": "Cerrar sesión",
+  "header.reloadPermissions": "Recargar permisos",
+  "header.roles": "Roles",
+  "header.noNotifications": "Sin notificaciones",
+  "pagination": {
+    "itemsPerPage": "Items por página",
+    "nextPage": "Siguiente página",
+    "previousPage": "Página anterior",
+    "firstPage": "Primera página",
+    "lastPage": "Última página",
+    "range": "{{current}} de {{total}}"
+  },
+  "CONFIRMATION": {
+    "CHANGE_LANGUAGE_TITLE": "Confirmar Cambio de Idioma",
+    "CHANGE_LANGUAGE_MESSAGE": "Cambiar el idioma recargará la página. Se perderá cualquier dato que no haya guardado. ¿Desea continuar?",
+    "RELOAD_PERMISSIONS_TITLE": "Recargar permisos",
+    "RELOAD_PERMISSIONS_MESSAGE": "Esto obtendrá nuevamente sus permisos y menús desde el servidor. La aplicación se recargará. ¿Desea continuar?"
+  },
+  "attachment": {
+    "upload-error-file": "Error al cargar el archivo. Por favor, verifique el tamaño y el tipo del archivo.",
+    "upload": "Subir Archivos",
+    "upload-singular": "Subir Archivo",
+    "file": "Archivo",
+    "user": "Usuario",
+    "date": "Fecha",
+    "actions": "Acciones",
+    "download": "Descargar",
+    "download-failed": "Error al descargar el archivo",
+    "title": "Adjuntar Documentos",
+    "title-disabled": "Documentos Adjuntos",
+    "default-user": "Usuario",
+    "upload-content": "Suba archivos PDF e imágenes para comenzar",
+    "upload-content-pdf": "Suba archivos PDF para comenzar",
+    "upload-content-image": "Suba archivos de imagen para comenzar",
+    "upload-content-excel": "Suba archivos Excel para comenzar",
+    "upload-placeholder": "Suba archivos para comenzar",
+    "upload-instructions": "Seleccione Archivos",
+    "upload-instructions-singular": "Seleccione Archivo",
+    "messages": {
+      "confirmDeleteTitle": "Confirmar eliminación",
+      "confirmDeleteMessage": "¿Está seguro de que desea eliminar el archivo seleccionado?",
+      "fileNameLength": "Existen nombres de archivos que contienen más de 80 caracteres.",
+      "upload-success": "Archivos subidos correctamente",
+      "no-attachments": "Debe subir al menos un archivo para continuar",
+      "only-one-file-allowed": "Solo se permite adjuntar un archivo"
+    }
+  },
+  "errors": {
+    "forbidden": "No tienes permisos para esta operación.",
+    "unauthorized": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
+    "notFound": "El recurso solicitado no fue encontrado.",
+    "serverError": "Ocurrió un error inesperado en el servidor. Por favor, inténtalo de nuevo más tarde.",
+    "networkError": "Ocurrió un error de red. Por favor, verifica tu conexión a internet e inténtalo de nuevo.",
+    "unknownError": "Ocurrió un error desconocido. Por favor, inténtalo de nuevo más tarde.",
+    "alert": {
+      "denied_access": "Acceso denegado",
+      "session": "Sesión",
+      "warning": "Advertencia",
+      "error": "Error",
+      "notFound": "No encontrado"
+    }
+  },
+  "messages": {
+    "enter-mandatory-field": "Por favor, ingrese un campo obligatorio"
+  }
+}

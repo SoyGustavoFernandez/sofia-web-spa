@@ -1,0 +1,10 @@
+{
+  "title": "Sign In",
+  "subtitle": "Access to SOFIA Pharmaceutical System",
+  "username": "Username",
+  "password": "Password",
+  "usernameRequired": "Username is required",
+  "passwordRequired": "Password is required",
+  "submit": "Sign In",
+  "error": "Error signing in. Please check your credentials."
+}

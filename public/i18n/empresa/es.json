@@ -1,0 +1,73 @@
+{
+  "title": "Gestión de Empresas",
+  "searchPlaceholder": "Buscar por nombre o RUC...",
+  "add": "Nueva Empresa",
+  "register": {
+    "title": "Registrar Empresa",
+    "subtitle": "Crea tu empresa y obtén 1 mes de prueba gratis",
+    "nombreEmpresa": "Nombre de la Empresa",
+    "usuario": "Usuario Administrador",
+    "password": "Contraseña",
+    "ruc": "RUC (opcional)",
+    "submit": "Registrar Empresa",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "login": "Iniciar sesión"
+  },
+  "estado": {
+    "0": "Trial Activo",
+    "1": "Activo",
+    "2": "Suspendido",
+    "3": "Cancelado",
+    "TrialActivo": "Trial Activo",
+    "Activo": "Activo",
+    "Suspendido": "Suspendido",
+    "Cancelado": "Cancelado"
+  },
+  "cols": {
+    "nombre": "Empresa",
+    "ruc": "RUC",
+    "estado": "Estado",
+    "fechaVencimiento": "Vencimiento",
+    "estaVigente": "Vigente",
+    "cantidadSucursales": "Sucursales"
+  },
+  "form": {
+    "titleEdit": "Editar Empresa",
+    "titleView": "Detalle de Empresa",
+    "nombre": "Nombre de la Empresa",
+    "ruc": "RUC (11 dígitos, opcional)",
+    "estado": "Estado",
+    "fechaVencimiento": "Fecha de Vencimiento",
+    "vigente": "Vigente",
+    "noVigente": "No Vigente",
+    "back": "Volver",
+    "required": "Este campo es obligatorio",
+    "maxLength200": "Máximo 200 caracteres",
+    "rucFormat": "El RUC debe tener exactamente 11 dígitos numéricos",
+    "usuarioMin": "El usuario debe tener al menos 4 caracteres",
+    "passwordMin": "La contraseña debe tener al menos 8 caracteres"
+  },
+  "deleteDialog": {
+    "title": "Cancelar Empresa",
+    "message": "¿Está seguro de que desea cancelar la empresa \"{{name}}\"? Esta acción cambiará su estado a Cancelado.",
+    "confirm": "Cancelar Empresa",
+    "cancel": "Mantener"
+  },
+  "notifications": {
+    "updated": "Empresa actualizada correctamente",
+    "cancelled": "Empresa cancelada correctamente",
+    "loadError": "Error al cargar las empresas",
+    "loadSingleError": "Error al cargar la empresa",
+    "updateError": "Error al actualizar la empresa",
+    "cancelError": "Error al cancelar la empresa",
+    "registerSuccess": "Empresa registrada correctamente. ¡Bienvenido!",
+    "registerError": "Error al registrar la empresa"
+  },
+  "help": {
+    "nombre": "Nombre comercial o legal de la empresa.",
+    "ruc": "Registro Único de Contribuyentes de 11 dígitos. Opcional pero único si se ingresa.",
+    "estado": "Estado actual de la suscripción de la empresa."
+  },
+  "noData": "No se encontraron empresas registradas.",
+  "showing": "Mostrando {{count}} de {{total}} empresas"
+}

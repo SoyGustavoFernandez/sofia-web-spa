@@ -1,0 +1,90 @@
+{
+  "title": "Mantenimiento de Empleados",
+  "searchPlaceholder": "Buscar por nombre, apellido o licencia...",
+  "search": {
+    "allSucursales": "Todas las sucursales",
+    "showing": "Mostrando {{count}} de {{total}} empleados",
+    "noData": "No se encontraron empleados."
+  },
+  "cols": {
+    "nombreCompleto": "Nombre Completo",
+    "sucursalNombre": "Sucursal Base",
+    "licenciaProf": "Licencia Prof."
+  },
+  "form": {
+    "titleNew": "Nuevo Empleado",
+    "titleEdit": "Editar Empleado",
+    "titleView": "Detalle de Empleado",
+    "nombres": "Nombres",
+    "apellidoPaterno": "Apellido Paterno",
+    "apellidoMaterno": "Apellido Materno",
+    "licenciaProf": "Licencia Profesional",
+    "sucursalBase": "Sucursal Base",
+    "seleccioneSucursal": "Seleccione una sucursal",
+    "required": "Este campo es obligatorio",
+    "maxLength50": "Máximo 50 caracteres",
+    "maxLength75": "Máximo 75 caracteres",
+    "back": "Volver",
+    "tabs": {
+      "datosGenerales": "Datos Generales",
+      "historialVentas": "Historial de Ventas",
+      "cuentaRoles": "Cuenta & Roles"
+    }
+  },
+  "help": {
+    "nombres": "Nombre(s) de pila del empleado tal como figura en su DNI u otro documento de identidad oficial.",
+    "apellidoPaterno": "Primer apellido del empleado tal como figura en su documento oficial.",
+    "apellidoMaterno": "Segundo apellido del empleado tal como figura en su documento oficial.",
+    "licenciaProf": "Número de colegiatura o licencia profesional farmacéutica emitida por el Colegio Químico Farmacéutico. Requerida para farmacéuticos.",
+    "sucursalBase": "Sucursal principal de trabajo del empleado. Determina a qué sede pertenece y tiene acceso."
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar al empleado \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Empleado registrado correctamente",
+    "updated": "Empleado actualizado correctamente",
+    "deleted": "Empleado eliminado correctamente"
+  },
+  "ventas": {
+    "emptyMessage": "El empleado no registra ventas en el sistema.",
+    "cols": {
+      "codigo": "Código",
+      "fecha": "Fecha",
+      "total": "Total",
+      "estado": "Estado",
+      "items": "Artículos"
+    }
+  },
+  "cuenta": {
+    "title": "Cuenta de Usuario & Asignación de Roles",
+    "noAccount": "Este empleado aún no tiene una cuenta de usuario creada.",
+    "createAccount": "Crear Cuenta de Usuario",
+    "username": "Nombre de Usuario",
+    "password": "Contraseña inicial",
+    "rolesTitle": "Roles Asignados",
+    "assignRole": "Asignar Rol",
+    "selectRole": "Seleccione un rol para asignar",
+    "created": "Cuenta de usuario creada correctamente",
+    "roleAssigned": "Rol asignado correctamente",
+    "roleRemoved": "Rol revocado correctamente",
+    "noRoles": "La cuenta no tiene roles asignados."
+  },
+  "import": {
+    "title": "Carga Masiva de Empleados",
+    "button": "Carga Masiva",
+    "downloadTemplate": "Descargar Plantilla",
+    "selectFile": "Seleccionar Archivo",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "errorsFound": "Se encontraron errores. Por favor corrígelos antes de guardar.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "previewTitle": "Vista Previa de Registros",
+    "success": "Se importaron {{count}} empleados correctamente.",
+    "valid": "Válido",
+    "invalid": "Con error"
+  }
+}

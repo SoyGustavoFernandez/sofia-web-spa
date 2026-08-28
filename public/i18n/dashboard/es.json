@@ -1,0 +1,86 @@
+{
+  "title": "Panel de Control Operativo",
+  "actions": {
+    "viewServices": "Ver Agenda de Servicios",
+    "viewInventory": "Ver Lotes de Inventario",
+    "viewMedicaments": "Ver Catálogo Medicamentos",
+    "viewPOS": "Ver Caja POS",
+    "viewRecetas": "Ver Recetas",
+    "viewProveedores": "Ver Proveedores",
+    "viewSucursales": "Ver Sucursales",
+    "notificar": "NOTIFICAR"
+  },
+  "kpi": {
+    "ventasHoy": "Ventas de Hoy",
+    "ventasMes": "Ventas del Mes",
+    "ticketPromedio": "Ticket Promedio",
+    "transacciones": "Transacciones Hoy"
+  },
+  "pos": {
+    "title": "Estado de Caja POS & Distribución de Pagos",
+    "statusOpen": "Caja Abierta",
+    "statusClosed": "Caja Cerrada",
+    "efectivo": "Efectivo",
+    "yapePlin": "Yape / Plin",
+    "tarjeta": "Tarjeta Débito/Crédito"
+  },
+  "citas": {
+    "title": "Programaciones del Día",
+    "colPaciente": "Paciente / Cliente",
+    "colServicio": "Servicio / Producto",
+    "colHora": "Hora Programada",
+    "colEstado": "Estado",
+    "colAcciones": "Acciones",
+    "noData": "No hay citas programadas para el día de hoy."
+  },
+  "lotes": {
+    "title": "Lotes por Vencer",
+    "colProducto": "Producto / Medicamento",
+    "colLote": "Nº Lote",
+    "colFechaCaducidad": "Fecha Caducidad",
+    "noData": "No existen lotes próximos a vencer en los siguientes 30 días."
+  },
+  "stock": {
+    "title": "Bajo Stock",
+    "colProducto": "Medicamento / Insumo",
+    "colCodigo": "Código",
+    "colStock": "Stock Actual",
+    "noData": "No hay medicamentos con alertas de bajo stock."
+  },
+  "recetas": {
+    "title": "Recetas Pendientes de Despacho",
+    "colPaciente": "Paciente",
+    "colMedico": "Médico Prescriptor",
+    "colFecha": "Fecha Emisión",
+    "colEstado": "Estado Despacho",
+    "noData": "No hay recetas pendientes de despacho."
+  },
+  "topProducts": {
+    "title": "Top Rotación de Medicamentos",
+    "colProducto": "Medicamento / Insumo",
+    "colCategoria": "Condición Venta",
+    "colVendidos": "Rotación",
+    "noData": "No hay medicamentos registrados en el ranking de rotación."
+  },
+  "sucursalesSales": {
+    "title": "Resumen de Ventas por Sucursal",
+    "colSucursal": "Sucursal / Sede",
+    "colLicencia": "Licencia",
+    "colVentas": "Ventas de Hoy (S/)",
+    "noData": "No hay sucursales registradas en el sistema."
+  },
+  "delivery": {
+    "title": "Despachos Delivery del Día",
+    "colCliente": "Cliente / Dirección",
+    "colRepartidor": "Repartidor",
+    "colHora": "Hora Salida",
+    "colEstado": "Estado Envío",
+    "noData": "No hay entregas por delivery agendadas para hoy."
+  },
+  "notifications": {
+    "whatsappOpened": "Abriendo WhatsApp para enviar recordatorio de cita a {{name}}.",
+    "whatsappMessageTemplate": "Estimado(a) {{paciente}}, le recordamos su cita para el servicio '{{servicio}}' programada para el día de hoy a las {{hora}}. Por favor acérquese a nuestra sucursal - Boticas Multifer.",
+    "defaultPaciente": "Estimado(a) Paciente",
+    "defaultServicio": "Servicio Programado"
+  }
+}

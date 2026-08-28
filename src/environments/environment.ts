@@ -4,7 +4,7 @@ export const builtInEnvironment = {
   production: false,
   appVersion: '1.0.0',
   api: {
-    baseurl: 'https://localhost:7249',
+    baseurl: 'https://localhost:7300',
   },
 };
 

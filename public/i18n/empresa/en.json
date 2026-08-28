@@ -1,0 +1,73 @@
+{
+  "title": "Company Management",
+  "searchPlaceholder": "Search by name or tax ID...",
+  "add": "New Company",
+  "register": {
+    "title": "Register Company",
+    "subtitle": "Create your company and get 1 month free trial",
+    "nombreEmpresa": "Company Name",
+    "usuario": "Admin Username",
+    "password": "Password",
+    "ruc": "Tax ID (optional)",
+    "submit": "Register Company",
+    "hasAccount": "Already have an account?",
+    "login": "Sign in"
+  },
+  "estado": {
+    "0": "Active Trial",
+    "1": "Active",
+    "2": "Suspended",
+    "3": "Cancelled",
+    "TrialActivo": "Active Trial",
+    "Activo": "Active",
+    "Suspendido": "Suspended",
+    "Cancelado": "Cancelled"
+  },
+  "cols": {
+    "nombre": "Company",
+    "ruc": "Tax ID",
+    "estado": "Status",
+    "fechaVencimiento": "Expiry",
+    "estaVigente": "Active",
+    "cantidadSucursales": "Branches"
+  },
+  "form": {
+    "titleEdit": "Edit Company",
+    "titleView": "Company Details",
+    "nombre": "Company Name",
+    "ruc": "Tax ID (11 digits, optional)",
+    "estado": "Status",
+    "fechaVencimiento": "Expiry Date",
+    "vigente": "Active",
+    "noVigente": "Inactive",
+    "back": "Back",
+    "required": "This field is required",
+    "maxLength200": "Maximum 200 characters",
+    "rucFormat": "Tax ID must be exactly 11 numeric digits",
+    "usuarioMin": "Username must be at least 4 characters",
+    "passwordMin": "Password must be at least 8 characters"
+  },
+  "deleteDialog": {
+    "title": "Cancel Company",
+    "message": "Are you sure you want to cancel the company \"{{name}}\"? This will change its status to Cancelled.",
+    "confirm": "Cancel Company",
+    "cancel": "Keep"
+  },
+  "notifications": {
+    "updated": "Company updated successfully",
+    "cancelled": "Company cancelled successfully",
+    "loadError": "Error loading companies",
+    "loadSingleError": "Error loading company",
+    "updateError": "Error updating company",
+    "cancelError": "Error cancelling company",
+    "registerSuccess": "Company registered successfully. Welcome!",
+    "registerError": "Error registering company"
+  },
+  "help": {
+    "nombre": "Commercial or legal name of the company.",
+    "ruc": "11-digit tax identification number. Optional but unique if provided.",
+    "estado": "Current subscription status of the company."
+  },
+  "noData": "No companies found.",
+  "showing": "Showing {{count}} of {{total}} companies"
+}

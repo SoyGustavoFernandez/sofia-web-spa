@@ -1,0 +1,13 @@
+{
+  "title": "System Audit",
+  "searchPlaceholder": "Search by action, entity or user...",
+  "cols": {
+    "fecha": "Date",
+    "usuario": "User",
+    "accion": "Action",
+    "entidad": "Entity",
+    "detalle": "Detail"
+  },
+  "noData": "No audit records found.",
+  "showing": "Showing {{count}} of {{total}} records"
+}

@@ -1,0 +1,63 @@
+{
+  "title": "Branch Management",
+  "searchPlaceholder": "Search by name, address or license...",
+  "add": "Add Branch",
+  "cols": {
+    "nombre": "Branch Name",
+    "direccionFisica": "Physical Address",
+    "numeroLicencia": "License Number",
+    "gerenteNombre": "Manager/In-Charge"
+  },
+  "form": {
+    "titleNew": "New Branch",
+    "titleEdit": "Edit Branch",
+    "titleView": "Branch Details",
+    "nombre": "Name",
+    "direccionFisica": "Physical Address",
+    "numeroLicencia": "License Number",
+    "gerente": "Manager/In-Charge",
+    "noGerente": "Unassigned",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "required": "This field is required",
+    "maxLength100": "Maximum 100 characters",
+    "maxLength255": "Maximum 255 characters",
+    "maxLength50": "Maximum 50 characters"
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete the branch \"{{name}}\"?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Branch created successfully",
+    "updated": "Branch updated successfully",
+    "deleted": "Branch deleted successfully"
+  },
+  "help": {
+    "nombre": "Descriptive name of the branch (e.g., Main Branch, North HQ).",
+    "direccionFisica": "Detailed physical address of the branch.",
+    "numeroLicencia": "Commercial license number or health authorization granted by the regulatory entity.",
+    "gerente": "Employee assigned as manager or administrator responsible for the branch."
+  },
+  "import": {
+    "title": "Bulk Branch Upload",
+    "downloadTemplate": "Download Template",
+    "selectFile": "Select File",
+    "dragDrop": "Drag and drop your Excel file here or click to browse",
+    "fileSelected": "File selected: {{name}}",
+    "errorsFound": "Errors were found in the file. Please fix them before saving.",
+    "saveValid": "Save Valid Records ({{count}})",
+    "noValid": "No valid records",
+    "saving": "Saving...",
+    "previewTitle": "Records Preview",
+    "success": "Successfully imported {{count}} branches.",
+    "errors": "Errors",
+    "status": "Status",
+    "valid": "Valid",
+    "invalid": "With error",
+    "button": "Bulk Upload"
+  }
+}

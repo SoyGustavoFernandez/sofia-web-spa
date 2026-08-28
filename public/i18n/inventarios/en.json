@@ -1,0 +1,83 @@
+{
+  "title": "Maintenance of Inventory & Batches",
+  "searchPlaceholder": "Search by batch number or medicament...",
+  "showing": "Showing {{count}} of {{total}} batches",
+  "noData": "No inventory batches found.",
+  "cols": {
+    "numeroLoteMfr": "Batch Number",
+    "productoNombre": "Medicament",
+    "fechaFabricacion": "Manufacture Date",
+    "fechaCaducidad": "Expiration Date",
+    "stock": "Stock"
+  },
+  "tooltipVerStock": "View Multi-branch Stock",
+  "form": {
+    "titleNew": "New Inventory Batch",
+    "titleEdit": "Edit Inventory Batch",
+    "titleView": "Inventory Batch Details",
+    "general": "Batch Data",
+    "producto": "Medicament",
+    "numeroLote": "Batch Number (Mfr)",
+    "fechaFabricacion": "Manufacture Date",
+    "fechaCaducidad": "Expiration Date",
+    "stockSection": "Initial Stock Entry",
+    "sucursal": "Destination Branch",
+    "cantidad": "Quantity to Enter",
+    "required": "This field is required",
+    "back": "Back"
+  },
+  "help": {
+    "producto": "Select the medicament to which this production batch belongs.",
+    "numeroLote": "Batch code printed on the packaging by the manufacturing laboratory.",
+    "fechaFabricacion": "Date on which the batch was produced by the manufacturer.",
+    "fechaCaducidad": "Expiration limit date of the batch registered on packaging.",
+    "sucursal": "Pharmacy branch where these units will be stored.",
+    "cantidad": "Number of physical units that will enter branch inventory."
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete batch \"{{name}}\"?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Inventory batch created successfully",
+    "updated": "Inventory batch updated successfully",
+    "deleted": "Inventory batch deleted successfully",
+    "stockRegistered": "Stock added successfully to branch",
+    "createError": "Error creating inventory batch",
+    "updateError": "Error updating inventory batch",
+    "deleteError": "Error deleting inventory batch"
+  },
+  "import": {
+    "title": "Bulk Upload Inventory Batches",
+    "button": "Bulk Upload",
+    "downloadTemplate": "Download Template",
+    "dragDrop": "Drag and drop your Excel file here or click to browse",
+    "selectFile": "Select File",
+    "fileSelected": "Selected file: {{name}}",
+    "saving": "Processing file...",
+    "previewTitle": "Records Preview",
+    "errorsFound": "Errors were found in the file. Only valid rows will be imported.",
+    "saveValid": "Save valid records ({{count}})",
+    "success": "Imported {{count}} inventory batches successfully.",
+    "status": "Status",
+    "errors": "Observations",
+    "valid": "Valid",
+    "invalid": "With error"
+  },
+  "stockDialog": {
+    "title": "Add Stock to Existing Batch",
+    "button": "Add Stock",
+    "submit": "Register Entry",
+    "esAjusteDirecto": "Direct Inventory Adjustment (Replace Physical Stock)"
+  },
+  "stockSedesDialog": {
+    "title": "Multi-branch Stock",
+    "colSucursal": "Branch / Location",
+    "colStock": "Stock",
+    "noData": "No other branches found with stock.",
+    "close": "Got it",
+    "currentBranch": "Current Branch"
+  }
+}

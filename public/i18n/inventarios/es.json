@@ -1,0 +1,83 @@
+{
+  "title": "Mantenimiento de Inventario & Lotes",
+  "searchPlaceholder": "Buscar por número de lote o medicamento...",
+  "showing": "Mostrando {{count}} de {{total}} lotes",
+  "noData": "No se encontraron lotes de inventario.",
+  "cols": {
+    "numeroLoteMfr": "Número de Lote",
+    "productoNombre": "Medicamento",
+    "fechaFabricacion": "Fecha de Fabricación",
+    "fechaCaducidad": "Fecha de Caducidad",
+    "stock": "Stock"
+  },
+  "tooltipVerStock": "Ver Stock Multisucursal",
+  "form": {
+    "titleNew": "Nuevo Lote de Inventario",
+    "titleEdit": "Editar Lote de Inventario",
+    "titleView": "Detalle de Lote de Inventario",
+    "general": "Datos del Lote",
+    "producto": "Medicamento",
+    "numeroLote": "Número de Lote (Fabricante)",
+    "fechaFabricacion": "Fecha de Fabricación",
+    "fechaCaducidad": "Fecha de Caducidad",
+    "stockSection": "Ingreso Inicial de Stock",
+    "sucursal": "Sucursal de Destino",
+    "cantidad": "Cantidad a Ingresar",
+    "required": "Este campo es obligatorio",
+    "back": "Volver"
+  },
+  "help": {
+    "producto": "Seleccione el medicamento al cual pertenece este lote de producción.",
+    "numeroLote": "Código de lote impreso en el empaque por el laboratorio fabricante.",
+    "fechaFabricacion": "Fecha en la que fue producido el lote por el fabricante.",
+    "fechaCaducidad": "Fecha límite de vencimiento del lote registrada en el empaque.",
+    "sucursal": "Sede farmacéutica donde se almacenarán estas unidades.",
+    "cantidad": "Número de unidades físicas que ingresarán al inventario de la sede."
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar el lote \"{{name}}\"?",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Lote de inventario registrado correctamente",
+    "updated": "Lote de inventario actualizado correctamente",
+    "deleted": "Lote de inventario eliminado correctamente",
+    "stockRegistered": "Stock ingresado correctamente a la sucursal",
+    "createError": "Error al crear el lote de inventario",
+    "updateError": "Error al actualizar el lote de inventario",
+    "deleteError": "Error al eliminar el lote de inventario"
+  },
+  "import": {
+    "title": "Carga Masiva de Lotes de Inventario",
+    "button": "Carga Masiva",
+    "downloadTemplate": "Descargar Plantilla",
+    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
+    "selectFile": "Seleccionar Archivo",
+    "fileSelected": "Archivo seleccionado: {{name}}",
+    "saving": "Procesando archivo...",
+    "previewTitle": "Vista Previa de Registros",
+    "errorsFound": "Se encontraron errores en el archivo. Solo se importarán las filas válidas.",
+    "saveValid": "Guardar registros válidos ({{count}})",
+    "success": "Se importaron {{count}} lotes de inventario correctamente.",
+    "status": "Estado",
+    "errors": "Observaciones",
+    "valid": "Válido",
+    "invalid": "Con error"
+  },
+  "stockDialog": {
+    "title": "Ingresar Stock a Lote Existente",
+    "button": "Ingresar Stock",
+    "submit": "Registrar Ingreso",
+    "esAjusteDirecto": "Es Ajuste Directo de Inventario (Reemplazar Stock Físico)"
+  },
+  "stockSedesDialog": {
+    "title": "Stock Multisucursal",
+    "colSucursal": "Sucursal / Sede",
+    "colStock": "Stock",
+    "noData": "No se encontraron otras sedes registradas con existencias.",
+    "close": "Entendido",
+    "currentBranch": "Sede Actual"
+  }
+}

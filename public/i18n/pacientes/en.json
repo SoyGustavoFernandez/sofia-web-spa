@@ -1,0 +1,69 @@
+{
+  "title": "Patient Management",
+  "searchPlaceholder": "Search by name or identity document...",
+  "add": "Add Patient",
+  "cols": {
+    "docIdentidadGub": "ID Document",
+    "nombreApellidos": "Full Name",
+    "fechaNacimiento": "Birth Date",
+    "contactoPrimario": "Primary Contact"
+  },
+  "actions": {
+    "edit": "Edit",
+    "view": "Details",
+    "delete": "Delete"
+  },
+  "form": {
+    "titleNew": "New Patient",
+    "titleEdit": "Edit Patient",
+    "titleView": "Patient Details",
+    "docIdentidadGub": "Identity Document",
+    "nombreApellidos": "Full Name",
+    "fechaNacimiento": "Date of Birth",
+    "contactoPrimario": "Primary Contact",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "required": "This field is required",
+    "maxLength50": "Maximum 50 characters",
+    "maxLength100": "Maximum 100 characters",
+    "maxLength200": "Maximum 200 characters",
+    "futureDateError": "Date of birth cannot be in the future",
+    "phoneInvalid": "Only numbers and leading + symbol are allowed"
+  },
+  "deleteDialog": {
+    "title": "Confirm Deletion",
+    "message": "Are you sure you want to delete the patient \"{{name}}\"?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "notifications": {
+    "created": "Patient created successfully",
+    "updated": "Patient updated successfully",
+    "deleted": "Patient deleted successfully"
+  },
+  "help": {
+    "docIdentidadGub": "Official government-issued identity document of the patient (e.g. DNI, RUC, Passport).",
+    "nombreApellidos": "Full names and surnames of the patient as they appear on their official document.",
+    "fechaNacimiento": "Patient's date of birth, used for automatic drug dosage calculations and clinical validations.",
+    "contactoPrimario": "Main phone number, mobile number, or email address of the patient for prescription and appointment notifications."
+  },
+  "import": {
+    "title": "Bulk Patient Upload",
+    "downloadTemplate": "Download Template",
+    "selectFile": "Select File",
+    "dragDrop": "Drag and drop your Excel file here or click to browse",
+    "fileSelected": "File selected: {{name}}",
+    "errorsFound": "Errors were found in the file. Please fix them before saving.",
+    "saveValid": "Save Valid Records ({{count}})",
+    "noValid": "No valid records",
+    "saving": "Saving...",
+    "previewTitle": "Records Preview",
+    "success": "Successfully imported {{count}} patients.",
+    "errors": "Errors",
+    "status": "Status",
+    "valid": "Valid",
+    "invalid": "With error",
+    "button": "Bulk Upload"
+  }
+}

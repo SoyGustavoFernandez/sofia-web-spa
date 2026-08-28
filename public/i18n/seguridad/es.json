@@ -1,0 +1,81 @@
+{
+  "title": "Mantenimiento de Roles y Seguridad",
+  "rolesTitle": "Roles & Permisos",
+  "usuariosTitle": "Cuentas de Usuario",
+  "searchPlaceholder": "Buscar rol por nombre...",
+  "searchUserPlaceholder": "Buscar cuenta por usuario o empleado...",
+  "showingUsers": "Mostrando {{count}} de {{total}} usuarios",
+  "noUsersData": "No se encontraron cuentas de usuario.",
+  "status": {
+    "active": "Activa"
+  },
+  "cols": {
+    "nombreRol": "Nombre del Rol",
+    "nivelJerarquia": "Nivel Jerárquico",
+    "descripcion": "Descripción",
+    "createdAt": "Creado",
+    "nombreUsuario": "Nombre de Usuario",
+    "empleado": "Empleado Asociado",
+    "roles": "Roles Asignados",
+    "estado": "Estado"
+  },
+  "nivel": {
+    "label": "Nivel",
+    "tooltip": "El nivel jerárquico determina la prioridad del rol. Un nivel mayor indica mayor autoridad (ej: 100 = Administrador, 10 = Operador)."
+  },
+  "form": {
+    "titleNew": "Nuevo Rol",
+    "titleEdit": "Editar Rol",
+    "titleView": "Detalle del Rol",
+    "titleUserNew": "Nueva Cuenta de Usuario",
+    "titleUserView": "Detalle de Cuenta de Usuario",
+    "nombreRol": "Nombre del Rol",
+    "descripcion": "Descripción",
+    "nivelJerarquia": "Nivel Jerárquico",
+    "required": "Este campo es obligatorio",
+    "maxLength100": "Máximo 100 caracteres",
+    "maxLength200": "Máximo 200 caracteres",
+    "minLevelError": "El nivel debe ser al menos 1",
+    "maxLevelError": "El nivel no puede superar 100",
+    "back": "Volver",
+    "tabs": {
+      "datosRol": "Datos del Rol",
+      "permisos": "Permisos del Rol"
+    }
+  },
+  "help": {
+    "nombreRol": "Nombre único que identifica al rol en el sistema (ej: Administrador, Farmacéutico, Cajero).",
+    "descripcion": "Descripción opcional que explica las responsabilidades del rol.",
+    "nivelJerarquia": "Número que representa la jerarquía del rol. Mayor número = mayor autoridad. Ej: Administrador = 100, Supervisor = 50, Operador = 10."
+  },
+  "permisos": {
+    "title": "Permisos Asignados",
+    "emptyMessage": "Este rol no tiene permisos asignados.",
+    "addTitle": "Agregar Permiso",
+    "modulo": "Módulo del Sistema",
+    "accion": "Acción",
+    "selectModulo": "Seleccione un módulo",
+    "selectAccion": "Seleccione una acción",
+    "add": "Agregar",
+    "revoke": "Revocar",
+    "revokeConfirm": "¿Desea revocar el permiso {{modulo}} / {{accion}}?",
+    "cols": {
+      "modulo": "Módulo",
+      "accion": "Acción",
+      "acciones": "Acciones"
+    },
+    "added": "Permiso asignado correctamente",
+    "revoked": "Permiso revocado correctamente"
+  },
+  "deleteDialog": {
+    "title": "Confirmar Eliminación",
+    "message": "¿Está seguro de que desea eliminar el rol \"{{name}}\"? Esta acción quitará el rol de todos los usuarios que lo tengan asignado.",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "notifications": {
+    "created": "Rol creado correctamente",
+    "updated": "Rol actualizado correctamente",
+    "deleted": "Rol eliminado correctamente"
+  }
+}

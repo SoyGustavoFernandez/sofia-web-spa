@@ -1,0 +1,102 @@
+<ng-container *transloco="let t; scope: 'empresa'; read: 'empresa'">
+  <div class="page-container">
+    <div class="page-header">
+      <h1 class="mat-h1">{{ t('title') }}</h1>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>{{ t('searchPlaceholder') }}</mat-label>
+        <input matInput [(ngModel)]="searchText" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-center">
+        <mat-spinner diameter="48" />
+      </div>
+    } @else {
+      <div class="table-wrapper mat-elevation-z2">
+        <table mat-table [dataSource]="filteredEmpresas" class="full-width">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>{{ t('cols.nombre') }}</th>
+            <td mat-cell *matCellDef="let e">{{ e.nombre }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ruc">
+            <th mat-header-cell *matHeaderCellDef>{{ t('cols.ruc') }}</th>
+            <td mat-cell *matCellDef="let e">{{ e.ruc ?? '—' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>{{ t('cols.estado') }}</th>
+            <td mat-cell *matCellDef="let e">
+              <span class="estado-chip" [ngClass]="estadoClass(e.estado)">
+                {{ estadoLabel(e.estado) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fechaVencimiento">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ t('cols.fechaVencimiento') }}
+            </th>
+            <td mat-cell *matCellDef="let e">
+              {{
+                e.fechaVencimiento
+                  ? (e.fechaVencimiento | date: 'dd/MM/yyyy')
+                  : '—'
+              }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="estaVigente">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ t('cols.estaVigente') }}
+            </th>
+            <td mat-cell *matCellDef="let e">
+              <mat-icon [color]="e.estaVigente ? 'primary' : 'warn'">
+                {{ e.estaVigente ? 'check_circle' : 'cancel' }}
+              </mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cantidadSucursales">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ t('cols.cantidadSucursales') }}
+            </th>
+            <td mat-cell *matCellDef="let e">{{ e.cantidadSucursales }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let e" class="actions-cell">
+              <a
+                mat-icon-button
+                [routerLink]="[e.id, 'editar']"
+                matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="openDelete(e)"
+                matTooltip="Cancelar empresa">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td
+              class="mat-cell"
+              [attr.colspan]="displayedColumns.length"
+              style="text-align: center; padding: 2rem">
+              {{ t('noData') }}
+            </td>
+          </tr>
+        </table>
+      </div>
+    }
+  </div>
+</ng-container>

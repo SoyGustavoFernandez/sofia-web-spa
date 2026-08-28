@@ -1,0 +1,10 @@
+{
+  "title": "Iniciar Sesión",
+  "subtitle": "Acceso al Sistema Farmacéutico SOFIA",
+  "username": "Usuario",
+  "password": "Contraseña",
+  "usernameRequired": "El usuario es obligatorio",
+  "passwordRequired": "La contraseña es obligatoria",
+  "submit": "Ingresar",
+  "error": "Error al iniciar sesión. Verifique sus credenciales."
+}

@@ -1,0 +1,77 @@
+<ng-container *transloco="let t; scope: 'empresa'; read: 'empresa'">
+  <div class="page-container">
+    @if (loading()) {
+      <div class="loading-center"><mat-spinner diameter="48" /></div>
+    } @else {
+      <div class="form-header">
+        <button
+          mat-icon-button
+          routerLink="/empresas"
+          matTooltip="{{ t('form.back') }}">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2 class="mat-h2">{{ t('form.titleEdit') }}</h2>
+      </div>
+
+      @if (empresa(); as e) {
+        <div class="info-chips">
+          <span class="info-label">Estado:</span>
+          <strong>{{ estadoLabel(e.estado) }}</strong>
+          &nbsp;·&nbsp;
+          <span class="info-label">Vigente:</span>
+          <strong>{{
+            e.estaVigente ? t('form.vigente') : t('form.noVigente')
+          }}</strong>
+          @if (e.fechaVencimiento) {
+            &nbsp;·&nbsp;
+            <span class="info-label">Vencimiento:</span>
+            <strong>{{ e.fechaVencimiento | date: 'dd/MM/yyyy' }}</strong>
+          }
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('form.nombre') }}</mat-label>
+          <input matInput formControlName="nombre" />
+          @if (
+            form.get('nombre')?.hasError('required') &&
+            form.get('nombre')?.touched
+          ) {
+            <mat-error>{{ t('form.required') }}</mat-error>
+          }
+          @if (form.get('nombre')?.hasError('maxlength')) {
+            <mat-error>{{ t('form.maxLength200') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('form.ruc') }}</mat-label>
+          <input matInput formControlName="ruc" maxlength="11" />
+          @if (
+            form.get('ruc')?.hasError('pattern') && form.get('ruc')?.touched
+          ) {
+            <mat-error>{{ t('form.rucFormat') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-button type="button" routerLink="/empresas">
+            {{ t('form.back') }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="saving()">
+            @if (saving()) {
+              <mat-spinner diameter="18" />
+            } @else {
+              Guardar
+            }
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</ng-container>
