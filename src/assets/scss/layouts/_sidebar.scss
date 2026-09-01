@@ -7,7 +7,8 @@
   position: fixed;
   overflow-x: hidden;
   border-right-width: 0;
-  /* Línea vertical gris suave en el borde derecho del sidebar */
+  background: #fff;
+  --mat-sidenav-container-background-color: #fff;
   box-shadow: inset -1px 0 0 0 rgba(0, 0, 0, 0.08);
 }
 
@@ -93,6 +94,17 @@
 }
 
 @media (min-width: 1024px) {
+  /* Desktop: scrim never needed since sidebar is always visible */
+  .mat-drawer-backdrop.mat-drawer-shown {
+    display: none;
+  }
+
+  /* Desktop: content respects fixed sidebar width */
+  .contentWrapper {
+    margin-left: $sidenav-desktop;
+    transition: margin-left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
   .sidebarNav-mini {
     .contentWrapper {
       margin-left: $sidenav-mini !important;

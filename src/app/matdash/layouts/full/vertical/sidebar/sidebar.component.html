@@ -1,13 +1,20 @@
-<div class="d-flex align-items-center justify-content-between">
-  <div class="branding"><app-branding></app-branding></div>
+@if (showToggle) {
+  <div class="d-flex align-items-center justify-content-end p-2">
+    <a
+      href="javascript:void(0)"
+      (click)="toggleMobileNav.emit()"
+      class="d-flex justify-content-center icon-40 align-items-center">
+      <i-tabler name="x" class="icon-20 d-flex"></i-tabler>
+    </a>
+  </div>
+}
 
-  @if(showToggle) {
-  <a
-    href="javascript:void(0)"
-    (click)="toggleMobileNav.emit()"
-    class="d-flex justify-content-center ng-star-inserted icon-40 align-items-center"
-  >
-    <i-tabler name="x" class="icon-20 d-flex"></i-tabler>
-  </a>
-  }
-</div>
+<ng-scrollbar class="position-relative" style="height: calc(100vh - 20px)">
+  <mat-nav-list class="sidebar-list top-parent">
+    @for (group of navItems; track group.id) {
+      @for (item of group.children!; track item.displayName) {
+        <app-nav-item [item]="item" (notify)="toggleMobileNav.emit()"></app-nav-item>
+      }
+    }
+  </mat-nav-list>
+</ng-scrollbar>

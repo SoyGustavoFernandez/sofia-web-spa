@@ -7,7 +7,7 @@ export const navItems: NavItem[] = [
     children: [
       { navCap: 'Inicio' },
       {
-        displayName: 'Dashboard',
+        displayName: 'nav.dashboard',
         iconName: 'solar:widget-add-line-duotone',
         route: '/dashboard',
       },
@@ -15,78 +15,79 @@ export const navItems: NavItem[] = [
   },
   {
     id: 2,
-    name: 'Operaciones',
+    name: 'Administración',
     children: [
-      { navCap: 'Ventas & Caja' },
+      { navCap: 'Administración' },
       {
-        displayName: 'POS / Ventas',
-        iconName: 'solar:card-search-linear',
-        route: '/pos',
-      },
-      { navCap: 'Gestión Farmacéutica' },
-      {
-        displayName: 'Inventario & Lotes',
-        iconName: 'solar:box-minimalistic-line-duotone',
-        route: '/inventario',
-      },
-      {
-        displayName: 'Medicamentos',
-        iconName: 'solar:medical-kit-line-duotone',
-        route: '/medicamentos',
-      },
-      {
-        displayName: 'Recetas Médicas',
-        iconName: 'solar:document-text-line-duotone',
-        route: '/recetas',
-      },
-      {
-        displayName: 'Delivery',
-        iconName: 'solar:delivery-line-duotone',
-        route: '/delivery',
-      },
-      {
-        displayName: 'Servicios & Citas',
-        iconName: 'solar:calendar-mark-line-duotone',
-        route: '/servicios',
-      },
-    ],
-  },
-  {
-    id: 4,
-    name: 'Sistema',
-    children: [
-      { navCap: 'Multi-tenant' },
-      {
-        displayName: 'Empresas',
+        displayName: 'nav.empresa',
         iconName: 'solar:buildings-line-duotone',
         route: '/empresas',
+      },
+      {
+        displayName: 'nav.rolesPermisos',
+        iconName: 'solar:lock-keyhole-line-duotone',
+        route: '/roles',
       },
     ],
   },
   {
     id: 3,
-    name: 'Administración',
+    name: 'Catálogos',
     children: [
-      { navCap: 'Contactos & Regulaciones' },
+      { navCap: 'Catálogos' },
       {
-        displayName: 'Pacientes',
-        iconName: 'solar:user-line-duotone',
-        route: '/pacientes',
+        displayName: 'nav.unidadesMedida',
+        iconName: 'solar:ruler-line-duotone',
+        route: '/unidades-medida',
       },
       {
-        displayName: 'Proveedores',
+        displayName: 'nav.laboratorios',
+        iconName: 'solar:test-tube-line-duotone',
+        route: '/laboratorios',
+      },
+      {
+        displayName: 'nav.ingredientesActivos',
+        iconName: 'solar:atom-line-duotone',
+        route: '/ingredientes-activos',
+      },
+      {
+        displayName: 'nav.proveedores',
         iconName: 'solar:shop-line-duotone',
         route: '/proveedores',
       },
       {
-        displayName: 'DIGEMID / Calidad',
-        iconName: 'solar:shield-check-line-duotone',
-        route: '/digemid',
+        displayName: 'nav.aseguradoras',
+        iconName: 'solar:shield-user-line-duotone',
+        route: '/aseguradoras',
+      },
+    ],
+  },
+  {
+    id: 4,
+    name: 'Pacientes & Atención',
+    children: [
+      { navCap: 'Pacientes & Atención' },
+      {
+        displayName: 'nav.pacientes',
+        iconName: 'solar:user-line-duotone',
+        route: '/pacientes',
       },
       {
-        displayName: 'Roles & Seguridad',
-        iconName: 'solar:lock-keyhole-line-duotone',
-        route: '/roles',
+        displayName: 'nav.profesionalesSalud',
+        iconName: 'solar:stethoscope-line-duotone',
+        route: '/profesionales-salud',
+      },
+    ],
+  },
+  {
+    id: 5,
+    name: 'DIGEMID',
+    children: [
+      { navCap: 'DIGEMID' },
+      {
+        displayName: 'nav.catalogoDigemid',
+        iconName: 'solar:shield-check-line-duotone',
+        route: '/digemid-catalogo',
       },
     ],
   },
