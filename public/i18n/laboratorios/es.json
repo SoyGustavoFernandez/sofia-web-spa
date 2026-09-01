@@ -1,5 +1,5 @@
 {
-  "title": "Mantenimiento de Laboratorios",
+  "title": "Laboratorios",
   "searchPlaceholder": "Buscar por nombre o código...",
   "add": "Agregar Laboratorio",
   "cols": {
@@ -57,5 +57,29 @@
     "valid": "Válido",
     "invalid": "Con error",
     "button": "Carga Masiva"
+  },
+  "search": {
+    "title": "Búsqueda de Laboratorios",
+    "search-error": "Error al buscar laboratorios",
+    "export-filename": "laboratorios.xlsx"
+  },
+  "detail": {
+    "title-new": "Nuevo Laboratorio",
+    "title-edit": "Editar Laboratorio",
+    "save-success": "Laboratorio guardado correctamente",
+    "save-error": "Error al guardar el laboratorio",
+    "delete-success": "Laboratorio eliminado correctamente",
+    "delete-error": "Error al eliminar el laboratorio",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar este laboratorio?",
+    "load-error": "Error al cargar el laboratorio"
+  },
+  "fields": {
+    "nombreCompania": "Nombre de Compañía",
+    "codigoIdentificador": "Código Identificador"
+  },
+  "table": {
+    "nombreCompania": "Nombre de Compañía",
+    "codigoIdentificador": "Código Identificador"
   }
 }

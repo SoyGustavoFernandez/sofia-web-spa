@@ -1,5 +1,5 @@
 {
-  "title": "Patient Management",
+  "title": "Patients",
   "searchPlaceholder": "Search by name or identity document...",
   "add": "Add Patient",
   "cols": {
@@ -65,5 +65,35 @@
     "valid": "Valid",
     "invalid": "With error",
     "button": "Bulk Upload"
+  },
+  "search": {
+    "title": "Search Patients",
+    "search-error": "Error searching patients",
+    "export-filename": "patients.xlsx",
+    "fechaNacimientoDesde": "Birth Date From",
+    "fechaNacimientoHasta": "Birth Date To"
+  },
+  "detail": {
+    "title-new": "New Patient",
+    "title-edit": "Edit Patient",
+    "save-success": "Patient saved successfully",
+    "save-error": "Error saving patient",
+    "delete-success": "Patient deleted successfully",
+    "delete-error": "Error deleting patient",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this patient?",
+    "load-error": "Error loading patient"
+  },
+  "fields": {
+    "docIdentidadGub": "Identity Document",
+    "nombreApellidos": "Full Name",
+    "fechaNacimiento": "Date of Birth",
+    "contactoPrimario": "Primary Contact"
+  },
+  "table": {
+    "docIdentidadGub": "ID Document",
+    "nombreApellidos": "Full Name",
+    "fechaNacimiento": "Birth Date",
+    "contactoPrimario": "Primary Contact"
   }
 }

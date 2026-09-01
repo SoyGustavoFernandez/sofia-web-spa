@@ -1,5 +1,5 @@
 {
-  "title": "Supplier Management",
+  "title": "Suppliers",
   "searchPlaceholder": "Search by business name or tax ID...",
   "add": "Add Supplier",
   "cols": {
@@ -22,8 +22,8 @@
     "razonSocial": "Business Name",
     "taxId": "Tax ID / RUC",
     "terminosFinancieros": "Financial Terms",
-    "calificacionEsg": "ESG Rating (0-100)",
-    "tasaCumplimiento": "Compliance Rate (0-100)",
+    "calificacionEsg": "ESG Rating",
+    "tasaCumplimiento": "Compliance Rate",
     "save": "Save",
     "cancel": "Cancel",
     "back": "Back",
@@ -47,7 +47,7 @@
   "help": {
     "razonSocial": "Official legal name of the supplier company.",
     "taxId": "Official tax identification number of the supplier.",
-    "terminosFinancieros": "Agreed payment deadlines and conditions (e.g., Net 30, Cash on Delivery).",
+    "terminosFinancieros": "Agreed payment deadlines and conditions (e.g. Net 30, Cash on Delivery).",
     "calificacionEsg": "Supplier rating based on Environmental, Social, and Governance criteria.",
     "tasaCumplimiento": "Historical percentage of orders delivered on time and in correct quantities."
   },
@@ -68,5 +68,33 @@
     "valid": "Valid",
     "invalid": "With error",
     "button": "Bulk Upload"
+  },
+  "search": {
+    "title": "Search Suppliers",
+    "search-error": "Error searching suppliers",
+    "export-filename": "suppliers.xlsx"
+  },
+  "detail": {
+    "title-new": "New Supplier",
+    "title-edit": "Edit Supplier",
+    "save-success": "Supplier saved successfully",
+    "save-error": "Error saving supplier",
+    "delete-success": "Supplier deleted successfully",
+    "delete-error": "Error deleting supplier",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this supplier?",
+    "load-error": "Error loading supplier"
+  },
+  "fields": {
+    "razonSocial": "Business Name",
+    "taxId": "Tax ID / RUC",
+    "terminosFinancieros": "Financial Terms",
+    "calificacionEsg": "ESG Rating",
+    "tasaCumplimiento": "Compliance Rate"
+  },
+  "table": {
+    "razonSocial": "Business Name",
+    "taxId": "Tax ID / RUC",
+    "tasaCumplimiento": "Compliance Rate"
   }
 }

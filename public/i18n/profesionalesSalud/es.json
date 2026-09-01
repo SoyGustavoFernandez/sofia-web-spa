@@ -1,0 +1,29 @@
+{
+  "title": "Profesionales de Salud",
+  "search": {
+    "title": "Búsqueda de Profesionales de Salud",
+    "search-error": "Error al buscar profesionales de salud",
+    "export-filename": "profesionales-salud.xlsx"
+  },
+  "detail": {
+    "title-new": "Nuevo Profesional de Salud",
+    "title-edit": "Editar Profesional de Salud",
+    "save-success": "Profesional de salud guardado correctamente",
+    "save-error": "Error al guardar el profesional de salud",
+    "delete-success": "Profesional de salud eliminado correctamente",
+    "delete-error": "Error al eliminar el profesional de salud",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar este profesional de salud?",
+    "load-error": "Error al cargar el profesional de salud"
+  },
+  "fields": {
+    "numeroRegistro": "Número de Registro",
+    "nombrePrescriptor": "Nombre del Prescriptor",
+    "direccionClinica": "Dirección de Clínica"
+  },
+  "table": {
+    "numeroRegistro": "Número de Registro",
+    "nombrePrescriptor": "Nombre del Prescriptor",
+    "direccionClinica": "Dirección de Clínica"
+  }
+}

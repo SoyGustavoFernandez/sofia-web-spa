@@ -1,5 +1,5 @@
 {
-  "title": "Mantenimiento de Unidades de Medida",
+  "title": "Unidades de Medida",
   "searchPlaceholder": "Buscar por código o descripción...",
   "add": "Agregar Unidad de Medida",
   "cols": {
@@ -57,5 +57,29 @@
     "valid": "Válido",
     "invalid": "Con error",
     "button": "Carga Masiva"
+  },
+  "search": {
+    "title": "Búsqueda de Unidades de Medida",
+    "search-error": "Error al buscar unidades de medida",
+    "export-filename": "unidades-medida.xlsx"
+  },
+  "detail": {
+    "title-new": "Nueva Unidad de Medida",
+    "title-edit": "Editar Unidad de Medida",
+    "save-success": "Unidad de medida guardada correctamente",
+    "save-error": "Error al guardar la unidad de medida",
+    "delete-success": "Unidad de medida eliminada correctamente",
+    "delete-error": "Error al eliminar la unidad de medida",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar esta unidad de medida?",
+    "load-error": "Error al cargar la unidad de medida"
+  },
+  "fields": {
+    "codigo": "Código",
+    "descripcion": "Descripción"
+  },
+  "table": {
+    "codigo": "Código",
+    "descripcion": "Descripción"
   }
 }

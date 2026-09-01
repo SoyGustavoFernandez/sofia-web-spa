@@ -1,98 +1,170 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
-import { EmpresaService } from '../services/empresa.service';
-import { Empresa, EstadoEmpresa } from '../models/empresa.model';
+import { DateAdapter } from '@angular/material/core';
+import { MaterialModule } from '@shared/material.module';
+import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
-import { EmpresaDeleteDialogComponent } from '../empresa-delete-dialog/empresa-delete-dialog.component';
+import { SearchStateService } from '@core/services/shared/search-state.service';
+import { EmpresaService } from '../services/empresa.service';
+import { EmpresaDto, EstadoEmpresa, SearchEmpresaParams } from '../models/empresa.model';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-empresa-search',
   standalone: true,
+  templateUrl: './empresa-search.component.html',
+  providers: [provideTranslocoScope('empresa')],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     RouterModule,
-    FormsModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatChipsModule,
-    MatTooltipModule,
-    MatDialogModule,
-    MatProgressSpinnerModule,
     TranslocoModule,
+    MaterialModule,
+    PageHeaderComponent,
   ],
-  providers: [provideTranslocoScope('empresa')],
-  templateUrl: './empresa-search.component.html',
 })
 export class EmpresaSearchComponent implements OnInit {
-  private readonly empresaService = inject(EmpresaService);
-  private readonly errorNotifier = inject(ErrorNotifierService);
-  private readonly dialog = inject(MatDialog);
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly service = inject(EmpresaService);
   private readonly transloco = inject(TranslocoService);
+  private readonly notifier = inject(ErrorNotifierService);
+  private readonly dateAdapter = inject(DateAdapter<Date>);
+  private readonly searchState = inject(SearchStateService);
 
-  readonly displayedColumns = ['nombre', 'ruc', 'estado', 'fechaVencimiento', 'estaVigente', 'cantidadSucursales', 'acciones'];
+  readonly showResults = signal(false);
+  readonly loading = signal(false);
+  readonly items = signal<EmpresaDto[]>([]);
+  readonly totalCount = signal(0);
+  readonly pageNumber = signal(1);
+  readonly pageSize = signal(10);
   readonly EstadoEmpresa = EstadoEmpresa;
 
-  readonly empresas = signal<Empresa[]>([]);
-  readonly loading = signal(false);
-  searchText = '';
+  readonly searchForm = this.fb.group({
+    estado: [null as EstadoEmpresa | null],
+    nombre: [''],
+    fechaVencimientoDesde: [null as Date | null],
+    fechaVencimientoHasta: [null as Date | null],
+  });
 
-  get filteredEmpresas(): Empresa[] {
-    const q = this.searchText.toLowerCase();
-    if (!q) return this.empresas();
-    return this.empresas().filter(e =>
-      e.nombre.toLowerCase().includes(q) || (e.ruc ?? '').includes(q)
-    );
+  readonly estadoOptions = [
+    { value: null, label: 'empresa.fields.estadoTodos' },
+    { value: EstadoEmpresa.TrialActivo, label: 'empresa.estado.TrialActivo' },
+    { value: EstadoEmpresa.Activo, label: 'empresa.estado.Activo' },
+    { value: EstadoEmpresa.Suspendido, label: 'empresa.estado.Suspendido' },
+    { value: EstadoEmpresa.Cancelado, label: 'empresa.estado.Cancelado' },
+  ];
+
+  readonly breadcrumbs: BreadcrumbItem[] = [
+    { label: 'breadcrumbs.home', route: '/dashboard' },
+    { label: 'breadcrumbs.administracion' },
+    { label: 'breadcrumbs.empresa', isActive: true },
+  ];
+
+  readonly displayedColumns = ['nombre', 'ruc', 'estado', 'estaVigente'];
+
+  private get stateKey(): string {
+    return this.router.url.split('?')[0];
   }
 
   ngOnInit(): void {
-    this.load();
+    const locale = this.transloco.getActiveLang() === 'es' ? 'es-PE' : 'en-US';
+    this.dateAdapter.setLocale(locale);
+    this.transloco.langChanges$.subscribe(lang => {
+      this.dateAdapter.setLocale(lang === 'es' ? 'es-PE' : 'en-US');
+    });
+
+    const saved = this.searchState.restore(this.stateKey);
+    if (saved) {
+      this.searchForm.patchValue(saved.formValues);
+      this.pageNumber.set(saved.pageIndex + 1);
+      this.pageSize.set(saved.pageSize);
+      this.search(this.pageNumber());
+    }
   }
 
-  load(): void {
+  search(page = 1): void {
     this.loading.set(true);
-    this.empresaService.getAll().subscribe({
-      next: data => { this.empresas.set(data); this.loading.set(false); },
+    this.pageNumber.set(page);
+    const { estado, nombre, fechaVencimientoDesde, fechaVencimientoHasta } = this.searchForm.value;
+    const params: SearchEmpresaParams = {
+      nombre: nombre ?? undefined,
+      estado: estado ?? undefined,
+      fechaVencimientoDesde: fechaVencimientoDesde ? fechaVencimientoDesde.toISOString() : undefined,
+      fechaVencimientoHasta: fechaVencimientoHasta ? fechaVencimientoHasta.toISOString() : undefined,
+      pageNumber: page,
+      pageSize: this.pageSize(),
+    };
+    this.service.search(params).subscribe({
+      next: result => {
+        this.items.set(result.items as EmpresaDto[]);
+        this.totalCount.set(result.totalCount);
+        this.showResults.set(true);
+        this.loading.set(false);
+        this.searchState.save(this.stateKey, {
+          formValues: this.searchForm.getRawValue(),
+          pageIndex: this.pageNumber() - 1,
+          pageSize: this.pageSize(),
+        });
+      },
       error: () => {
         this.loading.set(false);
-        this.errorNotifier.showError(this.transloco.translate('empresa.notifications.loadError'));
+        this.notifier.showError(this.transloco.translate('empresa.search.search-error'));
       },
     });
   }
 
-  openDelete(empresa: Empresa): void {
-    const ref = this.dialog.open(EmpresaDeleteDialogComponent, {
-      data: empresa,
-      width: '480px',
-    });
-    ref.afterClosed().subscribe(confirmed => { if (confirmed) this.load(); });
+  onPageChange(event: PageEvent): void {
+    this.pageSize.set(event.pageSize);
+    this.search(event.pageIndex + 1);
+  }
+
+  clear(): void {
+    this.searchForm.reset();
+    this.showResults.set(false);
+    this.items.set([]);
+    this.totalCount.set(0);
+    this.pageNumber.set(1);
+    this.searchState.clear(this.stateKey);
   }
 
   estadoLabel(estado: EstadoEmpresa): string {
     return this.transloco.translate(`empresa.estado.${estado}`);
   }
 
-  estadoClass(estado: EstadoEmpresa): string {
-    const map: Record<number, string> = {
-      [EstadoEmpresa.TrialActivo]: 'chip-trial',
-      [EstadoEmpresa.Activo]: 'chip-activo',
-      [EstadoEmpresa.Suspendido]: 'chip-suspendido',
-      [EstadoEmpresa.Cancelado]: 'chip-cancelado',
+  exportar(): void {
+    const t = (key: string) => this.transloco.translate(key, {}, 'empresa');
+    const { nombre, estado, fechaVencimientoDesde, fechaVencimientoHasta } = this.searchForm.value;
+    const request = {
+      headers: [
+        t('cols.nombre'),
+        t('cols.ruc'),
+        t('cols.estado'),
+        t('cols.estaVigente'),
+        t('fields.fechaInicioTrial'),
+        t('fields.fechaVencimiento'),
+        t('fields.sucursalesCount'),
+      ],
+      yesLabel: this.transloco.translate('generic-labels.yes'),
+      noLabel: this.transloco.translate('generic-labels.no'),
+      nombre: nombre ?? undefined,
+      estado: estado ?? undefined,
+      fechaVencimientoDesde: fechaVencimientoDesde ? new Date(fechaVencimientoDesde).toISOString() : undefined,
+      fechaVencimientoHasta: fechaVencimientoHasta ? new Date(fechaVencimientoHasta).toISOString() : undefined,
     };
-    return map[estado] ?? '';
+    this.service.exportar(request).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.transloco.translate('empresa.search.export-filename');
+        a.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => this.notifier.showError(this.transloco.translate('empresa.search.search-error')),
+    });
   }
 }

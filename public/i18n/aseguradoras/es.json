@@ -1,0 +1,27 @@
+{
+  "title": "Aseguradoras Médicas",
+  "search": {
+    "title": "Búsqueda de Aseguradoras",
+    "search-error": "Error al buscar aseguradoras",
+    "export-filename": "aseguradoras.xlsx"
+  },
+  "detail": {
+    "title-new": "Nueva Aseguradora",
+    "title-edit": "Editar Aseguradora",
+    "save-success": "Aseguradora guardada correctamente",
+    "save-error": "Error al guardar la aseguradora",
+    "delete-success": "Aseguradora eliminada correctamente",
+    "delete-error": "Error al eliminar la aseguradora",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar esta aseguradora?",
+    "load-error": "Error al cargar la aseguradora"
+  },
+  "fields": {
+    "nombreComercial": "Nombre Comercial",
+    "codigoIdentificadorNacional": "Código Identificador Nacional"
+  },
+  "table": {
+    "nombreComercial": "Nombre Comercial",
+    "codigoIdentificadorNacional": "Código Identificador Nacional"
+  }
+}

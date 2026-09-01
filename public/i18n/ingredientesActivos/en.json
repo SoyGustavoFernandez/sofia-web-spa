@@ -1,0 +1,27 @@
+{
+  "title": "Active Ingredients",
+  "search": {
+    "title": "Search Active Ingredients",
+    "search-error": "Error searching active ingredients",
+    "export-filename": "active-ingredients.xlsx"
+  },
+  "detail": {
+    "title-new": "New Active Ingredient",
+    "title-edit": "Edit Active Ingredient",
+    "save-success": "Active ingredient saved successfully",
+    "save-error": "Error saving active ingredient",
+    "delete-success": "Active ingredient deleted successfully",
+    "delete-error": "Error deleting active ingredient",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this active ingredient?",
+    "load-error": "Error loading active ingredient"
+  },
+  "fields": {
+    "denominacionDci": "INN Denomination",
+    "codigoAtc": "ATC Code"
+  },
+  "table": {
+    "denominacionDci": "INN Denomination",
+    "codigoAtc": "ATC Code"
+  }
+}

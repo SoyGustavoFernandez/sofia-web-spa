@@ -1,5 +1,5 @@
 {
-  "title": "Mantenimiento de Pacientes",
+  "title": "Pacientes",
   "searchPlaceholder": "Buscar por nombre o documento de identidad...",
   "add": "Agregar Paciente",
   "cols": {
@@ -65,5 +65,35 @@
     "valid": "Válido",
     "invalid": "Con error",
     "button": "Carga Masiva"
+  },
+  "search": {
+    "title": "Búsqueda de Pacientes",
+    "search-error": "Error al buscar pacientes",
+    "export-filename": "pacientes.xlsx",
+    "fechaNacimientoDesde": "Fecha Nacimiento Desde",
+    "fechaNacimientoHasta": "Fecha Nacimiento Hasta"
+  },
+  "detail": {
+    "title-new": "Nuevo Paciente",
+    "title-edit": "Editar Paciente",
+    "save-success": "Paciente guardado correctamente",
+    "save-error": "Error al guardar el paciente",
+    "delete-success": "Paciente eliminado correctamente",
+    "delete-error": "Error al eliminar el paciente",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar este paciente?",
+    "load-error": "Error al cargar el paciente"
+  },
+  "fields": {
+    "docIdentidadGub": "Documento de Identidad",
+    "nombreApellidos": "Nombre y Apellidos",
+    "fechaNacimiento": "Fecha de Nacimiento",
+    "contactoPrimario": "Contacto Primario"
+  },
+  "table": {
+    "docIdentidadGub": "Doc. Identidad",
+    "nombreApellidos": "Nombre y Apellidos",
+    "fechaNacimiento": "Fecha Nacimiento",
+    "contactoPrimario": "Contacto Primario"
   }
 }

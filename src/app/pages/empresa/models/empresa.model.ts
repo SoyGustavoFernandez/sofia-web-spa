@@ -5,6 +5,17 @@ export enum EstadoEmpresa {
   Cancelado = 3,
 }
 
+export interface EmpresaDto {
+  id: string;
+  nombre: string;
+  ruc: string | null;
+  estado: EstadoEmpresa;
+  fechaInicioTrial: string;
+  fechaVencimiento: string;
+  estaVigente: boolean;
+  cantidadSucursales: number;
+}
+
 export interface Empresa {
   id: string;
   nombre: string;
@@ -29,4 +40,30 @@ export interface RegistrarEmpresaRequest {
 
 export interface RegistrarEmpresaResponse {
   token: string;
+}
+
+export interface EmpresaExportRequest {
+  headers: string[];
+  yesLabel: string;
+  noLabel: string;
+  nombre?: string;
+  estado?: EstadoEmpresa;
+  fechaVencimientoDesde?: string;
+  fechaVencimientoHasta?: string;
+}
+
+export interface SearchEmpresaParams {
+  nombre?: string;
+  estado?: EstadoEmpresa;
+  fechaVencimientoDesde?: string;
+  fechaVencimientoHasta?: string;
+  pageNumber: number;
+  pageSize: number;
+}
+
+export interface PaginatedList<T> {
+  items: T[];
+  pageNumber: number;
+  totalPages: number;
+  totalCount: number;
 }

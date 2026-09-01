@@ -1,0 +1,27 @@
+{
+  "title": "Medical Insurers",
+  "search": {
+    "title": "Search Medical Insurers",
+    "search-error": "Error searching medical insurers",
+    "export-filename": "medical-insurers.xlsx"
+  },
+  "detail": {
+    "title-new": "New Medical Insurer",
+    "title-edit": "Edit Medical Insurer",
+    "save-success": "Medical insurer saved successfully",
+    "save-error": "Error saving medical insurer",
+    "delete-success": "Medical insurer deleted successfully",
+    "delete-error": "Error deleting medical insurer",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this medical insurer?",
+    "load-error": "Error loading medical insurer"
+  },
+  "fields": {
+    "nombreComercial": "Commercial Name",
+    "codigoIdentificadorNacional": "National Identifier Code"
+  },
+  "table": {
+    "nombreComercial": "Commercial Name",
+    "codigoIdentificadorNacional": "National Identifier Code"
+  }
+}
