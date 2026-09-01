@@ -46,13 +46,12 @@ export class MatPaginatorIntlTransloco extends MatPaginatorIntl {
         this.changes.next();
       });
     this.getRangeLabel = (page: number, pageSize: number, length: number) => {
-      const currentPageNumber = length > 0 ? page + 1 : 0;
-      const totalPages = length > 0 ? Math.ceil(length / pageSize) : 0;
-
-      return this.translocoService.translate('pagination.range', {
-        current: currentPageNumber,
-        total: totalPages,
-      });
+      if (length === 0) {
+        return this.translocoService.translate('pagination.rangeEmpty');
+      }
+      const current = page + 1;
+      const total = Math.ceil(length / pageSize);
+      return this.translocoService.translate('pagination.range', { current, total });
     };
   }
 }
