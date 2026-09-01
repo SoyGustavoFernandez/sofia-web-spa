@@ -1,0 +1,128 @@
+<div class="login-page" *transloco="let t; scope: 'auth'; read: 'auth'">
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="brand">
+      <div class="brand-logo">
+        <span class="logo-icon">⚕</span>
+        <span class="logo-text">SOFIA</span>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <p class="panel-title">Gestión completa de tu farmacia</p>
+      <p class="panel-sub">{{ t('system') }}</p>
+      <ul class="features">
+        <li class="feature-item">
+          <span class="feature-icon">💊</span>
+          <span>{{ t('features.inventory') }}</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon">📋</span>
+          <span>{{ t('features.patients') }}</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon">📊</span>
+          <span>{{ t('features.digemid') }}</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon">🔐</span>
+          <span>{{ t('features.security') }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel-footer">
+      © {{ currentYear }} SOFIA · v{{ appVersion }}
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="login-card">
+      <div class="login-header">
+        <h1 class="login-title">{{ t('title') }}</h1>
+        <p class="login-sub">{{ t('subtitle') }}</p>
+      </div>
+
+      <!-- Error alert -->
+      @if (loginError()) {
+        <div class="alert-error" role="alert">
+          <mat-icon class="alert-icon">error_outline</mat-icon>
+          <span>{{ loginError() }}</span>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <!-- Usuario -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ t('usuario') }}</mat-label>
+          <mat-icon matPrefix>person_outline</mat-icon>
+          <input
+            matInput
+            formControlName="usuario"
+            [placeholder]="t('usuarioPlaceholder')"
+            autocomplete="username" />
+          @if (
+            form.controls.usuario.hasError('required') &&
+            form.controls.usuario.touched
+          ) {
+            <mat-error>{{ t('errors.usuarioRequired') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Contraseña -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ t('password') }}</mat-label>
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <input
+            matInput
+            formControlName="password"
+            [type]="hidePassword() ? 'password' : 'text'"
+            [placeholder]="t('passwordPlaceholder')"
+            autocomplete="current-password" />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="togglePassword()"
+            [attr.aria-label]="t('password')">
+            <mat-icon>{{
+              hidePassword() ? 'visibility_off' : 'visibility'
+            }}</mat-icon>
+          </button>
+          @if (
+            form.controls.password.hasError('required') &&
+            form.controls.password.touched
+          ) {
+            <mat-error>{{ t('errors.passwordRequired') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Submit -->
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="btn-submit"
+          [disabled]="submitting()">
+          @if (submitting()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            {{ t('submit') }}
+          }
+        </button>
+      </form>
+
+      <a routerLink="/auth/forgot-password" class="forgot-link">{{
+        t('forgot')
+      }}</a>
+
+      <div class="divider"><span>o</span></div>
+
+      <p class="register-row">
+        {{ t('registerPrompt') }}
+        <a routerLink="/auth/register">{{ t('register') }}</a>
+      </p>
+    </div>
+  </div>
+</div>

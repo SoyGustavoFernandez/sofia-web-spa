@@ -1,0 +1,24 @@
+{
+  "title": "Sign in",
+  "subtitle": "Enter your credentials to access the system",
+  "usuario": "Username",
+  "usuarioPlaceholder": "user@company.com",
+  "password": "Password",
+  "passwordPlaceholder": "••••••••",
+  "submit": "Sign in",
+  "forgot": "Forgot your password?",
+  "registerPrompt": "First time here?",
+  "register": "Register new company",
+  "system": "Optimized Pharmaceutical System with Artificial Intelligence",
+  "invalidCredentials": "Invalid credentials. Check your username and password.",
+  "errors": {
+    "usuarioRequired": "Username is required",
+    "passwordRequired": "Password is required"
+  },
+  "features": {
+    "inventory": "Medication and batch control",
+    "patients": "Prescription and patient management",
+    "digemid": "Automated DIGEMID reports",
+    "security": "Full security and audit trail"
+  }
+}
