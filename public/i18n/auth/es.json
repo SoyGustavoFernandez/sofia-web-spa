@@ -1,0 +1,24 @@
+{
+  "title": "Iniciar sesión",
+  "subtitle": "Ingresa tus credenciales para acceder al sistema",
+  "usuario": "Usuario",
+  "usuarioPlaceholder": "usuario@empresa.com",
+  "password": "Contraseña",
+  "passwordPlaceholder": "••••••••",
+  "submit": "Ingresar",
+  "forgot": "¿Olvidaste tu contraseña?",
+  "registerPrompt": "¿Primera vez?",
+  "register": "Registrar empresa nueva",
+  "system": "Sistema Optimizado Farmacéutico con Inteligencia Artificial",
+  "invalidCredentials": "Credenciales inválidas. Verifica tu usuario y contraseña.",
+  "errors": {
+    "usuarioRequired": "El usuario es obligatorio",
+    "passwordRequired": "La contraseña es obligatoria"
+  },
+  "features": {
+    "inventory": "Control de medicamentos y lotes",
+    "patients": "Gestión de recetas y pacientes",
+    "digemid": "Reportes DIGEMID automatizados",
+    "security": "Seguridad y auditoría completa"
+  }
+}

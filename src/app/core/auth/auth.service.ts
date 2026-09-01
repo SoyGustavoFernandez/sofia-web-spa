@@ -6,6 +6,9 @@ import { environment } from '@environment/environment';
 
 interface JwtPayload {
   sub: string;
+  unique_name?: string;
+  fullName?: string;
+  nombreEmpresa?: string;
   email?: string;
   roles?: string[];
   empresaId?: string;
@@ -13,7 +16,7 @@ interface JwtPayload {
   exp?: number;
 }
 
-interface LoginRequest { usuario: string; password: string; }
+interface LoginRequest { nombreUsuario: string; password: string; }
 interface AuthResponse { accessToken: string; }
 
 const TOKEN_KEY = 'sofia_token';
@@ -31,7 +34,9 @@ export class AuthService {
     const t = this._token();
     if (!t) return null;
     try {
-      return JSON.parse(atob(t.split('.')[1])) as JwtPayload;
+      const base64 = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+      return JSON.parse(new TextDecoder('utf-8').decode(bytes)) as JwtPayload;
     } catch { return null; }
   });
 
@@ -81,6 +86,11 @@ export class AuthService {
   storeToken(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
     this._token.set(token);
+  }
+
+  clearLocalSession(): void {
+    localStorage.removeItem(TOKEN_KEY);
+    this._token.set(null);
   }
 
   private loadToken(): string | null {

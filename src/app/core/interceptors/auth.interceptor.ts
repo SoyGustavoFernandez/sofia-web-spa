@@ -21,9 +21,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (!(err instanceof HttpErrorResponse) || err.status !== 401) {
         return throwError(() => err);
       }
-      // Never retry auth endpoints — avoids infinite loops
+      // Never retry auth endpoints — avoids infinite loops.
+      // For login/register: just propagate the error (don't touch local session).
+      // For logout/refresh: clear local session silently without an extra HTTP call.
       if (isAuthEndpoint(req.url)) {
-        auth.logout();
+        if (!req.url.includes('/auth/login') && !req.url.includes('/auth/register')) {
+          auth.clearLocalSession();
+        }
         return throwError(() => err);
       }
       return handle401(req, next, auth);
