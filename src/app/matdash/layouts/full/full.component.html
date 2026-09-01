@@ -1,3 +1,4 @@
+<csw-loading-bar></csw-loading-bar>
 <mat-sidenav-container
   class="mainWrapper"
   autosize
@@ -9,29 +10,29 @@
     cardBorder: options.cardBorder
   }"
   [dir]="options.dir!">
-  @if (resView) {
-    <mat-sidenav
-      #leftsidenav
-      mode="over"
-      [opened]="false"
-      class="sidebarNav"
-      (closedStart)="onSidenavClosedStart()"
-      (openedChange)="onSidenavOpenedChange($event)">
-      <app-sidebar
-        [showToggle]="false"
-        (toggleMobileNav)="leftsidenav.toggle()"
-        (toggleCollapsed)="toggleCollapsed()">
-      </app-sidebar>
-    </mat-sidenav>
-  }
+
+  <mat-sidenav
+    #leftsidenav
+    mode="over"
+    [opened]="!resView"
+    [disableClose]="!resView"
+    class="sidebarNav"
+    (closedStart)="onSidenavClosedStart()"
+    (openedChange)="onSidenavOpenedChange($event)">
+    <app-sidebar
+      [showToggle]="resView"
+      (toggleMobileNav)="leftsidenav.toggle()"
+      (toggleCollapsed)="toggleCollapsed()">
+    </app-sidebar>
+  </mat-sidenav>
 
   <mat-sidenav-content class="contentWrapper" #content>
     @if (options.horizontal && !resView) {
-      <app-horizontal-header (toggleMobileNav)="onToggleMobileNav()"></app-horizontal-header>
+      <app-horizontal-header (toggleMobileNav)="leftsidenav.toggle()"></app-horizontal-header>
       <app-horizontal-sidebar></app-horizontal-sidebar>
     } @else {
       <app-header
-        (toggleMobileNav)="onToggleMobileNav()"
+        (toggleMobileNav)="leftsidenav.toggle()"
         (toggleCollapsed)="toggleCollapsed()">
       </app-header>
     }

@@ -18,6 +18,7 @@ import { AppBreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component
 import { CustomizerComponent } from './shared/customizer/customizer.component';
 import { SidebarComponent } from './vertical/sidebar/sidebar.component';
 import { HeaderComponent } from './vertical/header/header.component';
+import { CSLoadingBarComponent } from '@shared/components/loading-bar/loading-bar.component';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 
@@ -35,6 +36,7 @@ const MOBILE_VIEW = 'screen and (max-width: 768px)';
     AppBreadcrumbComponent,
     SidebarComponent,
     HeaderComponent,
+    CSLoadingBarComponent,
   ],
   templateUrl: './full.component.html',
   styleUrls: [],
