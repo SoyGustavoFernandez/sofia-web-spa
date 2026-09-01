@@ -1,0 +1,129 @@
+﻿<ng-container *transloco="let t; scope: 'laboratorios'; read: 'laboratorios'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="false" />
+
+    <div class="sofia-filter-card">
+      <div
+        class="sofia-filter-header d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="mb-1">{{ t('search.title') }}</h4>
+          <div class="search-info-text">
+            {{ 'generic-labels.search-subtitle' | transloco }}
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button
+            mat-stroked-button
+            color="primary"
+            [routerLink]="['carga-masiva']">
+            <mat-icon>upload</mat-icon>
+            {{ 'carga-masiva.btn' | transloco }}
+          </button>
+          <button mat-flat-button color="primary" (click)="goToNew()">
+            <mat-icon>add</mat-icon>
+            {{ 'actions.new' | transloco }}
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="searchForm" class="row g-3 mt-1">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.nombreCompania') }}</mat-label>
+            <input
+              matInput
+              formControlName="nombreCompania"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.codigoIdentificador') }}</mat-label>
+            <input
+              matInput
+              formControlName="codigoIdentificador"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button mat-button (click)="clear()">
+          {{ 'actions.clear' | transloco }}
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="search()"
+          [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            {{ 'actions.search' | transloco }}
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (showResults()) {
+      <div class="sofia-results-card">
+        <div class="sofia-results-header">
+          {{ 'generic-labels.results' | transloco }} ({{ totalCount() }})
+        </div>
+        <div class="sofia-table-container">
+          <table mat-table [dataSource]="items()">
+            <ng-container matColumnDef="nombreCompania">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.nombreCompania') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <a [routerLink]="[row.id]" class="link-no-underline">{{
+                  row.nombreCompania
+                }}</a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="codigoIdentificador">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.codigoIdentificador') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.codigoIdentificador ?? '—' }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td
+                class="mat-cell"
+                [attr.colspan]="displayedColumns.length"
+                style="text-align: center; padding: 2rem">
+                {{ 'generic-labels.results' | transloco }}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button mat-stroked-button (click)="exportar()">
+            <mat-icon>download</mat-icon>
+            {{ 'actions.export' | transloco }}
+          </button>
+          <mat-paginator
+            [length]="totalCount()"
+            [pageIndex]="pageIndex()"
+            [pageSize]="pageSize()"
+            [pageSizeOptions]="[10, 25, 50]"
+            [showFirstLastButtons]="true"
+            (page)="onPageChange($event)" />
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>

@@ -9,6 +9,8 @@ import {
   importProvidersFrom,
   isDevMode,
 } from '@angular/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatPaginatorIntlTransloco } from '@shared/components/paginator-internationalization/mat-paginator-intl.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
@@ -45,6 +47,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, CSLoadingInterceptor])
     ),
     provideAnimationsAsync(),
+    { provide: MatPaginatorIntl, useClass: MatPaginatorIntlTransloco },
     provideTransloco({
       config: {
         availableLangs: ['es', 'en'],

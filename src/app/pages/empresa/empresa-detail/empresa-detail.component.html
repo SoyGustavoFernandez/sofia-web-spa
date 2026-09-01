@@ -1,0 +1,115 @@
+<ng-container *transloco="let t; scope: 'empresa'; read: 'empresa'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/empresas" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    } @else {
+      <div class="sofia-detail-card">
+        @if (!isEditMode()) {
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('title') }}</h4>
+              <div class="search-info-text">
+                {{ 'generic-labels.detail-subtitle' | transloco }}
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button mat-flat-button color="primary" (click)="enterEditMode()">
+                {{ 'actions.edit' | transloco }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Read-only metadata fields -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.estado') }}</mat-label>
+              <input matInput [value]="estadoDisplay()" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.sucursalesCount') }}</mat-label>
+              <input matInput [value]="sucursalesCountDisplay()" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.fechaInicioTrial') }}</mat-label>
+              <input
+                matInput
+                [value]="fechaInicioTrialDisplay() | date: 'dd/MM/yyyy'"
+                disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.fechaVencimiento') }}</mat-label>
+              <input
+                matInput
+                [value]="fechaVencimientoDisplay() | date: 'dd/MM/yyyy'"
+                disabled />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Editable fields -->
+        <form [formGroup]="form" class="row g-3">
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.nombre') }}</mat-label>
+              <input matInput formControlName="nombre" maxlength="150" />
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.ruc') }}</mat-label>
+              <input matInput formControlName="ruc" maxlength="20" />
+            </mat-form-field>
+          </div>
+        </form>
+
+        @if (isEditMode()) {
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="save()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+            <button
+              mat-flat-button
+              class="sofia-btn-delete"
+              (click)="onDelete()">
+              {{ 'actions.delete' | transloco }}
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-container>

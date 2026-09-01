@@ -1,5 +1,5 @@
 {
-  "title": "Company Management",
+  "title": "Companies",
   "searchPlaceholder": "Search by name or tax ID...",
   "add": "New Company",
   "register": {
@@ -8,7 +8,7 @@
     "nombreEmpresa": "Company Name",
     "usuario": "Admin Username",
     "password": "Password",
-    "ruc": "Tax ID (optional)",
+    "ruc": "Tax ID",
     "submit": "Register Company",
     "hasAccount": "Already have an account?",
     "login": "Sign in"
@@ -69,5 +69,36 @@
     "estado": "Current subscription status of the company."
   },
   "noData": "No companies found.",
-  "showing": "Showing {{count}} of {{total}} companies"
+  "showing": "Showing {{count}} of {{total}} companies",
+  "search": {
+    "title": "Search Companies",
+    "search-error": "Error searching companies",
+    "export-filename": "companies.xlsx"
+  },
+  "detail": {
+    "title-edit": "Edit Company",
+    "save-success": "Company updated successfully",
+    "save-error": "Error updating company",
+    "delete-success": "Company deleted successfully",
+    "delete-error": "Error deleting company",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this company?",
+    "load-error": "Error loading company"
+  },
+  "fields": {
+    "estado": "Status",
+    "estadoTodos": "All",
+    "nombre": "Company Name",
+    "ruc": "Tax ID (11 digits, optional)",
+    "estaVigente": "Active",
+    "fechaInicioTrial": "Trial Start",
+    "fechaVencimiento": "Expiry",
+    "sucursalesCount": "Branches"
+  },
+  "table": {
+    "nombre": "Company",
+    "ruc": "Tax ID",
+    "estado": "Status",
+    "estaVigente": "Active"
+  }
 }

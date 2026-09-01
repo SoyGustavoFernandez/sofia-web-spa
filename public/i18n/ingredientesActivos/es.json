@@ -1,0 +1,27 @@
+{
+  "title": "Ingredientes Activos",
+  "search": {
+    "title": "Búsqueda de Ingredientes Activos",
+    "search-error": "Error al buscar ingredientes activos",
+    "export-filename": "ingredientes-activos.xlsx"
+  },
+  "detail": {
+    "title-new": "Nuevo Ingrediente Activo",
+    "title-edit": "Editar Ingrediente Activo",
+    "save-success": "Ingrediente activo guardado correctamente",
+    "save-error": "Error al guardar el ingrediente activo",
+    "delete-success": "Ingrediente activo eliminado correctamente",
+    "delete-error": "Error al eliminar el ingrediente activo",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar este ingrediente activo?",
+    "load-error": "Error al cargar el ingrediente activo"
+  },
+  "fields": {
+    "denominacionDci": "Denominación DCI",
+    "codigoAtc": "Código ATC"
+  },
+  "table": {
+    "denominacionDci": "Denominación DCI",
+    "codigoAtc": "Código ATC"
+  }
+}

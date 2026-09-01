@@ -1,5 +1,5 @@
 {
-  "title": "Gestión de Empresas",
+  "title": "Empresas",
   "searchPlaceholder": "Buscar por nombre o RUC...",
   "add": "Nueva Empresa",
   "register": {
@@ -8,7 +8,7 @@
     "nombreEmpresa": "Nombre de la Empresa",
     "usuario": "Usuario Administrador",
     "password": "Contraseña",
-    "ruc": "RUC (opcional)",
+    "ruc": "RUC",
     "submit": "Registrar Empresa",
     "hasAccount": "¿Ya tienes cuenta?",
     "login": "Iniciar sesión"
@@ -69,5 +69,36 @@
     "estado": "Estado actual de la suscripción de la empresa."
   },
   "noData": "No se encontraron empresas registradas.",
-  "showing": "Mostrando {{count}} de {{total}} empresas"
+  "showing": "Mostrando {{count}} de {{total}} empresas",
+  "search": {
+    "title": "Búsqueda de Empresas",
+    "search-error": "Error al buscar empresas",
+    "export-filename": "empresas.xlsx"
+  },
+  "detail": {
+    "title-edit": "Editar Empresa",
+    "save-success": "Empresa actualizada correctamente",
+    "save-error": "Error al actualizar la empresa",
+    "delete-success": "Empresa eliminada correctamente",
+    "delete-error": "Error al eliminar la empresa",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar esta empresa?",
+    "load-error": "Error al cargar la empresa"
+  },
+  "fields": {
+    "estado": "Estado",
+    "estadoTodos": "Todos",
+    "nombre": "Nombre de la Empresa",
+    "ruc": "RUC (11 dígitos, opcional)",
+    "estaVigente": "Vigente",
+    "fechaInicioTrial": "Inicio Trial",
+    "fechaVencimiento": "Vencimiento",
+    "sucursalesCount": "Sucursales"
+  },
+  "table": {
+    "nombre": "Empresa",
+    "ruc": "RUC",
+    "estado": "Estado",
+    "estaVigente": "Vigente"
+  }
 }

@@ -1,0 +1,33 @@
+{
+  "title": "Roles",
+  "search": {
+    "title": "Search Roles",
+    "search-error": "Error searching roles",
+    "export-filename": "roles.xlsx"
+  },
+  "detail": {
+    "title-new": "New Role",
+    "title-edit": "Edit Role",
+    "nombreRolHint": "The role name is a system identifier and cannot be changed.",
+    "save-success": "Role saved successfully",
+    "save-error": "Error saving role",
+    "delete-success": "Role deleted successfully",
+    "delete-error": "Error deleting role",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this role?",
+    "load-error": "Error loading role"
+  },
+  "fields": {
+    "nombreRol": "Role Name",
+    "descripcion": "Description",
+    "nivelJerarquia": "Hierarchy Level",
+    "nivelJerarquiaDesde": "Level from",
+    "nivelJerarquiaHasta": "Level to",
+    "createdAt": "Created At"
+  },
+  "table": {
+    "nombreRol": "Role Name",
+    "descripcion": "Description",
+    "nivelJerarquia": "Hierarchy Level"
+  }
+}

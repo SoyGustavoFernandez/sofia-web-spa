@@ -1,101 +1,163 @@
 <ng-container *transloco="let t; scope: 'empresa'; read: 'empresa'">
-  <div class="page-container">
-    <div class="page-header">
-      <h1 class="mat-h1">{{ t('title') }}</h1>
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>{{ t('searchPlaceholder') }}</mat-label>
-        <input matInput [(ngModel)]="searchText" />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="false" />
+
+    <div class="sofia-filter-card">
+      <div
+        class="sofia-filter-header d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="mb-1">{{ t('search.title') }}</h4>
+          <div class="search-info-text">
+            {{ 'generic-labels.search-subtitle' | transloco }}
+          </div>
+        </div>
+        <button
+          mat-stroked-button
+          color="primary"
+          [routerLink]="['carga-masiva']">
+          <mat-icon>upload</mat-icon>
+          {{ 'carga-masiva.btn' | transloco }}
+        </button>
+      </div>
+
+      <form [formGroup]="searchForm" class="row g-3 mt-1">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.nombre') }}</mat-label>
+            <input matInput formControlName="nombre" (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.estado') }}</mat-label>
+            <mat-select formControlName="estado">
+              @for (opt of estadoOptions; track opt.value) {
+                <mat-option [value]="opt.value">{{
+                  opt.label | transloco
+                }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.fechaVencimiento') }} desde</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerDesde"
+              formControlName="fechaVencimientoDesde"
+              readonly />
+            <mat-datepicker-toggle matSuffix [for]="pickerDesde" />
+            <mat-datepicker #pickerDesde />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.fechaVencimiento') }} hasta</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerHasta"
+              formControlName="fechaVencimientoHasta"
+              readonly />
+            <mat-datepicker-toggle matSuffix [for]="pickerHasta" />
+            <mat-datepicker #pickerHasta />
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button mat-button (click)="clear()">
+          {{ 'actions.clear' | transloco }}
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="search()"
+          [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            {{ 'actions.search' | transloco }}
+          }
+        </button>
+      </div>
     </div>
 
-    @if (loading()) {
-      <div class="loading-center">
-        <mat-spinner diameter="48" />
-      </div>
-    } @else {
-      <div class="table-wrapper mat-elevation-z2">
-        <table mat-table [dataSource]="filteredEmpresas" class="full-width">
-          <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef>{{ t('cols.nombre') }}</th>
-            <td mat-cell *matCellDef="let e">{{ e.nombre }}</td>
-          </ng-container>
+    @if (showResults()) {
+      <div class="sofia-results-card">
+        <div class="sofia-results-header">
+          {{ 'generic-labels.results' | transloco }} ({{ totalCount() }})
+        </div>
+        <div class="sofia-table-container">
+          <table mat-table [dataSource]="items()">
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>{{ t('table.nombre') }}</th>
+              <td mat-cell *matCellDef="let row">
+                <a [routerLink]="[row.id]" class="link-no-underline">{{
+                  row.nombre
+                }}</a>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="ruc">
-            <th mat-header-cell *matHeaderCellDef>{{ t('cols.ruc') }}</th>
-            <td mat-cell *matCellDef="let e">{{ e.ruc ?? '—' }}</td>
-          </ng-container>
+            <ng-container matColumnDef="ruc">
+              <th mat-header-cell *matHeaderCellDef>{{ t('table.ruc') }}</th>
+              <td mat-cell *matCellDef="let row">{{ row.ruc ?? '—' }}</td>
+            </ng-container>
 
-          <ng-container matColumnDef="estado">
-            <th mat-header-cell *matHeaderCellDef>{{ t('cols.estado') }}</th>
-            <td mat-cell *matCellDef="let e">
-              <span class="estado-chip" [ngClass]="estadoClass(e.estado)">
-                {{ estadoLabel(e.estado) }}
-              </span>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>{{ t('table.estado') }}</th>
+              <td mat-cell *matCellDef="let row">
+                {{ estadoLabel(row.estado) }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="fechaVencimiento">
-            <th mat-header-cell *matHeaderCellDef>
-              {{ t('cols.fechaVencimiento') }}
-            </th>
-            <td mat-cell *matCellDef="let e">
-              {{
-                e.fechaVencimiento
-                  ? (e.fechaVencimiento | date: 'dd/MM/yyyy')
-                  : '—'
-              }}
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="estaVigente">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.estaVigente') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-icon
+                  class="sofia-vigente-icon"
+                  [class.vigente]="row.estaVigente"
+                  [class.no-vigente]="!row.estaVigente">
+                  {{ row.estaVigente ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="estaVigente">
-            <th mat-header-cell *matHeaderCellDef>
-              {{ t('cols.estaVigente') }}
-            </th>
-            <td mat-cell *matCellDef="let e">
-              <mat-icon [color]="e.estaVigente ? 'primary' : 'warn'">
-                {{ e.estaVigente ? 'check_circle' : 'cancel' }}
-              </mat-icon>
-            </td>
-          </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td
+                class="mat-cell"
+                [attr.colspan]="displayedColumns.length"
+                style="text-align: center; padding: 2rem">
+                {{ 'generic-labels.results' | transloco }}
+              </td>
+            </tr>
+          </table>
+        </div>
 
-          <ng-container matColumnDef="cantidadSucursales">
-            <th mat-header-cell *matHeaderCellDef>
-              {{ t('cols.cantidadSucursales') }}
-            </th>
-            <td mat-cell *matCellDef="let e">{{ e.cantidadSucursales }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let e" class="actions-cell">
-              <a
-                mat-icon-button
-                [routerLink]="[e.id, 'editar']"
-                matTooltip="Editar">
-                <mat-icon>edit</mat-icon>
-              </a>
-              <button
-                mat-icon-button
-                color="warn"
-                (click)="openDelete(e)"
-                matTooltip="Cancelar empresa">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-          <tr class="mat-row" *matNoDataRow>
-            <td
-              class="mat-cell"
-              [attr.colspan]="displayedColumns.length"
-              style="text-align: center; padding: 2rem">
-              {{ t('noData') }}
-            </td>
-          </tr>
-        </table>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button mat-stroked-button (click)="exportar()">
+            <mat-icon>download</mat-icon>
+            {{ 'actions.export' | transloco }}
+          </button>
+          <mat-paginator
+            [length]="totalCount()"
+            [pageIndex]="pageNumber() - 1"
+            [pageSize]="pageSize()"
+            [pageSizeOptions]="[10, 25, 50]"
+            [showFirstLastButtons]="true"
+            (page)="onPageChange($event)" />
+        </div>
       </div>
     }
   </div>

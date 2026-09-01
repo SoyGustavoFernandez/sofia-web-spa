@@ -1,0 +1,35 @@
+{
+  "title": "Catálogo DIGEMID",
+  "search": {
+    "title": "Búsqueda en Catálogo DIGEMID",
+    "search-error": "Error al buscar en el catálogo DIGEMID",
+    "export-filename": "digemid-catalogo.xlsx"
+  },
+  "detail": {
+    "title-new": "Nuevo Producto DIGEMID",
+    "title-edit": "Editar Producto DIGEMID",
+    "save-success": "Producto DIGEMID guardado correctamente",
+    "save-error": "Error al guardar el producto DIGEMID",
+    "delete-success": "Producto DIGEMID eliminado correctamente",
+    "delete-error": "Error al eliminar el producto DIGEMID",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar este producto del catálogo DIGEMID?",
+    "load-error": "Error al cargar el producto DIGEMID"
+  },
+  "fields": {
+    "codProd": "Código de Producto",
+    "nomProd": "Nombre del Producto",
+    "concent": "Concentración",
+    "formaFarmaceutica": "Forma Farmacéutica",
+    "fraccion": "Fracción",
+    "registroSanitario": "Registro Sanitario",
+    "titular": "Titular",
+    "estado": "Estado"
+  },
+  "table": {
+    "codProd": "Código",
+    "nomProd": "Nombre del Producto",
+    "formaFarmaceutica": "Forma Farmacéutica",
+    "estado": "Estado"
+  }
+}

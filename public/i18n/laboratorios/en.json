@@ -1,5 +1,5 @@
 {
-  "title": "Laboratory Management",
+  "title": "Laboratories",
   "searchPlaceholder": "Search by name or code...",
   "add": "Add Laboratory",
   "cols": {
@@ -38,7 +38,7 @@
   },
   "help": {
     "nombreCompania": "Commercial or legal name of the pharmaceutical laboratory.",
-    "codigoIdentificador": "Unique identification code of the laboratory (e.g., sanitary registry or internal code)."
+    "codigoIdentificador": "Unique identification code of the laboratory (e.g. sanitary registry or internal code)."
   },
   "import": {
     "title": "Bulk Laboratory Upload",
@@ -57,5 +57,29 @@
     "valid": "Valid",
     "invalid": "With error",
     "button": "Bulk Upload"
+  },
+  "search": {
+    "title": "Search Laboratories",
+    "search-error": "Error searching laboratories",
+    "export-filename": "laboratories.xlsx"
+  },
+  "detail": {
+    "title-new": "New Laboratory",
+    "title-edit": "Edit Laboratory",
+    "save-success": "Laboratory saved successfully",
+    "save-error": "Error saving laboratory",
+    "delete-success": "Laboratory deleted successfully",
+    "delete-error": "Error deleting laboratory",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this laboratory?",
+    "load-error": "Error loading laboratory"
+  },
+  "fields": {
+    "nombreCompania": "Company Name",
+    "codigoIdentificador": "Identifier Code"
+  },
+  "table": {
+    "nombreCompania": "Company Name",
+    "codigoIdentificador": "Identifier Code"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "title": "Mantenimiento de Proveedores",
+  "title": "Proveedores",
   "searchPlaceholder": "Buscar por razón social o RUC...",
   "add": "Agregar Proveedor",
   "cols": {
@@ -22,8 +22,8 @@
     "razonSocial": "Razón Social",
     "taxId": "RUC / Tax ID",
     "terminosFinancieros": "Términos Financieros",
-    "calificacionEsg": "Calificación ESG (0-100)",
-    "tasaCumplimiento": "Tasa de Cumplimiento (0-100)",
+    "calificacionEsg": "Calificación ESG",
+    "tasaCumplimiento": "Tasa de Cumplimiento",
     "save": "Guardar",
     "cancel": "Cancelar",
     "back": "Volver",
@@ -68,5 +68,33 @@
     "valid": "Válido",
     "invalid": "Con error",
     "button": "Carga Masiva"
+  },
+  "search": {
+    "title": "Búsqueda de Proveedores",
+    "search-error": "Error al buscar proveedores",
+    "export-filename": "proveedores.xlsx"
+  },
+  "detail": {
+    "title-new": "Nuevo Proveedor",
+    "title-edit": "Editar Proveedor",
+    "save-success": "Proveedor guardado correctamente",
+    "save-error": "Error al guardar el proveedor",
+    "delete-success": "Proveedor eliminado correctamente",
+    "delete-error": "Error al eliminar el proveedor",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar este proveedor?",
+    "load-error": "Error al cargar el proveedor"
+  },
+  "fields": {
+    "razonSocial": "Razón Social",
+    "taxId": "RUC / Tax ID",
+    "terminosFinancieros": "Términos Financieros",
+    "calificacionEsg": "Calificación ESG",
+    "tasaCumplimiento": "Tasa de Cumplimiento"
+  },
+  "table": {
+    "razonSocial": "Razón Social",
+    "taxId": "RUC / Tax ID",
+    "tasaCumplimiento": "Tasa de Cumplimiento"
   }
 }

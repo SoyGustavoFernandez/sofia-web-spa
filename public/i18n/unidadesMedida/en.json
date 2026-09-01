@@ -1,5 +1,5 @@
 {
-  "title": "Unit of Measure Management",
+  "title": "Units of Measure",
   "searchPlaceholder": "Search by code or description...",
   "add": "Add Unit of Measure",
   "cols": {
@@ -57,5 +57,29 @@
     "valid": "Valid",
     "invalid": "With error",
     "button": "Bulk Upload"
+  },
+  "search": {
+    "title": "Search Units of Measure",
+    "search-error": "Error searching units of measure",
+    "export-filename": "units-of-measure.xlsx"
+  },
+  "detail": {
+    "title-new": "New Unit of Measure",
+    "title-edit": "Edit Unit of Measure",
+    "save-success": "Unit of measure saved successfully",
+    "save-error": "Error saving unit of measure",
+    "delete-success": "Unit of measure deleted successfully",
+    "delete-error": "Error deleting unit of measure",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this unit of measure?",
+    "load-error": "Error loading unit of measure"
+  },
+  "fields": {
+    "codigo": "Code",
+    "descripcion": "Description"
+  },
+  "table": {
+    "codigo": "Code",
+    "descripcion": "Description"
   }
 }

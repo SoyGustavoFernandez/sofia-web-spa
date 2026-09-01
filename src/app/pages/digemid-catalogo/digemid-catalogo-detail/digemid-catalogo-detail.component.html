@@ -1,0 +1,76 @@
+<ng-container
+  *transloco="let t; scope: 'digemidCatalogo'; read: 'digemidCatalogo'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/digemid-catalogo" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    } @else {
+      <div class="sofia-detail-card">
+        <form [formGroup]="form" class="row g-3">
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.codProd') }}</mat-label>
+              <input matInput formControlName="codProd" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-9">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.nomProd') }}</mat-label>
+              <input matInput formControlName="nomProd" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.concent') }}</mat-label>
+              <input matInput formControlName="concent" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.formaFarmaceutica') }}</mat-label>
+              <input matInput formControlName="formaFarmaceutica" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.fraccion') }}</mat-label>
+              <input matInput formControlName="fraccion" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.registroSanitario') }}</mat-label>
+              <input matInput formControlName="registroSanitario" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-5">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.titular') }}</mat-label>
+              <input matInput formControlName="titular" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.estado') }}</mat-label>
+              <input matInput formControlName="estado" />
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+    }
+  </div>
+</ng-container>
