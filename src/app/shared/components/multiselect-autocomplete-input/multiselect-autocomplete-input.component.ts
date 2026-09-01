@@ -164,14 +164,14 @@ export class MultiselectAutocompleteInputComponent<T> implements OnInit, OnDestr
         }
     }
 
-    private getValId(val: any): any {
+    private getValId(val: T): string | number | null {
         if (val == null) return null;
         if (typeof val === 'object') {
-            if ('portId' in val) return val.portId;
-            if ('id' in val) return val.id;
-            if ('code' in val) return val.code;
+            const obj = val as Record<string, unknown>;
+            if ('id' in obj) return obj['id'] as string | number;
+            if ('code' in obj) return obj['code'] as string | number;
         }
-        return val;
+        return val as unknown as string | number;
     }
 
     private areItemsEqual(a: T, b: T): boolean {
