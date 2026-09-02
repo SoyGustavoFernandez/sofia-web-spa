@@ -29,5 +29,16 @@
     "nombreRol": "Nombre del Rol",
     "descripcion": "Descripción",
     "nivelJerarquia": "Nivel de Jerarquía"
+  },
+  "permisos": {
+    "title": "Permisos del Rol",
+    "subtitle": "Seleccione los permisos que tendrá este rol en el sistema.",
+    "save": "Guardar permisos",
+    "save-success": "Permisos guardados correctamente",
+    "save-error": "Error al guardar los permisos",
+    "load-error": "Error al cargar los permisos",
+    "cache-warning": "Los cambios pueden tardar hasta 30 minutos en aplicarse",
+    "no-changes": "No hay cambios en los permisos",
+    "acciones": "acciones"
   }
 }

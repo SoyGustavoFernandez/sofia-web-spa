@@ -32,7 +32,6 @@
 
         <form [formGroup]="form" class="row g-3">
           <div class="col-md-9">
-            <!-- nombreRol: editable on create, read-only for existing records -->
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ t('fields.nombreRol') }}</mat-label>
               <input matInput formControlName="nombreRol" maxlength="100" />
@@ -94,6 +93,84 @@
           </div>
         }
       </div>
+
+      @if (!isNew()) {
+        <div class="sofia-detail-card">
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('permisos.title') }}</h4>
+              <div class="search-info-text">{{ t('permisos.subtitle') }}</div>
+            </div>
+            <span class="badge bg-warning text-dark" style="font-size: 11px">
+              <mat-icon style="font-size: 14px; vertical-align: middle"
+                >schedule</mat-icon
+              >
+              {{ t('permisos.cache-warning') }}
+            </span>
+          </div>
+
+          @if (loadingPermisos()) {
+            <div class="d-flex justify-content-center p-4">
+              <mat-spinner diameter="32" />
+            </div>
+          } @else {
+            <mat-accordion multi>
+              @for (group of permisosCatalog(); track group.modulo) {
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <mat-checkbox
+                        [checked]="areAllSelected(group.modulo, group.acciones)"
+                        [indeterminate]="
+                          areSomeSelected(group.modulo, group.acciones) &&
+                          !areAllSelected(group.modulo, group.acciones)
+                        "
+                        (change)="toggleModulo(group.modulo, group.acciones)"
+                        (click)="$event.stopPropagation()">
+                        <strong>{{ group.modulo }}</strong>
+                      </mat-checkbox>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      {{ countSelected(group.modulo, group.acciones) }}/{{
+                        group.acciones.length
+                      }}
+                      {{ t('permisos.acciones') }}
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+
+                  <div class="row g-2 pt-1">
+                    @for (accion of group.acciones; track accion) {
+                      <div class="col-md-3 col-6">
+                        <mat-checkbox
+                          [checked]="isPermisoActivo(group.modulo, accion)"
+                          (change)="togglePermiso(group.modulo, accion)">
+                          {{ accion }}
+                        </mat-checkbox>
+                      </div>
+                    }
+                  </div>
+                </mat-expansion-panel>
+              }
+            </mat-accordion>
+
+            <div class="d-flex justify-content-end mt-3">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="savePermisos()"
+                [disabled]="savingPermisos()">
+                @if (savingPermisos()) {
+                  <mat-spinner diameter="18" />
+                } @else {
+                  {{ t('permisos.save') }}
+                }
+              </button>
+            </div>
+          }
+        </div>
+      }
     }
   </div>
 </ng-container>

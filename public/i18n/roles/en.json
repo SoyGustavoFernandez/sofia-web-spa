@@ -29,5 +29,16 @@
     "nombreRol": "Role Name",
     "descripcion": "Description",
     "nivelJerarquia": "Hierarchy Level"
+  },
+  "permisos": {
+    "title": "Role Permissions",
+    "subtitle": "Select the permissions this role will have in the system.",
+    "save": "Save permissions",
+    "save-success": "Permissions saved successfully",
+    "save-error": "Error saving permissions",
+    "load-error": "Error loading permissions",
+    "cache-warning": "Changes may take up to 30 minutes to apply",
+    "no-changes": "No changes in permissions",
+    "acciones": "actions"
   }
 }

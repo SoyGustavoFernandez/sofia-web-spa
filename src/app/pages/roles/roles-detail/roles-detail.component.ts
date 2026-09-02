@@ -1,15 +1,16 @@
-﻿import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { MatDialog } from '@angular/material/dialog';
+import { forkJoin } from 'rxjs';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { RolService } from '../services/rol.service';
-import { RolResponse } from '../models/rol.model';
+import { RolResponse, PermisoCatalogGroup, PermisoRolDto } from '../models/rol.model';
 
 @Component({
   selector: 'app-roles-detail',
@@ -39,9 +40,15 @@ export class RolesDetailComponent implements OnInit {
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly deleting = signal(false);
+  readonly loadingPermisos = signal(false);
+  readonly savingPermisos = signal(false);
 
   private entityId: string | null = null;
   private snapshot: RolResponse | null = null;
+  private permisosSnapshot: PermisoRolDto[] = [];
+
+  readonly permisosCatalog = signal<PermisoCatalogGroup[]>([]);
+  readonly permisosActivos = signal<PermisoRolDto[]>([]);
 
   // nombreRol is editable only when creating; for existing records it is always disabled
   readonly form = this.fb.group({
@@ -61,12 +68,11 @@ export class RolesDetailComponent implements OnInit {
     if (!id) {
       this.isNew.set(true);
       this.isEditMode.set(true);
-      // All fields enabled when creating a new role
     } else {
       this.entityId = id;
-      // For existing records: nombreRol is always read-only; others start disabled
       this.form.disable();
       this.load();
+      this.loadPermisos();
     }
   }
 
@@ -89,12 +95,99 @@ export class RolesDetailComponent implements OnInit {
     });
   }
 
+  private loadPermisos(): void {
+    this.loadingPermisos.set(true);
+    forkJoin([
+      this.service.getPermissionsCatalog(),
+      this.service.getPermisos(this.entityId!),
+    ]).subscribe({
+      next: ([catalog, activos]) => {
+        this.permisosCatalog.set(catalog);
+        this.permisosActivos.set(activos);
+        this.permisosSnapshot = [...activos];
+        this.loadingPermisos.set(false);
+      },
+      error: (err: unknown) => {
+        this.loadingPermisos.set(false);
+        this.notifier.showServerError(err, this.transloco.translate('roles.permisos.load-error'));
+      },
+    });
+  }
+
+  isPermisoActivo(modulo: string, accion: string): boolean {
+    return this.permisosActivos().some(p => p.moduloSistema === modulo && p.accion === accion);
+  }
+
+  areAllSelected(modulo: string, acciones: string[]): boolean {
+    return acciones.every(a => this.isPermisoActivo(modulo, a));
+  }
+
+  areSomeSelected(modulo: string, acciones: string[]): boolean {
+    return acciones.some(a => this.isPermisoActivo(modulo, a));
+  }
+
+  countSelected(modulo: string, acciones: string[]): number {
+    return acciones.filter(a => this.isPermisoActivo(modulo, a)).length;
+  }
+
+  togglePermiso(modulo: string, accion: string): void {
+    const current = this.permisosActivos();
+    const existing = current.find(p => p.moduloSistema === modulo && p.accion === accion);
+    if (existing) {
+      this.permisosActivos.set(current.filter(p => !(p.moduloSistema === modulo && p.accion === accion)));
+    } else {
+      this.permisosActivos.set([...current, { id: '', moduloSistema: modulo, accion }]);
+    }
+  }
+
+  toggleModulo(modulo: string, acciones: string[]): void {
+    if (this.areAllSelected(modulo, acciones)) {
+      this.permisosActivos.set(this.permisosActivos().filter(p => p.moduloSistema !== modulo));
+    } else {
+      const missing = acciones.filter(a => !this.isPermisoActivo(modulo, a));
+      this.permisosActivos.set([
+        ...this.permisosActivos(),
+        ...missing.map(a => ({ id: '', moduloSistema: modulo, accion: a })),
+      ]);
+    }
+  }
+
+  savePermisos(): void {
+    const current = this.permisosActivos();
+    const toAssign = current.filter(
+      c => !this.permisosSnapshot.some(s => s.moduloSistema === c.moduloSistema && s.accion === c.accion)
+    );
+    const toRevoke = this.permisosSnapshot.filter(
+      s => !current.some(c => c.moduloSistema === s.moduloSistema && c.accion === s.accion)
+    );
+
+    if (toAssign.length === 0 && toRevoke.length === 0) {
+      this.notifier.showSuccess(this.transloco.translate('roles.permisos.no-changes'));
+      return;
+    }
+
+    this.savingPermisos.set(true);
+    forkJoin([
+      ...toAssign.map(p => this.service.assignPermiso(this.entityId!, p.moduloSistema, p.accion)),
+      ...toRevoke.map(p => this.service.revokePermiso(p.id)),
+    ]).subscribe({
+      next: () => {
+        this.notifier.showSuccess(this.transloco.translate('roles.permisos.save-success'));
+        this.savingPermisos.set(false);
+        this.loadPermisos();
+      },
+      error: (err: unknown) => {
+        this.savingPermisos.set(false);
+        this.notifier.showServerError(err, this.transloco.translate('roles.permisos.save-error'));
+        this.loadPermisos();
+      },
+    });
+  }
+
   enterEditMode(): void {
     this.isEditMode.set(true);
-    // For existing records: descripcion and nivelJerarquia become editable; nombreRol stays disabled
     this.form.get('descripcion')?.enable();
     this.form.get('nivelJerarquia')?.enable();
-    // nombreRol remains disabled for existing records
   }
 
   cancelEdit(): void {
