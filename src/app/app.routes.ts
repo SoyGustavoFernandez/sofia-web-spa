@@ -28,6 +28,11 @@ export const appRoutes: Route[] = [
       },
       // Administración
       {
+        path: 'sucursales',
+        loadChildren: () =>
+          import('./pages/sucursales/sucursales.routes').then(m => m.SUCURSALES_ROUTES),
+      },
+      {
         path: 'empresas',
         loadChildren: () =>
           import('./pages/empresa/empresa.routes').then(m => m.EMPRESA_ROUTES),

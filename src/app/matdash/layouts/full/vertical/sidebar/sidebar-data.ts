@@ -24,6 +24,11 @@ export const navItems: NavItem[] = [
         route: '/empresas',
       },
       {
+        displayName: 'nav.sucursales',
+        iconName: 'solar:shop-2-line-duotone',
+        route: '/sucursales',
+      },
+      {
         displayName: 'nav.rolesPermisos',
         iconName: 'solar:lock-keyhole-line-duotone',
         route: '/roles',
