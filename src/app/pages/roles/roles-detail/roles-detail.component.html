@@ -103,8 +103,20 @@
               <h4 class="mb-1">{{ t('permisos.title') }}</h4>
               <div class="search-info-text">{{ t('permisos.subtitle') }}</div>
             </div>
-            <span class="badge bg-warning text-dark" style="font-size: 11px">
-              <mat-icon style="font-size: 14px; vertical-align: middle"
+            <span
+              class="bg-warning text-dark d-flex align-items-center gap-1"
+              style="
+                font-size: 11px;
+                padding: 0.45rem 0.75rem;
+                border-radius: 8px;
+              ">
+              <mat-icon
+                style="
+                  font-size: 14px;
+                  width: 14px;
+                  height: 14px;
+                  line-height: 14px;
+                "
                 >schedule</mat-icon
               >
               {{ t('permisos.cache-warning') }}
@@ -118,7 +130,8 @@
           } @else {
             <mat-accordion multi>
               @for (group of permisosCatalog(); track group.modulo) {
-                <mat-expansion-panel>
+                <mat-expansion-panel
+                  style="--mat-expansion-container-background-color: white">
                   <mat-expansion-panel-header>
                     <mat-panel-title>
                       <mat-checkbox
@@ -155,7 +168,7 @@
               }
             </mat-accordion>
 
-            <div class="d-flex justify-content-end mt-3">
+            <div class="d-flex justify-content-end" style="margin-top: 1.5rem">
               <button
                 mat-flat-button
                 color="primary"
