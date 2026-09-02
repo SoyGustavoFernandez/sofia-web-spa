@@ -32,3 +32,14 @@ export interface PaginatedList<T> {
   totalPages: number;
   totalCount: number;
 }
+
+export interface PermisoCatalogGroup {
+  modulo: string;
+  acciones: string[];
+}
+
+export interface PermisoRolDto {
+  id: string;
+  moduloSistema: string;
+  accion: string;
+}

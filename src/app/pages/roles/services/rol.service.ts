@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environment/environment';
-import { RolResponse, CreateRolRequest, UpdateRolRequest, SearchRolParams, PaginatedList } from '../models/rol.model';
+import { RolResponse, CreateRolRequest, UpdateRolRequest, SearchRolParams, PaginatedList, PermisoCatalogGroup, PermisoRolDto } from '../models/rol.model';
 
 @Injectable({ providedIn: 'root' })
 export class RolService {
@@ -38,5 +38,21 @@ export class RolService {
 
   exportar(headers: string[], filters: { nombreRol?: string; descripcion?: string; nivelJerarquiaDesde?: number; nivelJerarquiaHasta?: number }): Observable<Blob> {
     return this.http.post(`${this.base}/exportar`, { headers, ...filters }, { responseType: 'blob' });
+  }
+
+  getPermissionsCatalog(): Observable<PermisoCatalogGroup[]> {
+    return this.http.get<PermisoCatalogGroup[]>(`${this.base}/permissions/catalog`);
+  }
+
+  getPermisos(rolId: string): Observable<PermisoRolDto[]> {
+    return this.http.get<PermisoRolDto[]>(`${this.base}/${rolId}/permissions`);
+  }
+
+  assignPermiso(rolId: string, moduloSistema: string, accion: string): Observable<{ id: string }> {
+    return this.http.post<{ id: string }>(`${this.base}/permissions`, { rolId, moduloSistema, accion });
+  }
+
+  revokePermiso(permisoId: string): Observable<void> {
+    return this.http.delete<void>(`${this.base}/permissions/${permisoId}`);
   }
 }
