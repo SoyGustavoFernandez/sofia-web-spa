@@ -1,0 +1,66 @@
+{
+  "title": "Cuentas de Usuario",
+  "search": {
+    "title": "Búsqueda de Cuentas",
+    "search-error": "Error al buscar cuentas",
+    "export-filename": "cuentas.xlsx"
+  },
+  "detail": {
+    "title-new": "Nueva Cuenta de Usuario",
+    "title-edit": "Detalle de Cuenta",
+    "load-error": "Error al cargar la cuenta",
+    "save-success": "Cuenta guardada correctamente",
+    "save-error": "Error al guardar la cuenta",
+    "delete-success": "Cuenta eliminada correctamente",
+    "delete-error": "Error al eliminar la cuenta",
+    "confirm-delete-title": "Eliminar cuenta",
+    "confirm-delete-message": "¿Está seguro de que desea eliminar esta cuenta de usuario? Esta acción no se puede deshacer.",
+    "confirm-delete-confirm": "Eliminar",
+    "confirm-delete-cancel": "Cancelar"
+  },
+  "fields": {
+    "nombreUsuario": "Nombre de Usuario",
+    "empleado": "Empleado",
+    "cuentaActiva": "Cuenta Activa",
+    "bloqueado": "Bloqueado",
+    "requiresCambio": "Requiere Cambio de Clave",
+    "intentosFallidos": "Intentos Fallidos",
+    "bloqueadoHasta": "Bloqueado Hasta",
+    "password": "Contraseña",
+    "createdAt": "Creado el",
+    "roles": "Roles Asignados",
+    "sucursales": "Sucursales Asignadas",
+    "forzarCambioClave": "Forzar Cambio de Contraseña",
+    "resetearIntentos": "Resetear Intentos Fallidos"
+  },
+  "roles": {
+    "title": "Roles Asignados",
+    "subtitle": "Gestione los roles de acceso de esta cuenta",
+    "empty": "Sin roles asignados",
+    "add-placeholder": "Agregar rol...",
+    "assign-success": "Rol asignado correctamente",
+    "assign-error": "Error al asignar el rol",
+    "remove-success": "Rol eliminado correctamente",
+    "remove-error": "Error al eliminar el rol"
+  },
+  "sucursales": {
+    "add-placeholder": "Agregar sucursal...",
+    "assign-success": "Sucursal asignada correctamente",
+    "assign-error": "Error al asignar la sucursal",
+    "remove-success": "Sucursal eliminada correctamente",
+    "remove-error": "Error al eliminar la sucursal"
+  },
+  "table": {
+    "nombreUsuario": "Usuario",
+    "empleado": "Empleado",
+    "cuentaActiva": "Estado",
+    "bloqueado": "Bloqueado",
+    "intentosFallidos": "Intentos"
+  },
+  "status": {
+    "active": "Activa",
+    "inactive": "Inactiva",
+    "blocked": "Bloqueada",
+    "ok": "OK"
+  }
+}

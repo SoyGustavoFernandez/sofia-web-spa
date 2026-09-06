@@ -33,6 +33,11 @@ export const navItems: NavItem[] = [
         iconName: 'solar:lock-keyhole-line-duotone',
         route: '/roles',
       },
+      {
+        displayName: 'nav.cuentasUsuario',
+        iconName: 'solar:user-id-line-duotone',
+        route: '/cuentas',
+      },
     ],
   },
   {
@@ -54,6 +59,11 @@ export const navItems: NavItem[] = [
         displayName: 'nav.ingredientesActivos',
         iconName: 'solar:atom-line-duotone',
         route: '/ingredientes-activos',
+      },
+      {
+        displayName: 'nav.medicamentos',
+        iconName: 'solar:pill-line-duotone',
+        route: '/medicamentos',
       },
       {
         displayName: 'nav.proveedores',
