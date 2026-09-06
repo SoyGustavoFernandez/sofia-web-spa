@@ -70,6 +70,7 @@
     "save-error": "Error saving unit of measure",
     "delete-success": "Unit of measure deleted successfully",
     "delete-error": "Error deleting unit of measure",
+    "delete-in-use": "This unit of measure cannot be deleted because it is used by medications or unit hierarchies.",
     "delete-confirm-title": "Confirm deletion",
     "delete-confirm-message": "Are you sure you want to delete this unit of measure?",
     "load-error": "Error loading unit of measure"

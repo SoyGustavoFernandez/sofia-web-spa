@@ -70,6 +70,7 @@
     "save-error": "Error al guardar la unidad de medida",
     "delete-success": "Unidad de medida eliminada correctamente",
     "delete-error": "Error al eliminar la unidad de medida",
+    "delete-in-use": "No se puede eliminar la unidad de medida porque está asociada a medicamentos o jerarquías de unidades.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Está seguro de que desea eliminar esta unidad de medida?",
     "load-error": "Error al cargar la unidad de medida"
