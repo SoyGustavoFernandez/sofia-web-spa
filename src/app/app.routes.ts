@@ -54,6 +54,11 @@ export const appRoutes: Route[] = [
           import('./pages/unidades-medida/unidades-medida.routes').then(m => m.UNIDADES_MEDIDA_ROUTES),
       },
       {
+        path: 'jerarquias',
+        loadChildren: () =>
+          import('./pages/jerarquias/jerarquias.routes').then(m => m.JERARQUIAS_ROUTES),
+      },
+      {
         path: 'laboratorios',
         loadChildren: () =>
           import('./pages/laboratorios/laboratorios.routes').then(m => m.LABORATORIOS_ROUTES),

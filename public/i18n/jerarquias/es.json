@@ -1,0 +1,38 @@
+{
+  "title": "Jerarquías de Unidades",
+  "search": {
+    "title": "Búsqueda de Jerarquías",
+    "search-error": "Error al buscar jerarquías de unidades",
+    "export-filename": "jerarquias-unidades.xlsx"
+  },
+  "detail": {
+    "load-error": "Error al cargar la jerarquía",
+    "save-success": "Jerarquía guardada correctamente",
+    "save-error": "Error al guardar la jerarquía",
+    "delete-success": "Jerarquía eliminada correctamente",
+    "delete-error": "Error al eliminar la jerarquía",
+    "delete-in-use": "No se puede eliminar la jerarquía porque está en uso.",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar esta jerarquía?",
+    "multiplicador-hint": "Cuántas unidades menores equivalen a una unidad mayor",
+    "multiplicador-error": "El multiplicador debe ser mayor que cero",
+    "same-unidad-error": "La unidad mayor y la unidad menor no pueden ser la misma"
+  },
+  "fields": {
+    "producto": "Producto",
+    "unidadMayor": "Unidad Mayor",
+    "unidadMenor": "Unidad Menor",
+    "multiplicador": "Multiplicador"
+  },
+  "table": {
+    "producto": "Producto",
+    "unidadMayor": "Unidad Mayor",
+    "unidadMenor": "Unidad Menor",
+    "multiplicador": "Multiplicador"
+  },
+  "autocomplete": {
+    "producto-placeholder": "Buscar producto...",
+    "unidad-placeholder": "Buscar unidad de medida...",
+    "no-results": "Sin resultados"
+  }
+}
