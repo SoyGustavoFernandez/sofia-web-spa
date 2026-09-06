@@ -88,6 +88,11 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('./pages/aseguradoras/aseguradoras.routes').then(m => m.ASEGURADORAS_ROUTES),
       },
+      // Inventario
+      {
+        path: 'lotes',
+        loadChildren: () => import('./pages/lotes/lotes.routes').then(m => m.LOTES_ROUTES),
+      },
       // Pacientes & Atención
       {
         path: 'pacientes',

@@ -1,0 +1,39 @@
+{
+  "title": "Lotes",
+  "search": {
+    "title": "Búsqueda de Lotes",
+    "search-error": "Error al buscar lotes",
+    "export-filename": "lotes.xlsx"
+  },
+  "detail": {
+    "load-error": "Error al cargar el lote",
+    "save-success": "Lote guardado correctamente",
+    "save-error": "Error al guardar el lote",
+    "save-conflict": "Ya existe un lote con ese número para el producto seleccionado",
+    "delete-success": "Lote eliminado correctamente",
+    "delete-error": "Error al eliminar el lote",
+    "delete-in-use": "No se puede eliminar un lote con stock o ventas registradas.",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar este lote?"
+  },
+  "fields": {
+    "producto": "Producto",
+    "numeroLote": "Número de Lote",
+    "fabricacion": "Fecha de Fabricación",
+    "caducidad": "Fecha de Caducidad",
+    "caducidadDesde": "Caducidad Desde",
+    "caducidadHasta": "Caducidad Hasta",
+    "fabricacionDesde": "Fabricación Desde",
+    "fabricacionHasta": "Fabricación Hasta"
+  },
+  "table": {
+    "producto": "Producto",
+    "numeroLote": "Número de Lote",
+    "fabricacion": "Fecha de Fabricación",
+    "caducidad": "Fecha de Caducidad"
+  },
+  "autocomplete": {
+    "producto-placeholder": "Buscar producto...",
+    "no-results": "Sin resultados"
+  }
+}

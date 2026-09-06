@@ -1,0 +1,214 @@
+<ng-container *transloco="let t; scope: 'lotes'; read: 'lotes'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="false" />
+
+    <div class="sofia-filter-card">
+      <div
+        class="sofia-filter-header d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="mb-1">{{ t('search.title') }}</h4>
+          <div class="search-info-text">
+            {{ 'generic-labels.search-subtitle' | transloco }}
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button mat-flat-button color="primary" (click)="goToNew()">
+            <mat-icon>add</mat-icon>
+            {{ 'actions.new' | transloco }}
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="searchForm" class="row g-3 mt-1">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.producto') }}</mat-label>
+            <input
+              matInput
+              formControlName="productoNombre"
+              [matAutocomplete]="productoAuto"
+              [placeholder]="t('autocomplete.producto-placeholder')"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete #productoAuto="matAutocomplete">
+              @for (p of productoOptions(); track p.id) {
+                <mat-option
+                  [value]="p.nombreComercial"
+                  (click)="selectProducto(p)"
+                  >{{ p.nombreComercial }}</mat-option
+                >
+              }
+              @if (
+                productoOptions().length === 0 &&
+                searchForm.controls.productoNombre.value
+              ) {
+                <mat-option disabled>{{
+                  t('autocomplete.no-results')
+                }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.numeroLote') }}</mat-label>
+            <input
+              matInput
+              formControlName="numeroLote"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.caducidadDesde') }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerCaducidadDesde"
+              formControlName="caducidadDesde" />
+            <mat-datepicker-toggle matIconSuffix [for]="pickerCaducidadDesde" />
+            <mat-datepicker #pickerCaducidadDesde />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.caducidadHasta') }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerCaducidadHasta"
+              formControlName="caducidadHasta" />
+            <mat-datepicker-toggle matIconSuffix [for]="pickerCaducidadHasta" />
+            <mat-datepicker #pickerCaducidadHasta />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.fabricacionDesde') }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerFabricacionDesde"
+              formControlName="fabricacionDesde" />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="pickerFabricacionDesde" />
+            <mat-datepicker #pickerFabricacionDesde />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.fabricacionHasta') }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerFabricacionHasta"
+              formControlName="fabricacionHasta" />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="pickerFabricacionHasta" />
+            <mat-datepicker #pickerFabricacionHasta />
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button mat-button (click)="clear()">
+          {{ 'actions.clear' | transloco }}
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="search()"
+          [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            {{ 'actions.search' | transloco }}
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (showResults()) {
+      <div class="sofia-results-card">
+        <div class="sofia-results-header">
+          {{ 'generic-labels.results' | transloco }} ({{ totalCount() }})
+        </div>
+        <div class="sofia-table-container">
+          <table mat-table [dataSource]="items()">
+            <ng-container matColumnDef="nombreProducto">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.producto') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <a [routerLink]="[row.id]" class="link-no-underline">{{
+                  row.nombreProducto
+                }}</a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numeroLoteMfr">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.numeroLote') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.numeroLoteMfr }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaFabricacion">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.fabricacion') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{
+                  row.fechaFabricacion
+                    ? (row.fechaFabricacion | date: 'dd/MM/yyyy')
+                    : '—'
+                }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaCaducidad">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.caducidad') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.fechaCaducidad | date: 'dd/MM/yyyy' }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td
+                class="mat-cell"
+                [attr.colspan]="displayedColumns.length"
+                style="text-align: center; padding: 2rem">
+                {{ 'generic-labels.no-results' | transloco }}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button mat-stroked-button (click)="exportar()">
+            <mat-icon>download</mat-icon>
+            {{ 'actions.export' | transloco }}
+          </button>
+          <mat-paginator
+            [length]="totalCount()"
+            [pageIndex]="pageIndex()"
+            [pageSize]="pageSize()"
+            [pageSizeOptions]="[10, 25, 50]"
+            [showFirstLastButtons]="true"
+            (page)="onPageChange($event)" />
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>

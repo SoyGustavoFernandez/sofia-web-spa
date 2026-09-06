@@ -1,0 +1,128 @@
+<ng-container *transloco="let t; scope: 'lotes'; read: 'lotes'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/lotes" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    } @else {
+      <div class="sofia-detail-card">
+        @if (!isNew() && !isEditMode()) {
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('title') }}</h4>
+              <div class="search-info-text">
+                {{ 'generic-labels.detail-subtitle' | transloco }}
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button mat-flat-button color="primary" (click)="enterEditMode()">
+                {{ 'actions.edit' | transloco }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <form [formGroup]="form" class="row g-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.producto') }}</mat-label>
+              <input
+                matInput
+                [formControl]="productoCtrl"
+                [matAutocomplete]="productoAuto"
+                [placeholder]="t('autocomplete.producto-placeholder')" />
+              <mat-autocomplete #productoAuto="matAutocomplete">
+                @for (p of productoOptions(); track p.id) {
+                  <mat-option
+                    [value]="p.nombreComercial"
+                    (click)="selectProducto(p)"
+                    >{{ p.nombreComercial }}</mat-option
+                  >
+                }
+                @if (productoOptions().length === 0 && productoCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+            @if (isNew() && productoTouched() && !selectedProducto()) {
+              <mat-error class="sofia-field-error">{{
+                'general.errors.required' | transloco
+              }}</mat-error>
+            }
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.numeroLote') }}</mat-label>
+              <input matInput formControlName="numeroLoteMfr" maxlength="100" />
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.fabricacion') }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pickerFabricacion"
+                formControlName="fechaFabricacion" />
+              <mat-datepicker-toggle matIconSuffix [for]="pickerFabricacion" />
+              <mat-datepicker #pickerFabricacion />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.caducidad') }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pickerCaducidad"
+                formControlName="fechaCaducidad" />
+              <mat-datepicker-toggle matIconSuffix [for]="pickerCaducidad" />
+              <mat-datepicker #pickerCaducidad />
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+        </form>
+
+        @if (isEditMode()) {
+          <div class="d-flex justify-content-end align-items-center mt-3 gap-4">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="save()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+            @if (!isNew()) {
+              <button
+                mat-flat-button
+                class="sofia-btn-delete"
+                (click)="confirmDelete()"
+                [disabled]="deleting()">
+                {{ 'actions.delete' | transloco }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-container>

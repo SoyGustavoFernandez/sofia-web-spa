@@ -1,0 +1,39 @@
+{
+  "title": "Batches",
+  "search": {
+    "title": "Batch Search",
+    "search-error": "Error searching batches",
+    "export-filename": "batches.xlsx"
+  },
+  "detail": {
+    "load-error": "Error loading the batch",
+    "save-success": "Batch saved successfully",
+    "save-error": "Error saving the batch",
+    "save-conflict": "A batch with that number already exists for the selected product",
+    "delete-success": "Batch deleted successfully",
+    "delete-error": "Error deleting the batch",
+    "delete-in-use": "Cannot delete a batch that has stock or sales registered.",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this batch?"
+  },
+  "fields": {
+    "producto": "Product",
+    "numeroLote": "Batch Number",
+    "fabricacion": "Manufacture Date",
+    "caducidad": "Expiration Date",
+    "caducidadDesde": "Expiration From",
+    "caducidadHasta": "Expiration To",
+    "fabricacionDesde": "Manufacture From",
+    "fabricacionHasta": "Manufacture To"
+  },
+  "table": {
+    "producto": "Product",
+    "numeroLote": "Batch Number",
+    "fabricacion": "Manufacture Date",
+    "caducidad": "Expiration Date"
+  },
+  "autocomplete": {
+    "producto-placeholder": "Search product...",
+    "no-results": "No results"
+  }
+}
