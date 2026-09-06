@@ -70,6 +70,7 @@
     "save-error": "Error al guardar el laboratorio",
     "delete-success": "Laboratorio eliminado correctamente",
     "delete-error": "Error al eliminar el laboratorio",
+    "delete-in-use": "No se puede eliminar el laboratorio porque tiene medicamentos asociados.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Está seguro de que desea eliminar este laboratorio?",
     "load-error": "Error al cargar el laboratorio"

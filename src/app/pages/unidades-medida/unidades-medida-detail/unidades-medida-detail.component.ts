@@ -1,5 +1,6 @@
 ﻿import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
@@ -151,9 +152,12 @@ export class UnidadesMedidaDetailComponent implements OnInit {
         this.notifier.showSuccess(this.transloco.translate('unidadesMedida.detail.delete-success'));
         this.router.navigate(['/unidades-medida']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.deleting.set(false);
-        this.notifier.showError(this.transloco.translate('unidadesMedida.detail.delete-error'));
+        const key = err instanceof HttpErrorResponse && err.status === 409
+          ? 'unidadesMedida.detail.delete-in-use'
+          : 'unidadesMedida.detail.delete-error';
+        this.notifier.showError(this.transloco.translate(key));
       },
     });
   }
