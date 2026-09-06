@@ -30,6 +30,19 @@
     "descripcion": "Description",
     "nivelJerarquia": "Hierarchy Level"
   },
+  "configuracion": {
+    "title": "Role Configuration",
+    "subtitle": "Define the menu, permissions and branches for this role.",
+    "tab-menu": "Menu",
+    "tab-permisos": "Permissions",
+    "tab-sucursales": "Branches",
+    "menu-preview-hint": "Menu preview based on permissions assigned to this role.",
+    "sucursales-save": "Save branches",
+    "sucursales-save-success": "Branches saved successfully",
+    "sucursales-save-error": "Error saving branches",
+    "sucursales-load-error": "Error loading branches",
+    "sucursales-no-data": "No branches available"
+  },
   "permisos": {
     "title": "Role Permissions",
     "subtitle": "Select the permissions this role will have in the system.",

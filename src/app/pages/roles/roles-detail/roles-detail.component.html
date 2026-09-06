@@ -62,36 +62,6 @@
             </mat-form-field>
           </div>
         </form>
-
-        @if (isEditMode()) {
-          <div class="d-flex justify-content-end align-items-center mt-3 gap-3">
-            <button mat-button (click)="cancelEdit()">
-              {{ 'actions.cancel' | transloco }}
-            </button>
-            <button
-              mat-flat-button
-              color="primary"
-              style="margin-left: 0.5rem"
-              (click)="save()"
-              [disabled]="saving()">
-              @if (saving()) {
-                <mat-spinner diameter="18" />
-              } @else {
-                {{ 'actions.save' | transloco }}
-              }
-            </button>
-            @if (!isNew()) {
-              <button
-                mat-flat-button
-                class="sofia-btn-delete"
-                style="margin-left: 0.5rem"
-                (click)="confirmDelete()"
-                [disabled]="deleting()">
-                {{ 'actions.delete' | transloco }}
-              </button>
-            }
-          </div>
-        }
       </div>
 
       @if (!isNew()) {
@@ -100,8 +70,10 @@
             class="d-flex justify-content-between align-items-center pb-3 border-bottom"
             style="margin-bottom: 1rem">
             <div>
-              <h4 class="mb-1">{{ t('permisos.title') }}</h4>
-              <div class="search-info-text">{{ t('permisos.subtitle') }}</div>
+              <h4 class="mb-1">{{ t('configuracion.title') }}</h4>
+              <div class="search-info-text">
+                {{ t('configuracion.subtitle') }}
+              </div>
             </div>
             <span
               class="bg-warning text-dark d-flex align-items-center gap-1"
@@ -116,72 +88,233 @@
                   width: 14px;
                   height: 14px;
                   line-height: 14px;
-                "
-                >schedule</mat-icon
-              >
+                ">
+                schedule
+              </mat-icon>
               {{ t('permisos.cache-warning') }}
             </span>
           </div>
 
-          @if (loadingPermisos()) {
-            <div class="d-flex justify-content-center p-4">
-              <mat-spinner diameter="32" />
-            </div>
-          } @else {
-            <mat-accordion multi>
-              @for (group of permisosCatalog(); track group.modulo) {
-                <mat-expansion-panel
-                  style="--mat-expansion-container-background-color: white">
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      <mat-checkbox
-                        [checked]="areAllSelected(group.modulo, group.acciones)"
-                        [indeterminate]="
-                          areSomeSelected(group.modulo, group.acciones) &&
-                          !areAllSelected(group.modulo, group.acciones)
-                        "
-                        (change)="toggleModulo(group.modulo, group.acciones)"
-                        (click)="$event.stopPropagation()">
-                        <strong>{{ group.modulo }}</strong>
-                      </mat-checkbox>
-                    </mat-panel-title>
-                    <mat-panel-description>
-                      {{ countSelected(group.modulo, group.acciones) }}/{{
-                        group.acciones.length
-                      }}
-                      {{ t('permisos.acciones') }}
-                    </mat-panel-description>
-                  </mat-expansion-panel-header>
+          <mat-tab-group animationDuration="200ms">
+            <!-- Tab 1: Menú -->
+            <mat-tab [label]="t('configuracion.tab-menu')">
+              <div class="pt-3">
+                @if (loadingPermisos()) {
+                  <div class="d-flex justify-content-center p-4">
+                    <mat-spinner diameter="32" />
+                  </div>
+                } @else {
+                  <div class="row g-3">
+                    @for (group of menuPreview(); track group.label) {
+                      <div class="col-lg-4 col-md-6 col-12">
+                        <div
+                          style="
+                            border: 1px solid var(--mat-sys-outline-variant);
+                            border-radius: 10px;
+                            overflow: hidden;
+                          ">
+                          <div
+                            style="
+                              padding: 8px 14px;
+                              background: var(--mat-sys-surface-variant);
+                              font-size: 11px;
+                              font-weight: 700;
+                              text-transform: uppercase;
+                              letter-spacing: 0.06em;
+                              color: var(--mat-sys-on-surface-variant);
+                            ">
+                            {{ group.label }}
+                          </div>
+                          <div
+                            style="
+                              padding: 8px 10px;
+                              display: flex;
+                              flex-direction: column;
+                              gap: 2px;
+                            ">
+                            @for (item of group.items; track item.route) {
+                              <div
+                                class="d-flex align-items-center gap-2"
+                                style="padding: 5px 6px; border-radius: 6px"
+                                [style.background]="
+                                  item.visible
+                                    ? 'color-mix(in srgb, var(--mat-sys-primary) 8%, transparent)'
+                                    : 'transparent'
+                                ">
+                                <mat-icon
+                                  style="
+                                    font-size: 15px;
+                                    width: 15px;
+                                    height: 15px;
+                                    line-height: 15px;
+                                    flex-shrink: 0;
+                                  "
+                                  [style.color]="
+                                    item.visible
+                                      ? 'var(--mat-sys-primary)'
+                                      : 'var(--mat-sys-outline)'
+                                  ">
+                                  {{
+                                    item.visible
+                                      ? 'check_circle'
+                                      : 'radio_button_unchecked'
+                                  }}
+                                </mat-icon>
+                                <span
+                                  style="font-size: 13px"
+                                  [style.color]="
+                                    item.visible
+                                      ? 'var(--mat-sys-on-surface)'
+                                      : 'var(--mat-sys-outline)'
+                                  ">
+                                  {{ item.label }}
+                                </span>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </mat-tab>
 
-                  <div class="row g-2 pt-1">
-                    @for (accion of group.acciones; track accion) {
-                      <div class="col-md-3 col-6">
+            <!-- Tab 2: Permisos -->
+            <mat-tab [label]="t('configuracion.tab-permisos')">
+              <div class="pt-3">
+                @if (loadingPermisos()) {
+                  <div class="d-flex justify-content-center p-4">
+                    <mat-spinner diameter="32" />
+                  </div>
+                } @else {
+                  <mat-accordion multi>
+                    @for (group of permisosCatalog(); track group.modulo) {
+                      <mat-expansion-panel
+                        style="
+                          --mat-expansion-container-background-color: white;
+                        ">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            <mat-checkbox
+                              [checked]="
+                                areAllSelected(group.modulo, group.acciones)
+                              "
+                              [indeterminate]="
+                                areSomeSelected(group.modulo, group.acciones) &&
+                                !areAllSelected(group.modulo, group.acciones)
+                              "
+                              [disabled]="!isEditMode()"
+                              (change)="
+                                toggleModulo(group.modulo, group.acciones)
+                              "
+                              (click)="$event.stopPropagation()">
+                              <strong>{{ group.modulo }}</strong>
+                            </mat-checkbox>
+                          </mat-panel-title>
+                          <mat-panel-description>
+                            {{ countSelected(group.modulo, group.acciones) }}/{{
+                              group.acciones.length
+                            }}
+                            {{ t('permisos.acciones') }}
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <div class="row g-2 pt-1">
+                          @for (accion of group.acciones; track accion) {
+                            <div class="col-md-3 col-6">
+                              <mat-checkbox
+                                [checked]="
+                                  isPermisoActivo(group.modulo, accion)
+                                "
+                                [disabled]="!isEditMode()"
+                                (change)="togglePermiso(group.modulo, accion)">
+                                {{ accion }}
+                              </mat-checkbox>
+                            </div>
+                          }
+                        </div>
+                      </mat-expansion-panel>
+                    }
+                  </mat-accordion>
+                }
+              </div>
+            </mat-tab>
+
+            <!-- Tab 3: Sucursales -->
+            <mat-tab [label]="t('configuracion.tab-sucursales')">
+              <div class="pt-3">
+                @if (loadingSucursales()) {
+                  <div class="d-flex justify-content-center p-4">
+                    <mat-spinner diameter="32" />
+                  </div>
+                } @else if (sucursales().length === 0) {
+                  <div class="search-info-text">
+                    {{ t('configuracion.sucursales-no-data') }}
+                  </div>
+                } @else {
+                  <div class="row g-2">
+                    @for (sucursal of sucursales(); track sucursal.id) {
+                      <div class="col-md-6 col-12">
                         <mat-checkbox
-                          [checked]="isPermisoActivo(group.modulo, accion)"
-                          (change)="togglePermiso(group.modulo, accion)">
-                          {{ accion }}
+                          [checked]="sucursal.asignada"
+                          [disabled]="!isEditMode()"
+                          (change)="toggleSucursal(sucursal.id)">
+                          {{ sucursal.nombre }}
                         </mat-checkbox>
                       </div>
                     }
                   </div>
-                </mat-expansion-panel>
-              }
-            </mat-accordion>
+                }
+              </div>
+            </mat-tab>
+          </mat-tab-group>
 
-            <div class="d-flex justify-content-end" style="margin-top: 1.5rem">
+          @if (isEditMode()) {
+            <div
+              class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top gap-3">
+              <button mat-button (click)="cancelEdit()">
+                {{ 'actions.cancel' | transloco }}
+              </button>
               <button
                 mat-flat-button
                 color="primary"
-                (click)="savePermisos()"
-                [disabled]="savingPermisos()">
-                @if (savingPermisos()) {
+                (click)="save()"
+                [disabled]="saving()">
+                @if (saving()) {
                   <mat-spinner diameter="18" />
                 } @else {
-                  {{ t('permisos.save') }}
+                  {{ 'actions.save' | transloco }}
                 }
+              </button>
+              <button
+                mat-flat-button
+                class="sofia-btn-delete"
+                (click)="confirmDelete()"
+                [disabled]="deleting()">
+                {{ 'actions.delete' | transloco }}
               </button>
             </div>
           }
+        </div>
+      } @else if (isEditMode()) {
+        <div class="sofia-detail-card">
+          <div class="d-flex justify-content-end align-items-center gap-3">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="save()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+          </div>
         </div>
       }
     }

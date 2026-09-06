@@ -837,6 +837,12 @@ button:not([disabled]) .iconify.icon-delete {
   }
 }
 
+// Prevent horizontal scrollbar inside mat-tab-group content
+.mat-mdc-tab-body-content {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}
+
 @media (max-width: 576px) {
   .sofia-page {
     padding: 8px;
