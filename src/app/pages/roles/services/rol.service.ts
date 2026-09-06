@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environment/environment';
-import { RolResponse, CreateRolRequest, UpdateRolRequest, SearchRolParams, PaginatedList, PermisoCatalogGroup, PermisoRolDto } from '../models/rol.model';
+import { RolResponse, CreateRolRequest, UpdateRolRequest, SearchRolParams, PaginatedList, PermisoCatalogGroup, PermisoRolDto, SucursalRolItem } from '../models/rol.model';
 
 @Injectable({ providedIn: 'root' })
 export class RolService {
@@ -54,5 +54,13 @@ export class RolService {
 
   revokePermiso(permisoId: string): Observable<void> {
     return this.http.delete<void>(`${this.base}/permissions/${permisoId}`);
+  }
+
+  getSucursales(rolId: string): Observable<SucursalRolItem[]> {
+    return this.http.get<SucursalRolItem[]>(`${this.base}/${rolId}/sucursales`);
+  }
+
+  setSucursales(rolId: string, sucursalIds: string[]): Observable<void> {
+    return this.http.put<void>(`${this.base}/${rolId}/sucursales`, { sucursalIds });
   }
 }

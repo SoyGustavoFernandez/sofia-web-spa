@@ -30,6 +30,19 @@
     "descripcion": "Descripción",
     "nivelJerarquia": "Nivel de Jerarquía"
   },
+  "configuracion": {
+    "title": "Configuración del Rol",
+    "subtitle": "Defina el menú, permisos y sucursales para este rol.",
+    "tab-menu": "Menú",
+    "tab-permisos": "Permisos",
+    "tab-sucursales": "Sucursales",
+    "menu-preview-hint": "Vista previa del menú según los permisos asignados al rol.",
+    "sucursales-save": "Guardar sucursales",
+    "sucursales-save-success": "Sucursales guardadas correctamente",
+    "sucursales-save-error": "Error al guardar las sucursales",
+    "sucursales-load-error": "Error al cargar las sucursales",
+    "sucursales-no-data": "No hay sucursales disponibles"
+  },
   "permisos": {
     "title": "Permisos del Rol",
     "subtitle": "Seleccione los permisos que tendrá este rol en el sistema.",
