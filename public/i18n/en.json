@@ -11,7 +11,9 @@
     "aseguradoras": "Insurers",
     "pacientes": "Patients",
     "profesionalesSalud": "Health Professionals",
-    "catalogoDigemid": "DIGEMID Catalog"
+    "catalogoDigemid": "DIGEMID Catalog",
+    "cuentasUsuario": "User Accounts",
+    "medicamentos": "Medications"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -30,7 +32,9 @@
     "pacientes": "Patients",
     "profesionales-salud": "Health Professionals",
     "digemid-catalogo": "DIGEMID Catalog",
-    "carga-masiva": "Bulk Upload"
+    "carga-masiva": "Bulk Upload",
+    "cuentas": "User Accounts",
+    "medicamentos": "Medications"
   },
   "actions": {
     "new": "New",
@@ -72,7 +76,9 @@
     "search-subtitle": "Enter the search criteria",
     "trace-ref": "Reference",
     "copy-ref": "Copy reference",
-    "detail-subtitle": "Record data"
+    "detail-subtitle": "Record data",
+    "no-results": "No results found",
+    "all": "All"
   },
   "header.logout": "Sign Out",
   "header.reloadPermissions": "Reload permissions",
@@ -164,6 +170,10 @@
     "nombrePrescriptor": "Prescriber Name",
     "direccionClinica": "Clinic Address",
     "nombreComercial": "Trade Name",
+    "codigoNacional": "National Code",
+    "laboratorio": "Laboratory",
+    "unidadBase": "Base Unit",
+    "condicionVenta": "Sale Condition",
     "codigoIdentificadorNacional": "National Identifier Code",
     "razonSocial": "Legal Name",
     "taxId": "Tax ID",
@@ -215,7 +225,9 @@
       "future-date": "'{{field}}' cannot be a future date",
       "invalid-decimal": "'{{field}}' must be a valid decimal number",
       "invalid-range": "'{{field}}' must be between {{min}} and {{max}}",
-      "invalid-digits": "'{{field}}' must contain exactly {{digits}} numeric digits"
+      "invalid-digits": "'{{field}}' must contain exactly {{digits}} numeric digits",
+      "not-found": "Value '{{value}}' for field '{{field}}' does not exist in the system",
+      "invalid-option": "'{{value}}' is not a valid value for '{{field}}'"
     }
   }
 }

@@ -1,62 +1,45 @@
 {
-  "title": "Medicaments Maintenance",
-  "searchPlaceholder": "Search by code, brand name or laboratory...",
-  "showing": "Showing {{count}} of {{total}} medicaments",
-  "showServicios": "Show Healthcare Services",
-  "noData": "No medicaments found.",
-  "cols": {
+  "title": "Medications",
+  "search": {
+    "title": "Medication Search",
+    "search-error": "Error searching medications",
+    "export-filename": "medications.xlsx"
+  },
+  "detail": {
+    "title-new": "New Medication",
+    "title-edit": "Edit Medication",
+    "save-success": "Medication saved successfully",
+    "save-error": "Error saving medication",
+    "delete-success": "Medication deleted successfully",
+    "delete-error": "Error deleting medication",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this medication?",
+    "load-error": "Error loading medication",
+    "condiciones-error": "Error loading sale conditions",
+    "stock-section": "Stock by Branch",
+    "stock-total": "Total Stock",
+    "sin-stock": "No stock registered",
+    "stock-col-sucursal": "Branch",
+    "stock-col-cantidad": "Stock"
+  },
+  "fields": {
     "codigoNacional": "National Code",
     "nombreComercial": "Commercial Name",
-    "laboratorioNombre": "Laboratory",
-    "unidadBaseNombre": "Base Unit",
-    "condicionVenta": "Prescription Type",
-    "stockTotal": "Stock"
+    "laboratorio": "Laboratory",
+    "unidadBase": "Base Unit",
+    "condicionVenta": "Sale Condition",
+    "stockTotal": "Total Stock"
   },
-  "form": {
-    "titleNew": "New Medicament",
-    "titleEdit": "Edit Medicament",
-    "titleView": "Medicament Details",
-    "general": "General Information",
-    "codeRequired": "National code is required",
-    "nameRequired": "Commercial name is required",
-    "labRequired": "Laboratory is required",
-    "unitRequired": "Base unit is required",
-    "conditionRequired": "Prescription type is required",
-    "back": "Back"
+  "table": {
+    "codigoNacional": "National Code",
+    "nombreComercial": "Commercial Name",
+    "laboratorio": "Laboratory",
+    "unidadBase": "Base Unit",
+    "condicionVenta": "Sale Condition"
   },
-  "help": {
-    "codigoNacional": "Identification code registered in DIGEMID for the medicament.",
-    "nombreComercial": "Registered brand name under which the medicament is commercialized.",
-    "laboratorio": "Manufacturing laboratory or sanitary registration holder.",
-    "unidadBase": "Minimum dispensing unit for the medicament (e.g. Tablet, Bottle, Box).",
-    "condicionVenta": "Legal prescription requirement for sale (e.g. OTC, Retained Prescription)."
-  },
-  "deleteDialog": {
-    "title": "Confirm Deletion",
-    "message": "Are you sure you want to delete the medicament \"{{name}}\"?",
-    "confirm": "Delete",
-    "cancel": "Cancel"
-  },
-  "notifications": {
-    "created": "Medicament created successfully",
-    "updated": "Medicament updated successfully",
-    "deleted": "Medicament deleted successfully"
-  },
-  "import": {
-    "title": "Bulk Upload Medicaments",
-    "button": "Bulk Upload",
-    "downloadTemplate": "Download Template",
-    "dragDrop": "Drag and drop your Excel file here or click to browse",
-    "selectFile": "Select File",
-    "fileSelected": "Selected file: {{name}}",
-    "saving": "Processing file...",
-    "previewTitle": "Records Preview",
-    "errorsFound": "Errors were found in the file. Only valid rows will be imported.",
-    "saveValid": "Save valid records ({{count}})",
-    "success": "Imported {{count}} medicaments successfully.",
-    "status": "Status",
-    "errors": "Observations",
-    "valid": "Valid",
-    "invalid": "With error"
+  "autocomplete": {
+    "laboratorio-placeholder": "Search laboratory...",
+    "unidad-placeholder": "Search unit of measure...",
+    "no-results": "No results"
   }
 }

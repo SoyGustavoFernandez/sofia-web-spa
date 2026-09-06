@@ -1,4 +1,5 @@
 import { Component, input, inject, signal, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -27,6 +28,11 @@ export class CargaMasivaPageComponent {
   readonly loadingPreview = signal(false);
   readonly saving = signal(false);
   readonly preview = signal<PreviewResult | null>(null);
+
+  // csw-page-header renders title verbatim; selectTranslate waits for the root bundle to load.
+  readonly title = toSignal(this.transloco.selectTranslate('carga-masiva.title'), {
+    initialValue: '',
+  });
 
   // Rows that passed backend validation
   readonly validRows = computed(() =>

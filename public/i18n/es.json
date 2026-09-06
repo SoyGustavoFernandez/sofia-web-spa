@@ -11,7 +11,9 @@
     "aseguradoras": "Aseguradoras",
     "pacientes": "Pacientes",
     "profesionalesSalud": "Profesionales de Salud",
-    "catalogoDigemid": "Catálogo DIGEMID"
+    "catalogoDigemid": "Catálogo DIGEMID",
+    "cuentasUsuario": "Cuentas de Usuario",
+    "medicamentos": "Medicamentos"
   },
   "breadcrumbs": {
     "home": "Inicio",
@@ -30,7 +32,9 @@
     "pacientes": "Pacientes",
     "profesionales-salud": "Profesionales de Salud",
     "digemid-catalogo": "Catálogo DIGEMID",
-    "carga-masiva": "Carga Masiva"
+    "carga-masiva": "Carga Masiva",
+    "cuentas": "Cuentas de Usuario",
+    "medicamentos": "Medicamentos"
   },
   "actions": {
     "new": "Nuevo",
@@ -72,7 +76,9 @@
     "search-subtitle": "Ingresa los criterios de búsqueda",
     "trace-ref": "Referencia",
     "copy-ref": "Copiar referencia",
-    "detail-subtitle": "Datos del registro"
+    "detail-subtitle": "Datos del registro",
+    "no-results": "Sin resultados",
+    "all": "Todos"
   },
   "header.logout": "Cerrar sesión",
   "header.reloadPermissions": "Recargar permisos",
@@ -164,6 +170,10 @@
     "nombrePrescriptor": "Nombre del Prescriptor",
     "direccionClinica": "Dirección Clínica",
     "nombreComercial": "Nombre Comercial",
+    "codigoNacional": "Código Nacional",
+    "laboratorio": "Laboratorio",
+    "unidadBase": "Unidad Base",
+    "condicionVenta": "Condición de Venta",
     "codigoIdentificadorNacional": "Código Identificador Nacional",
     "razonSocial": "Razón Social",
     "taxId": "Tax ID",
@@ -215,7 +225,9 @@
       "future-date": "'{{field}}' no puede ser una fecha futura",
       "invalid-decimal": "'{{field}}' debe ser un número decimal válido",
       "invalid-range": "'{{field}}' debe estar entre {{min}} y {{max}}",
-      "invalid-digits": "'{{field}}' debe contener exactamente {{digits}} dígitos numéricos"
+      "invalid-digits": "'{{field}}' debe contener exactamente {{digits}} dígitos numéricos",
+      "not-found": "El valor '{{value}}' del campo '{{field}}' no existe en el sistema",
+      "invalid-option": "'{{value}}' no es un valor válido para '{{field}}'"
     }
   }
 }
