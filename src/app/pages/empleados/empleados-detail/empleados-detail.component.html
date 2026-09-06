@@ -1,0 +1,130 @@
+<ng-container *transloco="let t; scope: 'empleados'; read: 'empleados'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/empleados" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    } @else {
+      <div class="sofia-detail-card">
+        @if (!isNew() && !isEditMode()) {
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('title') }}</h4>
+              <div class="search-info-text">
+                {{ 'generic-labels.detail-subtitle' | transloco }}
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button mat-flat-button color="primary" (click)="enterEditMode()">
+                {{ 'actions.edit' | transloco }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <form [formGroup]="form" class="row g-3">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.nombres') }}</mat-label>
+              <input matInput formControlName="nombres" maxlength="75" />
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.apellidoPaterno') }}</mat-label>
+              <input
+                matInput
+                formControlName="apellidoPaterno"
+                maxlength="75" />
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.apellidoMaterno') }}</mat-label>
+              <input
+                matInput
+                formControlName="apellidoMaterno"
+                maxlength="75" />
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.sucursal') }}</mat-label>
+              <input
+                matInput
+                [formControl]="sucursalCtrl"
+                [matAutocomplete]="sucursalAuto"
+                [placeholder]="t('autocomplete.sucursal-placeholder')" />
+              <mat-autocomplete #sucursalAuto="matAutocomplete">
+                @for (s of sucursalOptions(); track s.id) {
+                  <mat-option [value]="s.nombre" (click)="selectSucursal(s)">{{
+                    s.nombre
+                  }}</mat-option>
+                }
+                @if (sucursalOptions().length === 0 && sucursalCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+            @if (sucursalTouched() && !selectedSucursal()) {
+              <mat-error class="sofia-field-error">{{
+                'general.errors.required' | transloco
+              }}</mat-error>
+            }
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.licencia') }}</mat-label>
+              <input matInput formControlName="licencia" maxlength="50" />
+            </mat-form-field>
+          </div>
+        </form>
+
+        @if (isEditMode()) {
+          <div class="d-flex justify-content-end align-items-center mt-3 gap-4">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="save()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+            @if (!isNew()) {
+              <button
+                mat-flat-button
+                class="sofia-btn-delete"
+                (click)="confirmDelete()"
+                [disabled]="deleting()">
+                {{ 'actions.delete' | transloco }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-container>

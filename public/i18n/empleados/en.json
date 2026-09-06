@@ -1,90 +1,37 @@
 {
-  "title": "Employee Maintenance",
-  "searchPlaceholder": "Search by name, surname or license...",
+  "title": "Employees",
   "search": {
-    "allSucursales": "All branches",
-    "showing": "Showing {{count}} of {{total}} employees",
-    "noData": "No employees found."
+    "title": "Employee Search",
+    "search-error": "Error searching employees",
+    "export-filename": "employees.xlsx"
   },
-  "cols": {
-    "nombreCompleto": "Full Name",
-    "sucursalNombre": "Home Branch",
-    "licenciaProf": "Prof. License"
+  "detail": {
+    "load-error": "Error loading the employee",
+    "save-success": "Employee saved successfully",
+    "save-error": "Error saving the employee",
+    "delete-success": "Employee deleted successfully",
+    "delete-error": "Error deleting the employee",
+    "delete-manager": "An employee who manages a branch cannot be deleted. Assign another manager first.",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this employee?"
   },
-  "form": {
-    "titleNew": "New Employee",
-    "titleEdit": "Edit Employee",
-    "titleView": "Employee Details",
-    "nombres": "First Name(s)",
+  "fields": {
+    "nombres": "First Names",
     "apellidoPaterno": "Paternal Surname",
     "apellidoMaterno": "Maternal Surname",
-    "licenciaProf": "Professional License",
-    "sucursalBase": "Home Branch",
-    "seleccioneSucursal": "Select a branch",
-    "required": "This field is required",
-    "maxLength50": "Maximum 50 characters",
-    "maxLength75": "Maximum 75 characters",
-    "back": "Back",
-    "tabs": {
-      "datosGenerales": "General Info",
-      "historialVentas": "Sales History",
-      "cuentaRoles": "Account & Roles"
-    }
+    "licencia": "Professional License",
+    "sucursal": "Base Branch"
   },
-  "help": {
-    "nombres": "Employee's first name(s) as they appear on their official identity document.",
-    "apellidoPaterno": "Employee's paternal surname as it appears on their official document.",
-    "apellidoMaterno": "Employee's maternal surname as it appears on their official document.",
-    "licenciaProf": "Professional pharmacy license number issued by the Pharmaceutical College. Required for pharmacists.",
-    "sucursalBase": "Employee's main working branch. Determines which location the employee belongs to and has access to."
+  "table": {
+    "nombreCompleto": "Full Name",
+    "nombres": "First Names",
+    "apellidoPaterno": "Paternal Surname",
+    "apellidoMaterno": "Maternal Surname",
+    "licencia": "Professional License",
+    "sucursal": "Base Branch"
   },
-  "deleteDialog": {
-    "title": "Confirm Deletion",
-    "message": "Are you sure you want to delete the employee \"{{name}}\"?",
-    "confirm": "Delete",
-    "cancel": "Cancel"
-  },
-  "notifications": {
-    "created": "Employee registered successfully",
-    "updated": "Employee updated successfully",
-    "deleted": "Employee deleted successfully"
-  },
-  "ventas": {
-    "emptyMessage": "The employee has no registered sales in the system.",
-    "cols": {
-      "codigo": "Code",
-      "fecha": "Date",
-      "total": "Total",
-      "estado": "Status",
-      "items": "Items"
-    }
-  },
-  "cuenta": {
-    "title": "User Account & Role Assignment",
-    "noAccount": "This employee does not have a user account created yet.",
-    "createAccount": "Create User Account",
-    "username": "Username",
-    "password": "Initial Password",
-    "rolesTitle": "Assigned Roles",
-    "assignRole": "Assign Role",
-    "selectRole": "Select a role to assign",
-    "created": "User account created successfully",
-    "roleAssigned": "Role assigned successfully",
-    "roleRemoved": "Role revoked successfully",
-    "noRoles": "Account has no assigned roles."
-  },
-  "import": {
-    "title": "Bulk Employee Upload",
-    "button": "Bulk Upload",
-    "downloadTemplate": "Download Template",
-    "selectFile": "Select File",
-    "dragDrop": "Drag and drop your Excel file here or click to browse",
-    "fileSelected": "File selected: {{name}}",
-    "errorsFound": "Errors were found. Please fix them before saving.",
-    "saveValid": "Save Valid Records ({{count}})",
-    "previewTitle": "Records Preview",
-    "success": "Successfully imported {{count}} employees.",
-    "valid": "Valid",
-    "invalid": "With error"
+  "autocomplete": {
+    "sucursal-placeholder": "Search branch...",
+    "no-results": "No results"
   }
 }

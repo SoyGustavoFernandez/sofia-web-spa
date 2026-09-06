@@ -29,6 +29,11 @@ export const navItems: NavItem[] = [
         route: '/sucursales',
       },
       {
+        displayName: 'nav.empleados',
+        iconName: 'solar:users-group-rounded-line-duotone',
+        route: '/empleados',
+      },
+      {
         displayName: 'nav.rolesPermisos',
         iconName: 'solar:lock-keyhole-line-duotone',
         route: '/roles',

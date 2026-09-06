@@ -38,6 +38,11 @@ export const appRoutes: Route[] = [
           import('./pages/empresa/empresa.routes').then(m => m.EMPRESA_ROUTES),
       },
       {
+        path: 'empleados',
+        loadChildren: () =>
+          import('./pages/empleados/empleados.routes').then(m => m.EMPLEADOS_ROUTES),
+      },
+      {
         path: 'roles',
         loadChildren: () =>
           import('./pages/roles/roles.routes').then(m => m.ROLES_ROUTES),
