@@ -57,9 +57,11 @@ export class LoginComponent {
       next: () => {
         void this.router.navigate(['/dashboard']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.submitting.set(false);
-        this.loginError.set(this.transloco.translate('auth.invalidCredentials'));
+        const status = (err as { status?: number })?.status;
+        const key = status === 403 ? 'auth.accountBlocked' : 'auth.invalidCredentials';
+        this.loginError.set(this.transloco.translate(key));
       },
     });
   }

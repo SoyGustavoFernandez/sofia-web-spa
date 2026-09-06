@@ -11,6 +11,7 @@
   "register": "Register new company",
   "system": "Optimized Pharmaceutical System with Artificial Intelligence",
   "invalidCredentials": "Invalid credentials. Check your username and password.",
+  "accountBlocked": "Your account is temporarily blocked due to too many failed attempts. Please wait a few minutes and try again.",
   "errors": {
     "usuarioRequired": "Username is required",
     "passwordRequired": "Password is required"

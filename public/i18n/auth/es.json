@@ -11,6 +11,7 @@
   "register": "Registrar empresa nueva",
   "system": "Sistema Optimizado Farmacéutico con Inteligencia Artificial",
   "invalidCredentials": "Credenciales inválidas. Verifica tu usuario y contraseña.",
+  "accountBlocked": "Tu cuenta está temporalmente bloqueada por demasiados intentos fallidos. Espera unos minutos e intenta de nuevo.",
   "errors": {
     "usuarioRequired": "El usuario es obligatorio",
     "passwordRequired": "La contraseña es obligatoria"
