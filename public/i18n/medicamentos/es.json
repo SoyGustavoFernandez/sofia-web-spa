@@ -1,62 +1,45 @@
 {
-  "title": "Mantenimiento de Medicamentos",
-  "searchPlaceholder": "Buscar por código, nombre comercial o laboratorio...",
-  "showing": "Mostrando {{count}} de {{total}} medicamentos",
-  "showServicios": "Mostrar Servicios Asistenciales",
-  "noData": "No se encontraron medicamentos.",
-  "cols": {
+  "title": "Medicamentos",
+  "search": {
+    "title": "Búsqueda de Medicamentos",
+    "search-error": "Error al buscar medicamentos",
+    "export-filename": "medicamentos.xlsx"
+  },
+  "detail": {
+    "title-new": "Nuevo Medicamento",
+    "title-edit": "Editar Medicamento",
+    "save-success": "Medicamento guardado correctamente",
+    "save-error": "Error al guardar el medicamento",
+    "delete-success": "Medicamento eliminado correctamente",
+    "delete-error": "Error al eliminar el medicamento",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar este medicamento?",
+    "load-error": "Error al cargar el medicamento",
+    "condiciones-error": "Error al cargar las condiciones de venta",
+    "stock-section": "Stock por Sucursal",
+    "stock-total": "Stock Total",
+    "sin-stock": "Sin stock registrado",
+    "stock-col-sucursal": "Sucursal",
+    "stock-col-cantidad": "Stock"
+  },
+  "fields": {
     "codigoNacional": "Código Nacional",
     "nombreComercial": "Nombre Comercial",
-    "laboratorioNombre": "Laboratorio",
-    "unidadBaseNombre": "Unidad Base",
+    "laboratorio": "Laboratorio",
+    "unidadBase": "Unidad Base",
     "condicionVenta": "Condición de Venta",
-    "stockTotal": "Stock"
+    "stockTotal": "Stock Total"
   },
-  "form": {
-    "titleNew": "Nuevo Medicamento",
-    "titleEdit": "Editar Medicamento",
-    "titleView": "Detalle de Medicamento",
-    "general": "Información General",
-    "codeRequired": "El código nacional es obligatorio",
-    "nameRequired": "El nombre comercial es obligatorio",
-    "labRequired": "Debe seleccionar un laboratorio",
-    "unitRequired": "Debe seleccionar una unidad de medida",
-    "conditionRequired": "Debe seleccionar una condición de venta",
-    "back": "Volver"
+  "table": {
+    "codigoNacional": "Código Nacional",
+    "nombreComercial": "Nombre Comercial",
+    "laboratorio": "Laboratorio",
+    "unidadBase": "Unidad Base",
+    "condicionVenta": "Condición de Venta"
   },
-  "help": {
-    "codigoNacional": "Código de identificación registrado en la DIGEMID para el medicamento.",
-    "nombreComercial": "Nombre de marca registrado con el que se comercializa el medicamento.",
-    "laboratorio": "Laboratorio fabricante o titular del registro sanitario.",
-    "unidadBase": "Unidad mínima de dispensación del medicamento (ej. Tableta, Frasco, Caja).",
-    "condicionVenta": "Requisito legal de receta para la venta (ej. Venta Libre, Receta Médica Retenida)."
-  },
-  "deleteDialog": {
-    "title": "Confirmar Eliminación",
-    "message": "¿Está seguro de que desea eliminar el medicamento \"{{name}}\"?",
-    "confirm": "Eliminar",
-    "cancel": "Cancelar"
-  },
-  "notifications": {
-    "created": "Medicamento registrado correctamente",
-    "updated": "Medicamento actualizado correctamente",
-    "deleted": "Medicamento eliminado correctamente"
-  },
-  "import": {
-    "title": "Carga Masiva de Medicamentos",
-    "button": "Carga Masiva",
-    "downloadTemplate": "Descargar Plantilla",
-    "dragDrop": "Arrastra y suelta tu archivo Excel aquí o haz clic para buscar",
-    "selectFile": "Seleccionar Archivo",
-    "fileSelected": "Archivo seleccionado: {{name}}",
-    "saving": "Procesando archivo...",
-    "previewTitle": "Vista Previa de Registros",
-    "errorsFound": "Se encontraron errores en el archivo. Solo se importarán las filas válidas.",
-    "saveValid": "Guardar registros válidos ({{count}})",
-    "success": "Se importaron {{count}} medicamentos correctamente.",
-    "status": "Estado",
-    "errors": "Observaciones",
-    "valid": "Válido",
-    "invalid": "Con error"
+  "autocomplete": {
+    "laboratorio-placeholder": "Buscar laboratorio...",
+    "unidad-placeholder": "Buscar unidad de medida...",
+    "no-results": "Sin resultados"
   }
 }

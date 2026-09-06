@@ -1,0 +1,237 @@
+<ng-container *transloco="let t; scope: 'medicamentos'; read: 'medicamentos'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="false" />
+
+    <div class="sofia-filter-card">
+      <div
+        class="sofia-filter-header d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="mb-1">{{ t('search.title') }}</h4>
+          <div class="search-info-text">
+            {{ 'generic-labels.search-subtitle' | transloco }}
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button
+            mat-stroked-button
+            color="primary"
+            [routerLink]="['carga-masiva']">
+            <mat-icon>upload</mat-icon>
+            {{ 'carga-masiva.btn' | transloco }}
+          </button>
+          <button mat-flat-button color="primary" (click)="goToNew()">
+            <mat-icon>add</mat-icon>
+            {{ 'actions.new' | transloco }}
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="searchForm" class="row g-3 mt-1">
+        <!-- Row 1: identificadores -->
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.codigoNacional') }}</mat-label>
+            <input
+              matInput
+              formControlName="codigoNacional"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.nombreComercial') }}</mat-label>
+            <input
+              matInput
+              formControlName="nombreComercial"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Row 2: laboratorio + unidad + condición de venta -->
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.laboratorio') }}</mat-label>
+            <input
+              matInput
+              formControlName="laboratorioNombre"
+              [matAutocomplete]="labAuto"
+              [placeholder]="t('autocomplete.laboratorio-placeholder')"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete #labAuto="matAutocomplete">
+              @for (lab of labOptions(); track lab.id) {
+                <mat-option
+                  [value]="lab.nombreCompania"
+                  (click)="selectLab(lab)">
+                  {{ lab.nombreCompania }}
+                </mat-option>
+              }
+              @if (
+                labOptions().length === 0 &&
+                searchForm.controls.laboratorioNombre.value
+              ) {
+                <mat-option disabled>{{
+                  t('autocomplete.no-results')
+                }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.unidadBase') }}</mat-label>
+            <input
+              matInput
+              formControlName="unidadBaseNombre"
+              [matAutocomplete]="unidadAuto"
+              [placeholder]="t('autocomplete.unidad-placeholder')"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete #unidadAuto="matAutocomplete">
+              @for (u of unidadOptions(); track u.id) {
+                <mat-option [value]="u.descripcion" (click)="selectUnidad(u)">
+                  @if (u.codigo) {
+                    <span
+                      style="
+                        color: var(--mat-sys-outline);
+                        font-size: 12px;
+                        margin-right: 6px;
+                      "
+                      >{{ u.codigo }}</span
+                    >
+                  }
+                  {{ u.descripcion }}
+                </mat-option>
+              }
+              @if (
+                unidadOptions().length === 0 &&
+                searchForm.controls.unidadBaseNombre.value
+              ) {
+                <mat-option disabled>{{
+                  t('autocomplete.no-results')
+                }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.condicionVenta') }}</mat-label>
+            <mat-select formControlName="condicionVenta">
+              <mat-option [value]="null"
+                >— {{ 'generic-labels.all' | transloco }} —</mat-option
+              >
+              @for (label of condicionLabels(); track $index) {
+                <mat-option [value]="$index">{{ label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button mat-button (click)="clear()">
+          {{ 'actions.clear' | transloco }}
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="search()"
+          [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            {{ 'actions.search' | transloco }}
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (showResults()) {
+      <div class="sofia-results-card">
+        <div class="sofia-results-header">
+          {{ 'generic-labels.results' | transloco }} ({{ totalCount() }})
+        </div>
+        <div class="sofia-table-container">
+          <table mat-table [dataSource]="items()">
+            <ng-container matColumnDef="codigoNacional">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.codigoNacional') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <a [routerLink]="[row.id]" class="link-no-underline">{{
+                  row.codigoNacional
+                }}</a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombreComercial">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.nombreComercial') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.nombreComercial }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="laboratorioNombre">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.laboratorio') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.laboratorioNombre }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="unidadBaseNombre">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.unidadBase') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.unidadBaseNombre }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="condicionVenta">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.condicionVenta') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ getCondicionLabel(row.condicionVenta) }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td
+                class="mat-cell"
+                [attr.colspan]="displayedColumns.length"
+                style="text-align: center; padding: 2rem">
+                {{ 'generic-labels.no-results' | transloco }}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button mat-stroked-button (click)="exportar()">
+            <mat-icon>download</mat-icon>
+            {{ 'actions.export' | transloco }}
+          </button>
+          <mat-paginator
+            [length]="totalCount()"
+            [pageIndex]="pageIndex()"
+            [pageSize]="pageSize()"
+            [pageSizeOptions]="[10, 25, 50]"
+            [showFirstLastButtons]="true"
+            (page)="onPageChange($event)" />
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>

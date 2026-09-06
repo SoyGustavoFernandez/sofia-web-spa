@@ -1,0 +1,223 @@
+<ng-container *transloco="let t; scope: 'medicamentos'; read: 'medicamentos'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/medicamentos" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    } @else {
+      <div class="sofia-detail-card">
+        @if (!isNew() && !isEditMode()) {
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('title') }}</h4>
+              <div class="search-info-text">
+                {{ 'generic-labels.detail-subtitle' | transloco }}
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button mat-flat-button color="primary" (click)="enterEditMode()">
+                {{ 'actions.edit' | transloco }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <form [formGroup]="form" class="row g-3">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.codigoNacional') }}</mat-label>
+              <input matInput formControlName="codigoNacional" maxlength="50" />
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.nombreComercial') }}</mat-label>
+              <input
+                matInput
+                formControlName="nombreComercial"
+                maxlength="150" />
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Laboratorio autocomplete -->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.laboratorio') }}</mat-label>
+              <input
+                matInput
+                [formControl]="labSearchCtrl"
+                [matAutocomplete]="labAuto"
+                [placeholder]="t('autocomplete.laboratorio-placeholder')" />
+              <mat-icon matSuffix>search</mat-icon>
+              <mat-autocomplete #labAuto="matAutocomplete">
+                @for (lab of labOptions(); track lab.id) {
+                  <mat-option
+                    [value]="lab.nombreCompania"
+                    (click)="selectLab(lab)">
+                    {{ lab.nombreCompania }}
+                  </mat-option>
+                }
+                @if (labOptions().length === 0 && labSearchCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+            @if (labTouched() && !selectedLab()) {
+              <mat-error
+                style="font-size: 12px; margin-top: -12px; display: block">
+                {{ 'general.errors.required' | transloco }}
+              </mat-error>
+            }
+          </div>
+
+          <!-- Unidad Base autocomplete -->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.unidadBase') }}</mat-label>
+              <input
+                matInput
+                [formControl]="unidadSearchCtrl"
+                [matAutocomplete]="unidadAuto"
+                [placeholder]="t('autocomplete.unidad-placeholder')" />
+              <mat-icon matSuffix>search</mat-icon>
+              <mat-autocomplete #unidadAuto="matAutocomplete">
+                @for (u of unidadOptions(); track u.id) {
+                  <mat-option [value]="u.descripcion" (click)="selectUnidad(u)">
+                    @if (u.codigo) {
+                      <span
+                        style="
+                          color: var(--mat-sys-outline);
+                          font-size: 12px;
+                          margin-right: 6px;
+                        "
+                        >{{ u.codigo }}</span
+                      >
+                    }
+                    {{ u.descripcion }}
+                  </mat-option>
+                }
+                @if (unidadOptions().length === 0 && unidadSearchCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+            @if (unidadTouched() && !selectedUnidad()) {
+              <mat-error
+                style="font-size: 12px; margin-top: -12px; display: block">
+                {{ 'general.errors.required' | transloco }}
+              </mat-error>
+            }
+          </div>
+
+          <!-- Condición de Venta -->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.condicionVenta') }}</mat-label>
+              <mat-select formControlName="condicionVenta">
+                @for (label of condicionOptions(); track $index) {
+                  <mat-option [value]="$index">{{ label }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+        </form>
+
+        @if (isEditMode()) {
+          <div class="d-flex justify-content-end align-items-center mt-3 gap-3">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="save()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+            @if (!isNew()) {
+              <button
+                mat-flat-button
+                class="sofia-btn-delete"
+                (click)="confirmDelete()"
+                [disabled]="deleting()">
+                {{ 'actions.delete' | transloco }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Stock section (view mode only, existing record) -->
+      @if (!isNew() && !isEditMode()) {
+        <div class="sofia-detail-card">
+          <div class="pb-3 border-bottom" style="margin-bottom: 1rem">
+            <h4 class="mb-1">{{ t('detail.stock-section') }}</h4>
+            <div class="search-info-text">
+              {{ t('detail.stock-total') }}:
+              <strong>{{ snapshot?.stockTotal ?? 0 }}</strong>
+            </div>
+          </div>
+
+          @if (
+            snapshot?.stockPorSucursal && snapshot!.stockPorSucursal!.length > 0
+          ) {
+            <div class="sofia-table-container">
+              <table mat-table [dataSource]="snapshot!.stockPorSucursal!">
+                <ng-container matColumnDef="sucursalNombre">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ t('detail.stock-col-sucursal') }}
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    {{ row.sucursalNombre }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cantidadFisica">
+                  <th
+                    mat-header-cell
+                    *matHeaderCellDef
+                    style="text-align: right">
+                    {{ t('detail.stock-col-cantidad') }}
+                  </th>
+                  <td mat-cell *matCellDef="let row" style="text-align: right">
+                    {{ row.cantidadFisica }}
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="['sucursalNombre', 'cantidadFisica']"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="
+                    let row;
+                    columns: ['sucursalNombre', 'cantidadFisica']
+                  "></tr>
+              </table>
+            </div>
+          } @else {
+            <div class="search-info-text">{{ t('detail.sin-stock') }}</div>
+          }
+        </div>
+      }
+    }
+  </div>
+</ng-container>
