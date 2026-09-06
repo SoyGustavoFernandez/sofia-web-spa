@@ -837,6 +837,13 @@ button:not([disabled]) .iconify.icon-delete {
   }
 }
 
+// mat-error shown for a control that lives outside its own mat-form-field
+.sofia-field-error {
+  display: block;
+  margin-top: -12px;
+  font-size: 12px;
+}
+
 // Prevent horizontal scrollbar inside mat-tab-group content
 .mat-mdc-tab-body-content {
   overflow-x: hidden !important;

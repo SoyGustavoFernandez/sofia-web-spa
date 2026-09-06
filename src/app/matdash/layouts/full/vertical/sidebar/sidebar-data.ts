@@ -51,6 +51,11 @@ export const navItems: NavItem[] = [
         route: '/unidades-medida',
       },
       {
+        displayName: 'nav.jerarquiasUom',
+        iconName: 'solar:sort-vertical-line-duotone',
+        route: '/jerarquias',
+      },
+      {
         displayName: 'nav.laboratorios',
         iconName: 'solar:test-tube-line-duotone',
         route: '/laboratorios',

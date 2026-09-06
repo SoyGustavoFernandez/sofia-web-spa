@@ -5,6 +5,7 @@
     "sucursales": "Sucursales",
     "rolesPermisos": "Roles & Permisos",
     "unidadesMedida": "Unidades de Medida",
+    "jerarquiasUom": "Jerarquías de Unidades",
     "laboratorios": "Laboratorios",
     "ingredientesActivos": "Ingredientes Activos",
     "proveedores": "Proveedores",
@@ -25,6 +26,7 @@
     "sucursales": "Sucursales",
     "roles": "Roles & Permisos",
     "unidades-medida": "Unidades de Medida",
+    "jerarquias": "Jerarquías de Unidades",
     "laboratorios": "Laboratorios",
     "ingredientes-activos": "Ingredientes Activos",
     "aseguradoras": "Aseguradoras",
@@ -174,6 +176,10 @@
     "laboratorio": "Laboratorio",
     "unidadBase": "Unidad Base",
     "condicionVenta": "Condición de Venta",
+    "producto": "Producto",
+    "unidadMayor": "Unidad Mayor",
+    "unidadMenor": "Unidad Menor",
+    "multiplicador": "Multiplicador",
     "codigoIdentificadorNacional": "Código Identificador Nacional",
     "razonSocial": "Razón Social",
     "taxId": "Tax ID",
@@ -227,7 +233,9 @@
       "invalid-range": "'{{field}}' debe estar entre {{min}} y {{max}}",
       "invalid-digits": "'{{field}}' debe contener exactamente {{digits}} dígitos numéricos",
       "not-found": "El valor '{{value}}' del campo '{{field}}' no existe en el sistema",
-      "invalid-option": "'{{value}}' no es un valor válido para '{{field}}'"
+      "invalid-option": "'{{value}}' no es un valor válido para '{{field}}'",
+      "positive-number": "'{{field}}' debe ser mayor que cero",
+      "must-differ": "'{{field}}' no puede ser igual a '{{other}}'"
     }
   }
 }

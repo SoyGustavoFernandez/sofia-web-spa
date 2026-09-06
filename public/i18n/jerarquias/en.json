@@ -1,0 +1,38 @@
+{
+  "title": "Unit Hierarchies",
+  "search": {
+    "title": "Hierarchy Search",
+    "search-error": "Error searching unit hierarchies",
+    "export-filename": "unit-hierarchies.xlsx"
+  },
+  "detail": {
+    "load-error": "Error loading the hierarchy",
+    "save-success": "Hierarchy saved successfully",
+    "save-error": "Error saving the hierarchy",
+    "delete-success": "Hierarchy deleted successfully",
+    "delete-error": "Error deleting the hierarchy",
+    "delete-in-use": "This hierarchy cannot be deleted because it is in use.",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this hierarchy?",
+    "multiplicador-hint": "How many smaller units make up one larger unit",
+    "multiplicador-error": "The multiplier must be greater than zero",
+    "same-unidad-error": "The larger and smaller units cannot be the same"
+  },
+  "fields": {
+    "producto": "Product",
+    "unidadMayor": "Larger Unit",
+    "unidadMenor": "Smaller Unit",
+    "multiplicador": "Multiplier"
+  },
+  "table": {
+    "producto": "Product",
+    "unidadMayor": "Larger Unit",
+    "unidadMenor": "Smaller Unit",
+    "multiplicador": "Multiplier"
+  },
+  "autocomplete": {
+    "producto-placeholder": "Search product...",
+    "unidad-placeholder": "Search unit of measure...",
+    "no-results": "No results"
+  }
+}
