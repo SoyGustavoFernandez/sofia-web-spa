@@ -1,0 +1,305 @@
+<ng-container *transloco="let t; scope: 'cuentas'; read: 'cuentas'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/cuentas" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    }
+
+    <!-- Create mode -->
+    @if (isNew() && !loading()) {
+      <div class="sofia-detail-card">
+        <form [formGroup]="createForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <csw-autocomplete-input
+                [fetch]="fetchEmpleados"
+                [displayWith]="displayEmpleado"
+                [placeholder]="t('fields.empleado')"
+                [minLength]="2"
+                [clearOnInvalidSelection]="true"
+                (selectedChanges)="onEmpleadoSelected($event)" />
+              @if (empleadoError()) {
+                <mat-error style="font-size: 12px; margin-top: 4px">
+                  {{ 'general.errors.required' | transloco }}
+                </mat-error>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.nombreUsuario') }}</mat-label>
+                <input matInput formControlName="nombreUsuario" />
+                @if (
+                  createForm.get('nombreUsuario')?.hasError('required') &&
+                  createForm.get('nombreUsuario')?.touched
+                ) {
+                  <mat-error>{{
+                    'general.errors.required' | transloco
+                  }}</mat-error>
+                }
+                @if (createForm.get('nombreUsuario')?.hasError('maxlength')) {
+                  <mat-error>{{
+                    'general.errors.maxLength' | transloco: { max: 100 }
+                  }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.password') }}</mat-label>
+                <input matInput formControlName="password" type="password" />
+                @if (
+                  createForm.get('password')?.hasError('required') &&
+                  createForm.get('password')?.touched
+                ) {
+                  <mat-error>{{
+                    'general.errors.required' | transloco
+                  }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="save()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- View / Edit mode for existing record -->
+    @if (!isNew() && !loading() && entity()) {
+      <div class="sofia-detail-card">
+        <!-- View mode -->
+        @if (!isEditMode()) {
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('title') }}</h4>
+              <div class="search-info-text">
+                {{ 'generic-labels.detail-subtitle' | transloco }}
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button mat-flat-button color="primary" (click)="enterEditMode()">
+                {{ 'actions.edit' | transloco }}
+              </button>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.nombreUsuario') }}</mat-label>
+                <input matInput [value]="entity()!.nombreUsuario" disabled />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.empleado') }}</mat-label>
+                <input matInput [value]="entity()!.nombreEmpleado" disabled />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.intentosFallidos') }}</mat-label>
+                <input matInput [value]="entity()!.intentosFallidos" disabled />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.cuentaActiva') }}</mat-label>
+                <input
+                  matInput
+                  [value]="
+                    entity()!.cuentaActiva
+                      ? t('status.active')
+                      : t('status.inactive')
+                  "
+                  disabled />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.bloqueado') }}</mat-label>
+                <input
+                  matInput
+                  [value]="isBloqueado() ? t('status.blocked') : t('status.ok')"
+                  disabled />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.requiresCambio') }}</mat-label>
+                <input
+                  matInput
+                  [value]="
+                    entity()!.requiereCambioClave
+                      ? ('generic-labels.yes' | transloco)
+                      : ('generic-labels.no' | transloco)
+                  "
+                  disabled />
+              </mat-form-field>
+            </div>
+
+            @if (entity()!.bloqueadoHasta) {
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{ t('fields.bloqueadoHasta') }}</mat-label>
+                  <input
+                    matInput
+                    [value]="
+                      entity()!.bloqueadoHasta | date: 'dd/MM/yyyy HH:mm'
+                    "
+                    disabled />
+                </mat-form-field>
+              </div>
+            }
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.createdAt') }}</mat-label>
+                <input
+                  matInput
+                  [value]="entity()!.createdAt | date: 'dd/MM/yyyy'"
+                  disabled />
+              </mat-form-field>
+            </div>
+          </div>
+        }
+
+        <!-- Edit mode -->
+        @if (isEditMode()) {
+          <form [formGroup]="editForm">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{ t('fields.nombreUsuario') }}</mat-label>
+                  <input matInput [value]="entity()!.nombreUsuario" disabled />
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{ t('fields.empleado') }}</mat-label>
+                  <input matInput [value]="entity()!.nombreEmpleado" disabled />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+              <div class="col-md-4 d-flex align-items-center">
+                <mat-slide-toggle
+                  formControlName="cuentaActiva"
+                  color="primary">
+                  {{ t('fields.cuentaActiva') }}
+                </mat-slide-toggle>
+              </div>
+
+              <div class="col-md-4 d-flex align-items-center">
+                <mat-slide-toggle
+                  formControlName="forzarCambioClave"
+                  color="warn">
+                  {{ t('fields.forzarCambioClave') }}
+                </mat-slide-toggle>
+              </div>
+
+              <div class="col-md-4 d-flex align-items-center">
+                <mat-checkbox
+                  formControlName="resetearIntentos"
+                  color="primary">
+                  {{ t('fields.resetearIntentos') }}
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div
+              class="d-flex justify-content-end align-items-center mt-3 gap-4">
+              <button mat-button (click)="cancelEdit()">
+                {{ 'actions.cancel' | transloco }}
+              </button>
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="save()"
+                [disabled]="saving()">
+                @if (saving()) {
+                  <mat-spinner diameter="18" />
+                } @else {
+                  {{ 'actions.save' | transloco }}
+                }
+              </button>
+              <button
+                mat-flat-button
+                class="sofia-btn-delete"
+                (click)="confirmDelete()"
+                [disabled]="deleting()">
+                @if (deleting()) {
+                  <mat-spinner diameter="18" />
+                } @else {
+                  {{ 'actions.delete' | transloco }}
+                }
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+      <!-- Roles card -->
+      <div class="sofia-detail-card mt-3">
+        <div
+          class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+          style="margin-bottom: 1rem">
+          <div>
+            <h4 class="mb-1">{{ t('roles.title') }}</h4>
+            <div class="search-info-text">{{ t('roles.subtitle') }}</div>
+          </div>
+        </div>
+
+        @if (!isEditMode()) {
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('roles.title') }}</mat-label>
+            <input matInput [value]="entity()!.roles[0].nombreRol" disabled />
+          </mat-form-field>
+        }
+
+        @if (isEditMode()) {
+          <csw-autocomplete-input
+            [fetch]="fetchRoles"
+            [displayWith]="displayRol"
+            [placeholder]="t('roles.add-placeholder')"
+            [initialText]="entity()!.roles[0].nombreRol"
+            [minLength]="0"
+            [clearOnInvalidSelection]="true"
+            (selectedChanges)="onRolSelected($event)" />
+        }
+      </div>
+    }
+  </div>
+</ng-container>

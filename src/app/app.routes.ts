@@ -42,6 +42,11 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('./pages/roles/roles.routes').then(m => m.ROLES_ROUTES),
       },
+      {
+        path: 'cuentas',
+        loadChildren: () =>
+          import('./pages/seguridad/cuentas.routes').then(m => m.CUENTAS_ROUTES),
+      },
       // Catálogos
       {
         path: 'unidades-medida',
@@ -57,6 +62,11 @@ export const appRoutes: Route[] = [
         path: 'ingredientes-activos',
         loadChildren: () =>
           import('./pages/ingredientes-activos/ingredientes-activos.routes').then(m => m.INGREDIENTES_ACTIVOS_ROUTES),
+      },
+      {
+        path: 'medicamentos',
+        loadChildren: () =>
+          import('./pages/medicamentos/medicamentos.routes').then(m => m.MEDICAMENTOS_ROUTES),
       },
       {
         path: 'proveedores',

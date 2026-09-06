@@ -1,0 +1,66 @@
+{
+  "title": "User Accounts",
+  "search": {
+    "title": "Account Search",
+    "search-error": "Error searching accounts",
+    "export-filename": "accounts.xlsx"
+  },
+  "detail": {
+    "title-new": "New User Account",
+    "title-edit": "Account Detail",
+    "load-error": "Error loading account",
+    "save-success": "Account saved successfully",
+    "save-error": "Error saving account",
+    "delete-success": "Account deleted successfully",
+    "delete-error": "Error deleting account",
+    "confirm-delete-title": "Delete account",
+    "confirm-delete-message": "Are you sure you want to delete this user account? This action cannot be undone.",
+    "confirm-delete-confirm": "Delete",
+    "confirm-delete-cancel": "Cancel"
+  },
+  "fields": {
+    "nombreUsuario": "Username",
+    "empleado": "Employee",
+    "cuentaActiva": "Active Account",
+    "bloqueado": "Blocked",
+    "requiresCambio": "Requires Password Change",
+    "intentosFallidos": "Failed Attempts",
+    "bloqueadoHasta": "Blocked Until",
+    "password": "Password",
+    "createdAt": "Created at",
+    "roles": "Assigned Roles",
+    "sucursales": "Assigned Branches",
+    "forzarCambioClave": "Force Password Change",
+    "resetearIntentos": "Reset Failed Attempts"
+  },
+  "roles": {
+    "title": "Assigned Roles",
+    "subtitle": "Manage the access roles for this account",
+    "empty": "No roles assigned",
+    "add-placeholder": "Add role...",
+    "assign-success": "Role assigned successfully",
+    "assign-error": "Error assigning role",
+    "remove-success": "Role removed successfully",
+    "remove-error": "Error removing role"
+  },
+  "sucursales": {
+    "add-placeholder": "Add branch...",
+    "assign-success": "Branch assigned successfully",
+    "assign-error": "Error assigning branch",
+    "remove-success": "Branch removed successfully",
+    "remove-error": "Error removing branch"
+  },
+  "table": {
+    "nombreUsuario": "Username",
+    "empleado": "Employee",
+    "cuentaActiva": "Status",
+    "bloqueado": "Blocked",
+    "intentosFallidos": "Attempts"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "blocked": "Blocked",
+    "ok": "OK"
+  }
+}
