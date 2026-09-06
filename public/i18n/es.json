@@ -15,7 +15,9 @@
     "profesionalesSalud": "Profesionales de Salud",
     "catalogoDigemid": "Catálogo DIGEMID",
     "cuentasUsuario": "Cuentas de Usuario",
-    "medicamentos": "Medicamentos"
+    "medicamentos": "Medicamentos",
+    "inventario": "Inventario",
+    "lotes": "Lotes"
   },
   "breadcrumbs": {
     "home": "Inicio",
@@ -38,7 +40,9 @@
     "digemid-catalogo": "Catálogo DIGEMID",
     "carga-masiva": "Carga Masiva",
     "cuentas": "Cuentas de Usuario",
-    "medicamentos": "Medicamentos"
+    "medicamentos": "Medicamentos",
+    "inventario": "Inventario",
+    "lotes": "Lotes"
   },
   "actions": {
     "new": "Nuevo",

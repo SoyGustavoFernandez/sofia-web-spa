@@ -89,6 +89,18 @@ export const navItems: NavItem[] = [
   },
   {
     id: 4,
+    name: 'Inventario',
+    children: [
+      { navCap: 'Inventario' },
+      {
+        displayName: 'nav.lotes',
+        iconName: 'solar:box-line-duotone',
+        route: '/lotes',
+      },
+    ],
+  },
+  {
+    id: 5,
     name: 'Pacientes & Atención',
     children: [
       { navCap: 'Pacientes & Atención' },
@@ -105,7 +117,7 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     name: 'DIGEMID',
     children: [
       { navCap: 'DIGEMID' },
