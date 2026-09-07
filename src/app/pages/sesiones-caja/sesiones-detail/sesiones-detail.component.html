@@ -1,0 +1,289 @@
+<ng-container *transloco="let t; scope: 'sesiones-caja'; read: 'sesionesCaja'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/sesiones-caja" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    }
+
+    <!-- CREATE MODE -->
+    @if (isNew()) {
+      <div class="sofia-detail-card">
+        <div class="row g-3">
+          <!-- Sucursal -->
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.sucursal') }}</mat-label>
+              <input
+                matInput
+                [formControl]="sucursalCtrl"
+                [matAutocomplete]="sucursalAuto"
+                [placeholder]="t('autocomplete.sucursal-placeholder')"
+                (blur)="sucursalTouched.set(true)" />
+              <mat-autocomplete #sucursalAuto="matAutocomplete">
+                @for (s of sucursalOptions(); track s.id) {
+                  <mat-option [value]="s.nombre" (click)="selectSucursal(s)">{{
+                    s.nombre
+                  }}</mat-option>
+                }
+                @if (sucursalOptions().length === 0 && sucursalCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+              <mat-error>{{ t('autocomplete.sucursal-required') }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Empleado -->
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.empleado') }}</mat-label>
+              <input
+                matInput
+                [formControl]="empleadoCtrl"
+                [matAutocomplete]="empleadoAuto"
+                [placeholder]="t('autocomplete.empleado-placeholder')"
+                (blur)="empleadoTouched.set(true)" />
+              <mat-autocomplete #empleadoAuto="matAutocomplete">
+                @for (e of empleadoOptions(); track e.id) {
+                  <mat-option
+                    [value]="e.nombre_Completo"
+                    (click)="selectEmpleado(e)"
+                    >{{ e.nombre_Completo }}</mat-option
+                  >
+                }
+                @if (empleadoOptions().length === 0 && empleadoCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+              <mat-error>{{ t('autocomplete.empleado-required') }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Fecha apertura y monto -->
+          <div class="col-md-6">
+            <form [formGroup]="form">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.fechaApertura') }}</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="pickerApertura"
+                  formControlName="fechaHoraApertura" />
+                <mat-datepicker-toggle matIconSuffix [for]="pickerApertura" />
+                <mat-datepicker #pickerApertura />
+              </mat-form-field>
+            </form>
+          </div>
+
+          <div class="col-md-6">
+            <form [formGroup]="form">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.montoApertura') }}</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  formControlName="montoAperturaEfectivo" />
+              </mat-form-field>
+            </form>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center mt-3 gap-4">
+          <button mat-button (click)="cancelar()">
+            {{ 'actions.cancel' | transloco }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="aperturar()"
+            [disabled]="saving()">
+            @if (saving()) {
+              <mat-spinner diameter="18" />
+            } @else {
+              {{ t('actions.aperturar') }}
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- VIEW MODE (existing record) -->
+    @if (!isNew() && !loading() && snapshot(); as s) {
+      <div class="sofia-detail-card">
+        <div
+          class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+          style="margin-bottom: 1rem">
+          <div>
+            <h4 class="mb-1">{{ t('detail.title') }}</h4>
+            <div class="search-info-text">
+              {{ 'generic-labels.detail-subtitle' | transloco }}
+            </div>
+          </div>
+          @if (s.estadoSesion === EstadoSesion.Abierta) {
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="showCierrePanel.set(true)">
+              {{ t('actions.cerrar-sesion') }}
+            </button>
+          }
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.sucursal') }}</mat-label>
+              <input matInput [value]="s.sucursalNombre" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.empleado') }}</mat-label>
+              <input matInput [value]="s.empleadoNombre" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.fechaApertura') }}</mat-label>
+              <input
+                matInput
+                [value]="s.fechaHoraApertura | date: 'dd/MM/yyyy HH:mm'"
+                disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.fechaCierre') }}</mat-label>
+              <input
+                matInput
+                [value]="
+                  s.fechaHoraCierre
+                    ? (s.fechaHoraCierre | date: 'dd/MM/yyyy HH:mm')
+                    : '—'
+                "
+                disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.estado') }}</mat-label>
+              <input matInput [value]="estadoLabel(s.estadoSesion)" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.montoApertura') }}</mat-label>
+              <input
+                matInput
+                [value]="s.montoAperturaEfectivo | number: '1.2-2'"
+                disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.montoCierreDeclarado') }}</mat-label>
+              <input
+                matInput
+                [value]="
+                  s.montoCierreDeclarado != null
+                    ? (s.montoCierreDeclarado | number: '1.2-2')
+                    : '—'
+                "
+                disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.montoCierreCalculado') }}</mat-label>
+              <input
+                matInput
+                [value]="
+                  s.montoCierreCalculado != null
+                    ? (s.montoCierreCalculado | number: '1.2-2')
+                    : '—'
+                "
+                disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.diferencia') }}</mat-label>
+              <input
+                matInput
+                [value]="
+                  s.diferenciaArqueo != null
+                    ? (s.diferenciaArqueo | number: '1.2-2')
+                    : '—'
+                "
+                disabled />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Cierre panel -->
+        @if (showCierrePanel()) {
+          <div class="cierre-panel">
+            <h5 class="mb-3">{{ t('cierre.title') }}</h5>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <form [formGroup]="cierreForm">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>{{
+                      t('fields.montoCierreDeclarado')
+                    }}</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      min="0"
+                      formControlName="montoCierreDeclarado" />
+                    @if (
+                      cierreForm.controls.montoCierreDeclarado.invalid &&
+                      cierreForm.controls.montoCierreDeclarado.touched
+                    ) {
+                      <mat-error>{{ t('cierre.monto-requerido') }}</mat-error>
+                    }
+                  </mat-form-field>
+                </form>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-2">
+              <button mat-button (click)="showCierrePanel.set(false)">
+                {{ 'actions.cancel' | transloco }}
+              </button>
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="confirmarCierre()"
+                [disabled]="saving()">
+                @if (saving()) {
+                  <mat-spinner diameter="18" />
+                } @else {
+                  {{ t('actions.confirmar-cierre') }}
+                }
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-container>

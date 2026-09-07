@@ -18,7 +18,8 @@
     "medicamentos": "Medications",
     "inventario": "Inventory",
     "lotes": "Batches",
-    "stockPorSucursal": "Stock by Branch"
+    "stockPorSucursal": "Stock by Branch",
+    "sesionesCaja": "Cash Register Sessions"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -44,7 +45,9 @@
     "medicamentos": "Medications",
     "inventario": "Inventory",
     "lotes": "Batches",
-    "stock-por-sucursal": "Stock by Branch"
+    "stock-por-sucursal": "Stock by Branch",
+    "puntoVenta": "Point of Sale",
+    "sesionesCaja": "Cash Register Sessions"
   },
   "actions": {
     "new": "New",
