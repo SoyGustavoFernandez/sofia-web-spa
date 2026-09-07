@@ -1,0 +1,49 @@
+{
+  "title": "Stock por Sucursal",
+  "search": {
+    "title": "Consulta de Stock por Sucursal",
+    "search-error": "Error al consultar el stock",
+    "export-filename": "stock-por-sucursal.xlsx"
+  },
+  "detail": {
+    "title": "Detalle de Stock",
+    "adjust": "Ajustar cantidad",
+    "load-error": "Error al cargar el registro de stock",
+    "save-success": "Cantidad ajustada correctamente",
+    "save-error": "Error al ajustar la cantidad",
+    "cantidad-invalid": "La cantidad no puede ser negativa"
+  },
+  "create": {
+    "title": "Nuevo Registro de Stock",
+    "save-success": "Stock registrado correctamente",
+    "save-error": "Error al registrar el stock"
+  },
+  "fields": {
+    "sucursal": "Sucursal",
+    "producto": "Producto",
+    "numeroLote": "Número de Lote",
+    "caducidad": "Fecha de Caducidad",
+    "caducidadDesde": "Caducidad Desde",
+    "caducidadHasta": "Caducidad Hasta",
+    "cantidad": "Cantidad Física",
+    "cantidadMin": "Cantidad Mínima",
+    "cantidadMax": "Cantidad Máxima",
+    "soloConStock": "Solo con stock disponible",
+    "lote": "Lote"
+  },
+  "table": {
+    "sucursal": "Sucursal",
+    "producto": "Producto",
+    "numeroLote": "Número de Lote",
+    "caducidad": "Fecha de Caducidad",
+    "cantidad": "Cantidad Física"
+  },
+  "autocomplete": {
+    "sucursal-placeholder": "Buscar sucursal...",
+    "producto-placeholder": "Buscar producto...",
+    "lote-placeholder": "Buscar por número de lote...",
+    "sucursal-required": "Debe seleccionar una sucursal",
+    "lote-required": "Debe seleccionar un lote",
+    "no-results": "Sin resultados"
+  }
+}

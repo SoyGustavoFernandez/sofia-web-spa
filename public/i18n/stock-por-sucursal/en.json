@@ -1,0 +1,49 @@
+{
+  "title": "Stock by Branch",
+  "search": {
+    "title": "Stock by Branch Lookup",
+    "search-error": "Error looking up stock",
+    "export-filename": "stock-by-branch.xlsx"
+  },
+  "detail": {
+    "title": "Stock Detail",
+    "adjust": "Adjust quantity",
+    "load-error": "Error loading the stock record",
+    "save-success": "Quantity adjusted successfully",
+    "save-error": "Error adjusting the quantity",
+    "cantidad-invalid": "Quantity cannot be negative"
+  },
+  "create": {
+    "title": "New Stock Entry",
+    "save-success": "Stock entry registered successfully",
+    "save-error": "Error registering stock"
+  },
+  "fields": {
+    "sucursal": "Branch",
+    "producto": "Product",
+    "numeroLote": "Batch Number",
+    "caducidad": "Expiration Date",
+    "caducidadDesde": "Expiration From",
+    "caducidadHasta": "Expiration To",
+    "cantidad": "Physical Quantity",
+    "cantidadMin": "Minimum Quantity",
+    "cantidadMax": "Maximum Quantity",
+    "soloConStock": "Only with available stock",
+    "lote": "Batch"
+  },
+  "table": {
+    "sucursal": "Branch",
+    "producto": "Product",
+    "numeroLote": "Batch Number",
+    "caducidad": "Expiration Date",
+    "cantidad": "Physical Quantity"
+  },
+  "autocomplete": {
+    "sucursal-placeholder": "Search branch...",
+    "producto-placeholder": "Search product...",
+    "lote-placeholder": "Search by batch number...",
+    "sucursal-required": "You must select a branch",
+    "lote-required": "You must select a batch",
+    "no-results": "No results"
+  }
+}

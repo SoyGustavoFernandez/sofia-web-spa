@@ -17,7 +17,8 @@
     "cuentasUsuario": "User Accounts",
     "medicamentos": "Medications",
     "inventario": "Inventory",
-    "lotes": "Batches"
+    "lotes": "Batches",
+    "stockPorSucursal": "Stock by Branch"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -42,7 +43,8 @@
     "cuentas": "User Accounts",
     "medicamentos": "Medications",
     "inventario": "Inventory",
-    "lotes": "Batches"
+    "lotes": "Batches",
+    "stock-por-sucursal": "Stock by Branch"
   },
   "actions": {
     "new": "New",
