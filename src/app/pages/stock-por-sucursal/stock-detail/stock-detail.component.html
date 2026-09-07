@@ -1,0 +1,207 @@
+<ng-container
+  *transloco="let t; scope: 'stock-por-sucursal'; read: 'stockPorSucursal'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/stock-por-sucursal" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    }
+
+    <!-- CREATE MODE -->
+    @if (isNew()) {
+      <div class="sofia-detail-card">
+        <div class="row g-3">
+          <!-- Sucursal autocomplete — full row -->
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.sucursal') }}</mat-label>
+              <input
+                matInput
+                [formControl]="sucursalCtrl"
+                [matAutocomplete]="sucursalAuto"
+                [placeholder]="t('autocomplete.sucursal-placeholder')"
+                (blur)="sucursalTouched.set(true)" />
+              <mat-autocomplete #sucursalAuto="matAutocomplete">
+                @for (s of sucursalOptions(); track s.id) {
+                  <mat-option [value]="s.nombre" (click)="selectSucursal(s)">{{
+                    s.nombre
+                  }}</mat-option>
+                }
+                @if (sucursalOptions().length === 0 && sucursalCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+              @if (sucursalTouched() && !selectedSucursal()) {
+                <mat-error>{{ t('autocomplete.sucursal-required') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <!-- Lote autocomplete -->
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.lote') }}</mat-label>
+              <input
+                matInput
+                [formControl]="loteCtrl"
+                [matAutocomplete]="loteAuto"
+                [placeholder]="t('autocomplete.lote-placeholder')"
+                (blur)="loteTouched.set(true)" />
+              <mat-autocomplete #loteAuto="matAutocomplete">
+                @for (l of loteOptions(); track l.id) {
+                  <mat-option [value]="loteDisplay(l)" (click)="selectLote(l)">
+                    <div class="lote-option">
+                      <span class="lote-option__numero">{{
+                        l.numeroLoteMfr
+                      }}</span>
+                      <span class="lote-option__producto">{{
+                        l.nombreProducto
+                      }}</span>
+                    </div>
+                  </mat-option>
+                }
+                @if (loteOptions().length === 0 && loteCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+              @if (loteTouched() && !selectedLote()) {
+                <mat-error>{{ t('autocomplete.lote-required') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <!-- Cantidad -->
+          <div class="col-md-4">
+            <form [formGroup]="form">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.cantidad') }}</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  formControlName="cantidadFisica" />
+                <mat-error>{{ t('detail.cantidad-invalid') }}</mat-error>
+              </mat-form-field>
+            </form>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center mt-3 gap-4">
+          <button mat-button (click)="cancelEdit()">
+            {{ 'actions.cancel' | transloco }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="save()"
+            [disabled]="saving()">
+            @if (saving()) {
+              <mat-spinner diameter="18" />
+            } @else {
+              {{ 'actions.save' | transloco }}
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- VIEW / EDIT MODE (existing record) -->
+    @if (!isNew() && !loading() && snapshot(); as s) {
+      <div class="sofia-detail-card">
+        @if (!isEditMode()) {
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('detail.title') }}</h4>
+              <div class="search-info-text">
+                {{ 'generic-labels.detail-subtitle' | transloco }}
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button mat-flat-button color="primary" (click)="enterEditMode()">
+                {{ 'actions.edit' | transloco }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.sucursal') }}</mat-label>
+              <input matInput [value]="s.sucursalNombre" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.producto') }}</mat-label>
+              <input matInput [value]="s.productoNombre" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.numeroLote') }}</mat-label>
+              <input matInput [value]="s.numeroLote" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.caducidad') }}</mat-label>
+              <input
+                matInput
+                [value]="s.fechaCaducidad | date: 'dd/MM/yyyy'"
+                disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <form [formGroup]="form">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.cantidad') }}</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  formControlName="cantidadFisica" />
+                <mat-error>{{ t('detail.cantidad-invalid') }}</mat-error>
+              </mat-form-field>
+            </form>
+          </div>
+        </div>
+
+        @if (isEditMode()) {
+          <div class="d-flex justify-content-end align-items-center mt-3 gap-4">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="save()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-container>

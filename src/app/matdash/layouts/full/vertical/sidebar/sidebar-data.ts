@@ -97,6 +97,11 @@ export const navItems: NavItem[] = [
         iconName: 'solar:box-line-duotone',
         route: '/lotes',
       },
+      {
+        displayName: 'nav.stockPorSucursal',
+        iconName: 'solar:checklist-minimalistic-line-duotone',
+        route: '/stock-por-sucursal',
+      },
     ],
   },
   {

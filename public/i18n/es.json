@@ -17,7 +17,8 @@
     "cuentasUsuario": "Cuentas de Usuario",
     "medicamentos": "Medicamentos",
     "inventario": "Inventario",
-    "lotes": "Lotes"
+    "lotes": "Lotes",
+    "stockPorSucursal": "Stock por Sucursal"
   },
   "breadcrumbs": {
     "home": "Inicio",
@@ -42,7 +43,8 @@
     "cuentas": "Cuentas de Usuario",
     "medicamentos": "Medicamentos",
     "inventario": "Inventario",
-    "lotes": "Lotes"
+    "lotes": "Lotes",
+    "stock-por-sucursal": "Stock por Sucursal"
   },
   "actions": {
     "new": "Nuevo",
