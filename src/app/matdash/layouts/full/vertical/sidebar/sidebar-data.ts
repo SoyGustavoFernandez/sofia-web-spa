@@ -106,6 +106,18 @@ export const navItems: NavItem[] = [
   },
   {
     id: 5,
+    name: 'Punto de Venta',
+    children: [
+      { navCap: 'Punto de Venta' },
+      {
+        displayName: 'nav.sesionesCaja',
+        iconName: 'solar:cash-out-line-duotone',
+        route: '/sesiones-caja',
+      },
+    ],
+  },
+  {
+    id: 7,
     name: 'Pacientes & Atención',
     children: [
       { navCap: 'Pacientes & Atención' },
@@ -122,7 +134,7 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    id: 6,
+    id: 8,
     name: 'DIGEMID',
     children: [
       { navCap: 'DIGEMID' },

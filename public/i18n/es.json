@@ -18,7 +18,8 @@
     "medicamentos": "Medicamentos",
     "inventario": "Inventario",
     "lotes": "Lotes",
-    "stockPorSucursal": "Stock por Sucursal"
+    "stockPorSucursal": "Stock por Sucursal",
+    "sesionesCaja": "Sesiones de Caja"
   },
   "breadcrumbs": {
     "home": "Inicio",
@@ -44,7 +45,9 @@
     "medicamentos": "Medicamentos",
     "inventario": "Inventario",
     "lotes": "Lotes",
-    "stock-por-sucursal": "Stock por Sucursal"
+    "stock-por-sucursal": "Stock por Sucursal",
+    "puntoVenta": "Punto de Venta",
+    "sesionesCaja": "Sesiones de Caja"
   },
   "actions": {
     "new": "Nuevo",

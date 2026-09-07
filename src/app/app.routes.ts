@@ -100,6 +100,12 @@ export const appRoutes: Route[] = [
             m => m.STOCK_POR_SUCURSAL_ROUTES,
           ),
       },
+      // Punto de Venta
+      {
+        path: 'sesiones-caja',
+        loadChildren: () =>
+          import('./pages/sesiones-caja/sesiones-caja.routes').then(m => m.SESIONES_CAJA_ROUTES),
+      },
       // Pacientes & Atención
       {
         path: 'pacientes',

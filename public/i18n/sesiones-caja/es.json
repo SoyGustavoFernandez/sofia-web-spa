@@ -1,0 +1,61 @@
+{
+  "title": "Sesiones de Caja",
+  "search": {
+    "title": "Búsqueda de Sesiones de Caja",
+    "search-error": "Error al buscar sesiones de caja",
+    "export-filename": "sesiones-caja.xlsx"
+  },
+  "detail": {
+    "title": "Detalle de Sesión",
+    "load-error": "Error al cargar la sesión de caja"
+  },
+  "create": {
+    "title": "Nueva Sesión de Caja",
+    "save-success": "Sesión aperturada correctamente",
+    "save-error": "Error al aperturar la sesión"
+  },
+  "cierre": {
+    "title": "Cerrar Sesión",
+    "save-success": "Sesión cerrada correctamente",
+    "save-error": "Error al cerrar la sesión",
+    "monto-requerido": "Ingrese el monto declarado al cierre"
+  },
+  "fields": {
+    "sucursal": "Sucursal",
+    "empleado": "Cajero",
+    "fechaApertura": "Fecha / Hora Apertura",
+    "fechaCierre": "Fecha / Hora Cierre",
+    "montoApertura": "Monto Apertura (S/)",
+    "montoCierreDeclarado": "Monto Cierre Declarado (S/)",
+    "montoCierreCalculado": "Monto Cierre Calculado (S/)",
+    "diferencia": "Diferencia Arqueo (S/)",
+    "estado": "Estado",
+    "fechaInicio": "Apertura desde",
+    "fechaFin": "Apertura hasta"
+  },
+  "table": {
+    "sucursal": "Sucursal",
+    "empleado": "Cajero",
+    "fechaApertura": "Apertura",
+    "fechaCierre": "Cierre",
+    "montoApertura": "Monto Apertura",
+    "estado": "Estado"
+  },
+  "estado": {
+    "Abierta": "Abierta",
+    "Cerrada": "Cerrada",
+    "Cuadrada": "Cuadrada"
+  },
+  "autocomplete": {
+    "sucursal-placeholder": "Buscar sucursal...",
+    "empleado-placeholder": "Buscar cajero...",
+    "sucursal-required": "Debe seleccionar una sucursal",
+    "empleado-required": "Debe seleccionar un cajero",
+    "no-results": "Sin resultados"
+  },
+  "actions": {
+    "aperturar": "Aperturar",
+    "cerrar-sesion": "Cerrar Sesión",
+    "confirmar-cierre": "Confirmar Cierre"
+  }
+}

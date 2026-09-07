@@ -1,0 +1,61 @@
+{
+  "title": "Cash Register Sessions",
+  "search": {
+    "title": "Cash Register Session Lookup",
+    "search-error": "Error looking up sessions",
+    "export-filename": "cash-register-sessions.xlsx"
+  },
+  "detail": {
+    "title": "Session Detail",
+    "load-error": "Error loading the session"
+  },
+  "create": {
+    "title": "New Cash Register Session",
+    "save-success": "Session opened successfully",
+    "save-error": "Error opening the session"
+  },
+  "cierre": {
+    "title": "Close Session",
+    "save-success": "Session closed successfully",
+    "save-error": "Error closing the session",
+    "monto-requerido": "Enter the declared closing amount"
+  },
+  "fields": {
+    "sucursal": "Branch",
+    "empleado": "Cashier",
+    "fechaApertura": "Opening Date / Time",
+    "fechaCierre": "Closing Date / Time",
+    "montoApertura": "Opening Amount (S/)",
+    "montoCierreDeclarado": "Declared Closing Amount (S/)",
+    "montoCierreCalculado": "Calculated Closing Amount (S/)",
+    "diferencia": "Cash Difference (S/)",
+    "estado": "Status",
+    "fechaInicio": "Opening from",
+    "fechaFin": "Opening to"
+  },
+  "table": {
+    "sucursal": "Branch",
+    "empleado": "Cashier",
+    "fechaApertura": "Opened",
+    "fechaCierre": "Closed",
+    "montoApertura": "Opening Amount",
+    "estado": "Status"
+  },
+  "estado": {
+    "Abierta": "Open",
+    "Cerrada": "Closed",
+    "Cuadrada": "Balanced"
+  },
+  "autocomplete": {
+    "sucursal-placeholder": "Search branch...",
+    "empleado-placeholder": "Search cashier...",
+    "sucursal-required": "You must select a branch",
+    "empleado-required": "You must select a cashier",
+    "no-results": "No results"
+  },
+  "actions": {
+    "aperturar": "Open Session",
+    "cerrar-sesion": "Close Session",
+    "confirmar-cierre": "Confirm Close"
+  }
+}
