@@ -1,0 +1,598 @@
+// ============================================================
+// AI label badge (shown next to card title)
+// ============================================================
+
+.scanner-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--mat-sys-primary-container) 80%, transparent),
+    color-mix(in srgb, var(--mat-sys-secondary-container) 80%, transparent)
+  );
+  color: var(--mat-sys-on-primary-container);
+
+  mat-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+  }
+}
+
+// ============================================================
+// Drop zone — main capture / preview area
+// ============================================================
+
+.scanner-drop-zone {
+  margin-top: 20px;
+  min-height: 220px;
+  border: 2px dashed var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary) 3%,
+    var(--mat-sys-surface)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease;
+
+  // State: image selected and ready
+  &--filled {
+    border-style: solid;
+    border-color: var(--mat-sys-outline-variant);
+    background: var(--mat-sys-surface-container-low);
+    min-height: 300px;
+  }
+
+  // State: file being dragged over
+  &--dragging {
+    border-style: solid;
+    border-color: var(--mat-sys-primary);
+    background: color-mix(
+      in srgb,
+      var(--mat-sys-primary) 10%,
+      var(--mat-sys-surface)
+    );
+    transform: scale(1.01);
+  }
+
+  // State: AI analysis in progress
+  &--loading {
+    border-style: solid;
+    border-color: var(--mat-sys-primary);
+    background: color-mix(
+      in srgb,
+      var(--mat-sys-primary) 6%,
+      var(--mat-sys-surface)
+    );
+    animation: scanner-zone-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes scanner-zone-pulse {
+  0%,
+  100% {
+    border-color: var(--mat-sys-primary);
+  }
+  50% {
+    border-color: color-mix(in srgb, var(--mat-sys-primary) 40%, transparent);
+  }
+}
+
+// Centered content block (empty state / loading state)
+.scanner-zone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+// Icon ring — decorative halo around the scanner icon
+.scanner-icon-ring {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  border: 2px solid color-mix(in srgb, var(--mat-sys-primary) 22%, transparent);
+  margin-bottom: 8px;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: var(--mat-sys-primary);
+  }
+
+  // Outer pulsing ring
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    border: 1px solid
+      color-mix(in srgb, var(--mat-sys-primary) 16%, transparent);
+    animation: scanner-ring-pulse 2.6s ease-in-out infinite;
+  }
+}
+
+@keyframes scanner-ring-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.4;
+  }
+}
+
+.scanner-zone-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+}
+
+.scanner-zone-hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Loading ring — spinner with AI icon in center
+.scanner-loading-ring {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+
+  mat-spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .scanner-loading-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: var(--mat-sys-primary);
+    animation: scanner-sparkle 1.3s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes scanner-sparkle {
+  from {
+    opacity: 0.55;
+    transform: scale(0.88) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.12) rotate(8deg);
+  }
+}
+
+// Image preview inside the filled zone
+.scanner-preview-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  width: 100%;
+}
+
+.scanner-preview-img {
+  max-height: 340px;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px
+    color-mix(in srgb, var(--mat-sys-shadow, #000) 18%, transparent);
+}
+
+.scanner-preview-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+// ============================================================
+// Action buttons row
+// ============================================================
+
+.scanner-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.scanner-capture-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.scanner-btn-capture {
+  height: 44px;
+  min-width: 152px;
+  font-size: 0.9rem;
+}
+
+// ============================================================
+// Interpret button
+// ============================================================
+
+.scanner-interpret-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.scanner-interpret-btn {
+  min-width: 232px;
+  height: 52px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+// ============================================================
+// Result medication cards
+// ============================================================
+
+// NOTE: this project's utility classes follow a custom scale (e.g. `flex-col`,
+// `m-t-2`), not Bootstrap's (`flex-column`, `mt-2`) — those don't exist in the
+// compiled CSS. Spacing/layout for the results section lives here instead.
+
+.sofia-results-card {
+  margin-top: 16px;
+}
+
+.receta-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.receta-item-card {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--mat-sys-surface-container-low);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 6px 20px
+      color-mix(in srgb, var(--mat-sys-shadow, #000) 12%, transparent);
+    transform: translateY(-2px);
+    border-color: color-mix(
+      in srgb,
+      var(--mat-sys-primary) 30%,
+      var(--mat-sys-outline-variant)
+    );
+  }
+}
+
+// Gradient header strip — primary tones
+.receta-item-header {
+  padding: 14px 16px 12px;
+  background: linear-gradient(
+    135deg,
+    color-mix(
+      in srgb,
+      var(--mat-sys-primary-container) 55%,
+      var(--mat-sys-surface)
+    ),
+    color-mix(
+      in srgb,
+      var(--mat-sys-secondary-container) 35%,
+      var(--mat-sys-surface)
+    )
+  );
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
+
+  // Secondary variant for AI suggestions
+  &--secondary {
+    background: linear-gradient(
+      135deg,
+      color-mix(
+        in srgb,
+        var(--mat-sys-secondary-container) 55%,
+        var(--mat-sys-surface)
+      ),
+      color-mix(
+        in srgb,
+        var(--mat-sys-surface-variant) 55%,
+        var(--mat-sys-surface)
+      )
+    );
+    border-bottom-color: color-mix(
+      in srgb,
+      var(--mat-sys-secondary) 14%,
+      transparent
+    );
+  }
+}
+
+.receta-item-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+// Card body — stock / equivalents / alert
+.receta-item-body {
+  padding: 14px 16px;
+}
+
+.sugerencia-card {
+  border-color: color-mix(
+    in srgb,
+    var(--mat-sys-secondary-container) 70%,
+    transparent
+  );
+}
+
+.receta-item-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--mat-sys-on-surface);
+  letter-spacing: 0.01em;
+}
+
+.receta-item-detected {
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 3px;
+}
+
+// ============================================================
+// Badges
+// ============================================================
+
+.receta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  mat-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.badge-digemid {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 28%, transparent);
+}
+
+.badge-cantidad {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.badge-confianza-primary {
+  background: color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
+  color: var(--mat-sys-primary);
+}
+
+.badge-confianza-accent {
+  background: color-mix(in srgb, var(--mat-sys-secondary) 14%, transparent);
+  color: var(--mat-sys-secondary);
+}
+
+.badge-confianza-warn {
+  background: color-mix(in srgb, var(--mat-sys-error) 14%, transparent);
+  color: var(--mat-sys-error);
+}
+
+// ============================================================
+// Stock indicators
+// ============================================================
+
+.stock-ok,
+.stock-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.stock-ok {
+  color: #2e7d32;
+  background: color-mix(in srgb, #2e7d32 12%, transparent);
+}
+
+.stock-empty {
+  color: var(--mat-sys-error);
+  background: color-mix(in srgb, var(--mat-sys-error) 10%, transparent);
+}
+
+.stock-inline {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+}
+
+// ============================================================
+// Therapeutic equivalents section
+// ============================================================
+
+.equivalentes-section {
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  padding-top: 10px;
+  margin-top: 12px;
+}
+
+.equivalentes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.equivalentes-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.equivalente-row {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.equivalente-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+// ============================================================
+// No-stock alert with equivalents available
+// ============================================================
+
+.alert-equivalente {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border-left: 3px solid #f57c00;
+  background: color-mix(in srgb, #f57c00 9%, var(--mat-sys-surface));
+  color: #e65100;
+  font-size: 0.83rem;
+  font-weight: 500;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}
+
+// ============================================================
+// No-results empty state (inside results card)
+// ============================================================
+
+.scanner-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 24px;
+
+  mat-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    color: var(--mat-sys-on-surface-variant);
+    opacity: 0.45;
+  }
+
+  div {
+    font-size: 0.9rem;
+    color: var(--mat-sys-on-surface-variant);
+    opacity: 0.7;
+  }
+}
+
+// ============================================================
+// Dark mode overrides — hardcoded colors that need adjustment
+// ============================================================
+
+:root[data-theme='dark'] {
+  .stock-ok {
+    color: #81c784;
+    background: color-mix(in srgb, #81c784 16%, transparent);
+  }
+
+  .alert-equivalente {
+    color: #ffb74d;
+    border-left-color: #fb8c00;
+    background: color-mix(in srgb, #f57c00 14%, var(--mat-sys-surface));
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    .stock-ok {
+      color: #81c784;
+      background: color-mix(in srgb, #81c784 16%, transparent);
+    }
+
+    .alert-equivalente {
+      color: #ffb74d;
+      border-left-color: #fb8c00;
+      background: color-mix(in srgb, #f57c00 14%, var(--mat-sys-surface));
+    }
+  }
+}

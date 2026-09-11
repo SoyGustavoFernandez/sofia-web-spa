@@ -1,0 +1,79 @@
+{
+  "title": "Recetas Médicas",
+  "search": {
+    "title": "Búsqueda de Recetas Médicas",
+    "search-error": "Error al buscar recetas médicas",
+    "export-filename": "recetas-medicas.xlsx"
+  },
+  "detail": {
+    "title": "Detalle de Receta"
+  },
+  "create": {
+    "title": "Nueva Receta Médica",
+    "save-success": "Receta creada correctamente",
+    "save-error": "Error al crear la receta"
+  },
+  "edit": {
+    "save-success": "Receta actualizada correctamente",
+    "save-error": "Error al actualizar la receta",
+    "load-error": "Error al cargar la receta"
+  },
+  "delete": {
+    "confirm-title": "Eliminar receta",
+    "confirm-message": "¿Está seguro de que desea eliminar esta receta médica? Esta acción no se puede deshacer.",
+    "success": "Receta eliminada correctamente",
+    "error": "Error al eliminar la receta"
+  },
+  "fields": {
+    "paciente": "Paciente",
+    "medico": "Médico",
+    "fechaExpedicion": "Fecha de Expedición",
+    "repeticionesMax": "Repeticiones Máximas",
+    "indicacionesUso": "Indicaciones de Uso"
+  },
+  "table": {
+    "paciente": "Paciente",
+    "medico": "Médico",
+    "fechaExpedicion": "Fecha de Expedición",
+    "repeticiones": "Repeticiones",
+    "indicaciones": "Indicaciones"
+  },
+  "autocomplete": {
+    "paciente-placeholder": "Buscar paciente...",
+    "medico-placeholder": "Buscar médico...",
+    "no-results": "Sin resultados"
+  },
+  "validation": {
+    "paciente-required": "Debe seleccionar un paciente",
+    "medico-required": "Debe seleccionar un médico",
+    "fecha-required": "La fecha de expedición es requerida"
+  },
+  "scanner": {
+    "title": "Lector de Recetas IA",
+    "card-title": "Escanear receta médica",
+    "card-subtitle": "Tome una foto de la receta o seleccione una imagen de la galería",
+    "btn-camera": "Tomar foto",
+    "btn-gallery": "Galería",
+    "btn-clear": "Limpiar",
+    "btn-interpret": "Interpretar receta",
+    "interpreting": "Interpretando...",
+    "empty-hint": "Capture o seleccione una imagen para comenzar",
+    "detected-as": "Detectado como",
+    "confidence": "Confianza",
+    "suggested-quantity": "Cantidad sugerida",
+    "section-receta": "Medicamentos de la receta",
+    "section-suggestions": "Sugerencias IA",
+    "stock-available": "En stock",
+    "no-stock": "Sin stock",
+    "units": "unidades",
+    "equivalents": "Equivalentes terapéuticos",
+    "no-stock-but-equivalent": "No hay stock del medicamento prescrito, pero hay equivalentes disponibles.",
+    "no-results": "No se detectaron medicamentos en la imagen. Intente con una foto más nítida.",
+    "error": "Error al interpretar la receta. Intente nuevamente.",
+    "confidence-high": "Alta",
+    "confidence-medium": "Media",
+    "confidence-low": "Baja",
+    "ai-label": "Análisis con IA",
+    "drop-zone-hint": "o arrastra una imagen aquí"
+  }
+}

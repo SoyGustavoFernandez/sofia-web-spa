@@ -1,0 +1,305 @@
+<ng-container
+  *transloco="let t; scope: 'recetas-medicas'; read: 'recetasMedicas'">
+  <!-- Hidden file inputs -->
+  <input
+    #cameraInput
+    type="file"
+    accept="image/*"
+    capture="environment"
+    style="display: none"
+    (change)="onFileSelected($event)" />
+  <input
+    #galleryInput
+    type="file"
+    accept="image/*"
+    style="display: none"
+    (change)="onFileSelected($event)" />
+
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('scanner.title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="false" />
+
+    <!-- Capture card -->
+    <div class="sofia-filter-card">
+      <div class="sofia-filter-header">
+        <div
+          class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <h4 class="mb-0">{{ t('scanner.card-title') }}</h4>
+          <span class="scanner-ai-badge">
+            <mat-icon>auto_awesome</mat-icon>
+            {{ t('scanner.ai-label') }}
+          </span>
+        </div>
+        <div class="search-info-text mt-1">
+          {{ t('scanner.card-subtitle') }}
+        </div>
+      </div>
+
+      <!-- Drop zone — shows empty state / preview / loading -->
+      <div
+        class="scanner-drop-zone"
+        [class.scanner-drop-zone--filled]="!!imagenPreview() && !loading()"
+        [class.scanner-drop-zone--loading]="loading()"
+        [class.scanner-drop-zone--dragging]="dragging()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)">
+        @if (loading()) {
+          <div class="scanner-zone-content">
+            <div class="scanner-loading-ring">
+              <mat-spinner diameter="72" />
+              <mat-icon class="scanner-loading-icon">auto_awesome</mat-icon>
+            </div>
+            <p class="scanner-zone-title">{{ t('scanner.interpreting') }}</p>
+            <p class="scanner-zone-hint">{{ t('scanner.ai-label') }}</p>
+          </div>
+        } @else if (imagenPreview()) {
+          <div class="scanner-preview-content">
+            <img
+              [src]="imagenPreview()"
+              alt="Receta"
+              class="scanner-preview-img" />
+            <div class="scanner-preview-name">
+              <mat-icon>image</mat-icon>
+              {{ imagenSeleccionada()?.name }}
+            </div>
+          </div>
+        } @else {
+          <div class="scanner-zone-content">
+            <div class="scanner-icon-ring">
+              <mat-icon>document_scanner</mat-icon>
+            </div>
+            <p class="scanner-zone-title">{{ t('scanner.empty-hint') }}</p>
+            <p class="scanner-zone-hint">{{ t('scanner.drop-zone-hint') }}</p>
+          </div>
+        }
+      </div>
+
+      <!-- Action buttons -->
+      <div class="scanner-actions mt-3">
+        <div class="scanner-capture-group">
+          <button
+            mat-flat-button
+            color="primary"
+            class="scanner-btn-capture"
+            (click)="abrirCamara()"
+            [disabled]="loading()">
+            <mat-icon>photo_camera</mat-icon>
+            {{ t('scanner.btn-camera') }}
+          </button>
+          <button
+            mat-stroked-button
+            class="scanner-btn-capture"
+            (click)="abrirGaleria()"
+            [disabled]="loading()">
+            <mat-icon>photo_library</mat-icon>
+            {{ t('scanner.btn-gallery') }}
+          </button>
+        </div>
+        @if (imagenSeleccionada()) {
+          <button
+            mat-button
+            class="sofia-btn-delete"
+            (click)="limpiar()"
+            [disabled]="loading()">
+            <mat-icon>close</mat-icon>
+            {{ t('scanner.btn-clear') }}
+          </button>
+        }
+      </div>
+
+      <!-- Interpret button — hidden while loading (loading shown in drop zone) -->
+      @if (imagenSeleccionada() && !loading()) {
+        <div class="scanner-interpret-wrap mt-3">
+          <button
+            mat-flat-button
+            color="primary"
+            class="scanner-interpret-btn"
+            (click)="interpretar()"
+            [disabled]="loading()">
+            <span class="d-flex align-items-center gap-2">
+              <mat-icon>auto_awesome</mat-icon>
+              {{ t('scanner.btn-interpret') }}
+            </span>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Results -->
+    @if (resultados() !== null && !loading()) {
+      <!-- Medications from prescription -->
+      @if (itemsReceta.length > 0) {
+        <div class="sofia-results-card">
+          <div class="sofia-results-header d-flex align-items-center gap-2">
+            <mat-icon style="color: var(--mat-sys-primary)"
+              >medication</mat-icon
+            >
+            {{ t('scanner.section-receta') }} ({{ itemsReceta.length }})
+          </div>
+
+          <div class="receta-items-grid">
+            @for (item of itemsReceta; track item.nombreOficial) {
+              <div class="receta-item-card">
+                <!-- Gradient header strip -->
+                <div class="receta-item-header">
+                  <div class="receta-item-name">{{ item.nombreOficial }}</div>
+                  @if (
+                    item.nombreDetectado &&
+                    item.nombreDetectado !== item.nombreOficial
+                  ) {
+                    <div class="receta-item-detected">
+                      {{ t('scanner.detected-as') }}: "{{
+                        item.nombreDetectado
+                      }}"
+                    </div>
+                  }
+                  <div class="receta-item-badges">
+                    @if (item.validadoPorDigemid) {
+                      <span class="receta-badge badge-digemid">
+                        <mat-icon>verified</mat-icon>
+                        DIGEMID
+                      </span>
+                    }
+                    @if (item.cantidadSugerida) {
+                      <span class="receta-badge badge-cantidad">
+                        <mat-icon>numbers</mat-icon>
+                        {{ t('scanner.suggested-quantity') }}:
+                        {{ item.cantidadSugerida }}
+                      </span>
+                    }
+                    <span
+                      class="receta-badge"
+                      [class]="
+                        'badge-confianza-' + confianzaColor(item.confianzaFinal)
+                      ">
+                      {{ t('scanner.confidence') }}:
+                      {{ confianzaLabel(item.confianzaFinal) }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card body -->
+                <div class="receta-item-body">
+                  <!-- Stock status -->
+                  @if (item.tieneStock) {
+                    <div class="stock-ok">
+                      <mat-icon>check_circle</mat-icon>
+                      {{ t('scanner.stock-available') }}:
+                      {{ item.stockDisponible | number: '1.0-0' }}
+                      {{ t('scanner.units') }}
+                    </div>
+                  } @else {
+                    <div class="stock-empty">
+                      <mat-icon>cancel</mat-icon>
+                      {{ t('scanner.no-stock') }}
+                    </div>
+                  }
+
+                  <!-- Equivalents -->
+                  @if (item.equivalentes.length > 0) {
+                    <div class="equivalentes-section">
+                      <div class="equivalentes-label">
+                        <mat-icon>swap_horiz</mat-icon>
+                        {{ t('scanner.equivalents') }}:
+                      </div>
+                      <div class="equivalentes-list">
+                        @for (eq of item.equivalentes; track eq.medicamentoId) {
+                          <div
+                            class="equivalente-row d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div>
+                              <span class="equivalente-name">{{
+                                eq.nombreComercial
+                              }}</span>
+                              @if (eq.laboratorio) {
+                                <span class="search-info-text">
+                                  — {{ eq.laboratorio }}</span
+                                >
+                              }
+                            </div>
+                            @if (eq.tieneStock) {
+                              <span class="stock-ok stock-inline">
+                                <mat-icon>check_circle</mat-icon>
+                                {{ eq.stockDisponible | number: '1.0-0' }}
+                                {{ t('scanner.units') }}
+                              </span>
+                            } @else {
+                              <span class="stock-empty stock-inline">
+                                <mat-icon>cancel</mat-icon>
+                                {{ t('scanner.no-stock') }}
+                              </span>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+
+                  <!-- No stock warning with equivalents available -->
+                  @if (!item.tieneStock && tieneEquivalenteConStock(item)) {
+                    <div class="alert-equivalente">
+                      <mat-icon>info</mat-icon>
+                      <span>{{ t('scanner.no-stock-but-equivalent') }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- AI Suggestions -->
+      @if (itemsSugerencia.length > 0) {
+        <div class="sofia-results-card">
+          <div class="sofia-results-header d-flex align-items-center gap-2">
+            <mat-icon style="color: var(--mat-sys-secondary)"
+              >auto_awesome</mat-icon
+            >
+            {{ t('scanner.section-suggestions') }} ({{
+              itemsSugerencia.length
+            }})
+          </div>
+
+          <div class="receta-items-grid">
+            @for (item of itemsSugerencia; track item.nombreOficial) {
+              <div class="receta-item-card sugerencia-card">
+                <div class="receta-item-header receta-item-header--secondary">
+                  <div class="receta-item-name">{{ item.nombreOficial }}</div>
+                  <div class="receta-item-detected">
+                    {{ item.razonSugerencia }}
+                  </div>
+                </div>
+                <div class="receta-item-body">
+                  @if (item.tieneStock) {
+                    <div class="stock-ok">
+                      <mat-icon>check_circle</mat-icon>
+                      {{ t('scanner.stock-available') }}:
+                      {{ item.stockDisponible | number: '1.0-0' }}
+                      {{ t('scanner.units') }}
+                    </div>
+                  } @else {
+                    <div class="stock-empty">
+                      <mat-icon>cancel</mat-icon>
+                      {{ t('scanner.no-stock') }}
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Nothing found -->
+      @if (resultados()!.length === 0) {
+        <div class="sofia-results-card scanner-no-results">
+          <mat-icon>search_off</mat-icon>
+          <div>{{ t('scanner.no-results') }}</div>
+        </div>
+      }
+    }
+  </div>
+</ng-container>

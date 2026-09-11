@@ -131,6 +131,11 @@ export const navItems: NavItem[] = [
         iconName: 'solar:stethoscope-line-duotone',
         route: '/profesionales-salud',
       },
+      {
+        displayName: 'nav.recetasMedicas',
+        iconName: 'solar:document-text-line-duotone',
+        route: '/recetas-medicas',
+      },
     ],
   },
   {

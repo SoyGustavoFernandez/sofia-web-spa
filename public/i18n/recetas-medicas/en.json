@@ -1,0 +1,79 @@
+{
+  "title": "Medical Prescriptions",
+  "search": {
+    "title": "Medical Prescription Lookup",
+    "search-error": "Error looking up prescriptions",
+    "export-filename": "medical-prescriptions.xlsx"
+  },
+  "detail": {
+    "title": "Prescription Detail"
+  },
+  "create": {
+    "title": "New Medical Prescription",
+    "save-success": "Prescription created successfully",
+    "save-error": "Error creating the prescription"
+  },
+  "edit": {
+    "save-success": "Prescription updated successfully",
+    "save-error": "Error updating the prescription",
+    "load-error": "Error loading the prescription"
+  },
+  "delete": {
+    "confirm-title": "Delete prescription",
+    "confirm-message": "Are you sure you want to delete this prescription? This action cannot be undone.",
+    "success": "Prescription deleted successfully",
+    "error": "Error deleting the prescription"
+  },
+  "fields": {
+    "paciente": "Patient",
+    "medico": "Doctor",
+    "fechaExpedicion": "Issue Date",
+    "repeticionesMax": "Max Refills",
+    "indicacionesUso": "Usage Instructions"
+  },
+  "table": {
+    "paciente": "Patient",
+    "medico": "Doctor",
+    "fechaExpedicion": "Issue Date",
+    "repeticiones": "Refills",
+    "indicaciones": "Instructions"
+  },
+  "autocomplete": {
+    "paciente-placeholder": "Search patient...",
+    "medico-placeholder": "Search doctor...",
+    "no-results": "No results"
+  },
+  "validation": {
+    "paciente-required": "You must select a patient",
+    "medico-required": "You must select a doctor",
+    "fecha-required": "Issue date is required"
+  },
+  "scanner": {
+    "title": "AI Prescription Reader",
+    "card-title": "Scan prescription",
+    "card-subtitle": "Take a photo of the prescription or select an image from the gallery",
+    "btn-camera": "Take photo",
+    "btn-gallery": "Gallery",
+    "btn-clear": "Clear",
+    "btn-interpret": "Interpret prescription",
+    "interpreting": "Interpreting...",
+    "empty-hint": "Capture or select an image to get started",
+    "detected-as": "Detected as",
+    "confidence": "Confidence",
+    "suggested-quantity": "Suggested quantity",
+    "section-receta": "Prescription medications",
+    "section-suggestions": "AI Suggestions",
+    "stock-available": "In stock",
+    "no-stock": "Out of stock",
+    "units": "units",
+    "equivalents": "Therapeutic equivalents",
+    "no-stock-but-equivalent": "The prescribed medication is out of stock, but equivalents are available.",
+    "no-results": "No medications were detected in the image. Try with a clearer photo.",
+    "error": "Error interpreting the prescription. Please try again.",
+    "confidence-high": "High",
+    "confidence-medium": "Medium",
+    "confidence-low": "Low",
+    "ai-label": "AI-Powered Analysis",
+    "drop-zone-hint": "or drag an image here"
+  }
+}
