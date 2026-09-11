@@ -19,7 +19,8 @@
     "inventario": "Inventario",
     "lotes": "Lotes",
     "stockPorSucursal": "Stock por Sucursal",
-    "sesionesCaja": "Sesiones de Caja"
+    "sesionesCaja": "Sesiones de Caja",
+    "recetasMedicas": "Recetas Médicas"
   },
   "breadcrumbs": {
     "home": "Inicio",
@@ -47,7 +48,9 @@
     "lotes": "Lotes",
     "stock-por-sucursal": "Stock por Sucursal",
     "puntoVenta": "Punto de Venta",
-    "sesionesCaja": "Sesiones de Caja"
+    "sesionesCaja": "Sesiones de Caja",
+    "pacientesAtencion": "Pacientes & Atención",
+    "recetasMedicas": "Recetas Médicas"
   },
   "actions": {
     "new": "Nuevo",
@@ -91,7 +94,9 @@
     "copy-ref": "Copiar referencia",
     "detail-subtitle": "Datos del registro",
     "no-results": "Sin resultados",
-    "all": "Todos"
+    "all": "Todos",
+    "date-from": "Fecha desde",
+    "date-to": "Fecha hasta"
   },
   "header.logout": "Cerrar sesión",
   "header.reloadPermissions": "Recargar permisos",

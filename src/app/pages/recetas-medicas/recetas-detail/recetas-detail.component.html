@@ -1,0 +1,228 @@
+<ng-container
+  *transloco="let t; scope: 'recetas-medicas'; read: 'recetasMedicas'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/recetas-medicas" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    }
+
+    <!-- CREATE / EDIT MODE -->
+    @if (isEditing()) {
+      <div class="sofia-detail-card">
+        <div class="row g-3">
+          <!-- Paciente -->
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.paciente') }}</mat-label>
+              <input
+                matInput
+                [formControl]="pacienteCtrl"
+                [matAutocomplete]="pacienteAuto"
+                [placeholder]="t('autocomplete.paciente-placeholder')" />
+              <mat-autocomplete #pacienteAuto="matAutocomplete">
+                @for (p of pacienteOptions(); track p.id) {
+                  <mat-option
+                    [value]="p.nombreApellidos"
+                    (click)="selectPaciente(p)">
+                    {{ p.nombreApellidos }}
+                    <span style="font-size: 0.8em; opacity: 0.65">
+                      — {{ p.docIdentidadGub }}</span
+                    >
+                  </mat-option>
+                }
+                @if (pacienteOptions().length === 0 && pacienteCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+              @if (pacienteCtrl.invalid && pacienteCtrl.touched) {
+                <mat-error>{{ t('validation.paciente-required') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <!-- Médico -->
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.medico') }}</mat-label>
+              <input
+                matInput
+                [formControl]="medicoCtrl"
+                [matAutocomplete]="medicoAuto"
+                [placeholder]="t('autocomplete.medico-placeholder')" />
+              <mat-autocomplete #medicoAuto="matAutocomplete">
+                @for (m of medicoOptions(); track m.id) {
+                  <mat-option
+                    [value]="m.nombrePrescriptor"
+                    (click)="selectMedico(m)">
+                    {{ m.nombrePrescriptor }}
+                    <span style="font-size: 0.8em; opacity: 0.65">
+                      — {{ m.numeroRegistro }}</span
+                    >
+                  </mat-option>
+                }
+                @if (medicoOptions().length === 0 && medicoCtrl.value) {
+                  <mat-option disabled>{{
+                    t('autocomplete.no-results')
+                  }}</mat-option>
+                }
+              </mat-autocomplete>
+              @if (medicoCtrl.invalid && medicoCtrl.touched) {
+                <mat-error>{{ t('validation.medico-required') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <form [formGroup]="form" class="row g-3 col-12 m-0 p-0">
+            <!-- Fecha expedición -->
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.fechaExpedicion') }}</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="pickerFecha"
+                  formControlName="fechaExpedicion" />
+                <mat-datepicker-toggle matIconSuffix [for]="pickerFecha" />
+                <mat-datepicker #pickerFecha />
+                @if (
+                  form.controls.fechaExpedicion.invalid &&
+                  form.controls.fechaExpedicion.touched
+                ) {
+                  <mat-error>{{ t('validation.fecha-required') }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <!-- Repeticiones máximas -->
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.repeticionesMax') }}</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  formControlName="repeticionesMax" />
+              </mat-form-field>
+            </div>
+
+            <!-- Indicaciones -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{ t('fields.indicacionesUso') }}</mat-label>
+                <textarea
+                  matInput
+                  rows="3"
+                  formControlName="indicacionesUso"></textarea>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <div>
+            @if (!isNew()) {
+              <button
+                mat-flat-button
+                class="sofia-btn-delete"
+                (click)="eliminar()"
+                [disabled]="deleting()">
+                @if (deleting()) {
+                  <mat-spinner diameter="18" />
+                } @else {
+                  {{ 'actions.delete' | transloco }}
+                }
+              </button>
+            }
+          </div>
+          <div class="d-flex gap-2">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="guardar()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- VIEW MODE -->
+    @if (!isNew() && !isEditing() && !loading() && snapshot(); as s) {
+      <div class="sofia-detail-card">
+        <div
+          class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+          style="margin-bottom: 1rem">
+          <div>
+            <h4 class="mb-1">{{ t('detail.title') }}</h4>
+            <div class="search-info-text">
+              {{ 'generic-labels.detail-subtitle' | transloco }}
+            </div>
+          </div>
+          <button mat-flat-button color="primary" (click)="startEdit()">
+            {{ 'actions.edit' | transloco }}
+          </button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.paciente') }}</mat-label>
+              <input matInput [value]="s.clienteNombre" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.medico') }}</mat-label>
+              <input matInput [value]="s.medicoNombre" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.fechaExpedicion') }}</mat-label>
+              <input
+                matInput
+                [value]="s.fechaExpedicion | date: 'dd/MM/yyyy'"
+                disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.repeticionesMax') }}</mat-label>
+              <input matInput [value]="s.repeticionesMax" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.indicacionesUso') }}</mat-label>
+              <textarea
+                matInput
+                rows="3"
+                [value]="s.indicacionesUso ?? ''"
+                disabled></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>

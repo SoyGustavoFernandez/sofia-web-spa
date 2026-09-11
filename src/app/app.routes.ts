@@ -117,6 +117,11 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('./pages/profesionales-salud/profesionales-salud.routes').then(m => m.PROFESIONALES_SALUD_ROUTES),
       },
+      {
+        path: 'recetas-medicas',
+        loadChildren: () =>
+          import('./pages/recetas-medicas/recetas-medicas.routes').then(m => m.RECETAS_MEDICAS_ROUTES),
+      },
       // DIGEMID
       {
         path: 'digemid-catalogo',
