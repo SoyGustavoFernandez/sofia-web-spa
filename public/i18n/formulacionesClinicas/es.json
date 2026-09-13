@@ -1,0 +1,37 @@
+{
+  "title": "Formulaciones Clínicas",
+  "search": {
+    "title": "Búsqueda de Formulaciones Clínicas",
+    "search-error": "Error al buscar formulaciones clínicas"
+  },
+  "detail": {
+    "save-success": "Formulación clínica guardada correctamente",
+    "save-error": "Error al guardar la formulación clínica",
+    "save-conflict": "Ya existe una formulación con los datos ingresados",
+    "delete-success": "Formulación clínica eliminada correctamente",
+    "delete-error": "Error al eliminar la formulación clínica",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar esta formulación clínica?",
+    "load-error": "Error al cargar la formulación clínica"
+  },
+  "fields": {
+    "producto": "Medicamento",
+    "ingrediente": "Ingrediente Activo",
+    "concentracionDosis": "Concentración de Dosis",
+    "unidadMedida": "Unidad de Medida",
+    "codigoTeOrange": "Código TE Orange"
+  },
+  "table": {
+    "producto": "Medicamento",
+    "ingrediente": "Ingrediente Activo",
+    "concentracion": "Concentración",
+    "unidadMedida": "Unidad de Medida",
+    "codigoTeOrange": "Código TE Orange"
+  },
+  "autocomplete": {
+    "producto-placeholder": "Buscar medicamento...",
+    "ingrediente-placeholder": "Buscar ingrediente activo...",
+    "unidad-medida-placeholder": "Buscar unidad de medida...",
+    "no-results": "Sin resultados"
+  }
+}

@@ -79,6 +79,13 @@ export const appRoutes: Route[] = [
           import('./pages/medicamentos/medicamentos.routes').then(m => m.MEDICAMENTOS_ROUTES),
       },
       {
+        path: 'formulaciones-clinicas',
+        loadChildren: () =>
+          import('./pages/formulaciones-clinicas/formulaciones-clinicas.routes').then(
+            m => m.FORMULACIONES_CLINICAS_ROUTES,
+          ),
+      },
+      {
         path: 'proveedores',
         loadChildren: () =>
           import('./pages/proveedores/proveedores.routes').then(m => m.PROVEEDORES_ROUTES),
