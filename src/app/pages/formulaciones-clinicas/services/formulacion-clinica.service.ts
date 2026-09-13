@@ -44,4 +44,8 @@ export class FormulacionClinicaService {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
+
+  exportar(headers: string[], filters: { productoNombre?: string; ingredienteNombre?: string }): Observable<Blob> {
+    return this.http.post(`${this.base}/exportar`, { headers, ...filters }, { responseType: 'blob' });
+  }
 }

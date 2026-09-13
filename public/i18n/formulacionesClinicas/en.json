@@ -2,7 +2,8 @@
   "title": "Clinical Formulations",
   "search": {
     "title": "Search Clinical Formulations",
-    "search-error": "Error searching clinical formulations"
+    "search-error": "Error searching clinical formulations",
+    "export-filename": "clinical-formulations.xlsx"
   },
   "detail": {
     "save-success": "Clinical formulation saved successfully",
