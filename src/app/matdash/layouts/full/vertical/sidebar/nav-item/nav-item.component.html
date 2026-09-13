@@ -3,7 +3,7 @@
     <span class="sidebar-divider"></span>
   }
   <div mat-subheader class="nav-caption">
-    {{ item.navCap }}
+    {{ item.navCap | transloco }}
   </div>
 }
 @if (!item.navCap && !item.external && !item.twoLines) {

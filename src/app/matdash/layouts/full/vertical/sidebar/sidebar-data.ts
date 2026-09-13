@@ -5,7 +5,7 @@ export const navItems: NavItem[] = [
     id: 1,
     name: 'Principal',
     children: [
-      { navCap: 'Inicio' },
+      { navCap: 'breadcrumbs.home' },
       {
         displayName: 'nav.dashboard',
         iconName: 'solar:widget-add-line-duotone',
@@ -17,7 +17,7 @@ export const navItems: NavItem[] = [
     id: 2,
     name: 'Administración',
     children: [
-      { navCap: 'Administración' },
+      { navCap: 'breadcrumbs.administracion' },
       {
         displayName: 'nav.empresa',
         iconName: 'solar:buildings-line-duotone',
@@ -49,7 +49,7 @@ export const navItems: NavItem[] = [
     id: 3,
     name: 'Catálogos',
     children: [
-      { navCap: 'Catálogos' },
+      { navCap: 'breadcrumbs.catalogos' },
       {
         displayName: 'nav.unidadesMedida',
         iconName: 'solar:ruler-line-duotone',
@@ -96,7 +96,7 @@ export const navItems: NavItem[] = [
     id: 4,
     name: 'Inventario',
     children: [
-      { navCap: 'Inventario' },
+      { navCap: 'breadcrumbs.inventario' },
       {
         displayName: 'nav.lotes',
         iconName: 'solar:box-line-duotone',
@@ -113,7 +113,7 @@ export const navItems: NavItem[] = [
     id: 5,
     name: 'Punto de Venta',
     children: [
-      { navCap: 'Punto de Venta' },
+      { navCap: 'breadcrumbs.puntoVenta' },
       {
         displayName: 'nav.sesionesCaja',
         iconName: 'solar:cash-out-line-duotone',
@@ -125,7 +125,7 @@ export const navItems: NavItem[] = [
     id: 7,
     name: 'Pacientes & Atención',
     children: [
-      { navCap: 'Pacientes & Atención' },
+      { navCap: 'breadcrumbs.pacientesAtencion' },
       {
         displayName: 'nav.pacientes',
         iconName: 'solar:user-line-duotone',
@@ -147,7 +147,7 @@ export const navItems: NavItem[] = [
     id: 8,
     name: 'DIGEMID',
     children: [
-      { navCap: 'DIGEMID' },
+      { navCap: 'breadcrumbs.digemid' },
       {
         displayName: 'nav.catalogoDigemid',
         iconName: 'solar:shield-check-line-duotone',
