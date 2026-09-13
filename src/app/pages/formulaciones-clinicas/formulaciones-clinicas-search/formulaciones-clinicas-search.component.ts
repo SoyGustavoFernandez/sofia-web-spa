@@ -117,4 +117,31 @@ export class FormulacionesClinicasSearchComponent implements OnInit {
   goToNew(): void {
     this.router.navigate(['/formulaciones-clinicas/nueva']);
   }
+
+  exportar(): void {
+    const t = (key: string) => this.transloco.translate(key, {}, 'formulacionesClinicas');
+    const headers = [
+      t('table.producto'),
+      t('table.ingrediente'),
+      t('table.concentracion'),
+      t('table.unidadMedida'),
+      t('table.codigoTeOrange'),
+    ];
+    const { productoNombre, ingredienteNombre } = this.searchForm.value;
+    const filters = {
+      productoNombre: productoNombre ?? undefined,
+      ingredienteNombre: ingredienteNombre ?? undefined,
+    };
+    this.service.exportar(headers, filters).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.transloco.translate('formulacionesClinicas.search.export-filename');
+        a.click();
+        URL.revokeObjectURL(url);
+      },
+      error: err => this.notifier.showServerError(err, this.transloco.translate('formulacionesClinicas.search.search-error')),
+    });
+  }
 }

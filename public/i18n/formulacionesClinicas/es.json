@@ -2,7 +2,8 @@
   "title": "Formulaciones Clínicas",
   "search": {
     "title": "Búsqueda de Formulaciones Clínicas",
-    "search-error": "Error al buscar formulaciones clínicas"
+    "search-error": "Error al buscar formulaciones clínicas",
+    "export-filename": "formulaciones-clinicas.xlsx"
   },
   "detail": {
     "save-success": "Formulación clínica guardada correctamente",

@@ -158,6 +158,7 @@
             <button
               mat-flat-button
               color="primary"
+              style="margin-left: 0.5rem"
               (click)="save()"
               [disabled]="saving()">
               @if (saving()) {
@@ -170,6 +171,7 @@
               <button
                 mat-flat-button
                 class="sofia-btn-delete"
+                style="margin-left: 0.5rem"
                 (click)="confirmDelete()"
                 [disabled]="deleting()">
                 {{ 'actions.delete' | transloco }}
