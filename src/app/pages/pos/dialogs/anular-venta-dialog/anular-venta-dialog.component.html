@@ -1,0 +1,25 @@
+<ng-container *transloco="let t; scope: 'pos'; read: 'pos'">
+  <h2 mat-dialog-title>{{ t('ventasDetail.anularDialogTitle') }}</h2>
+
+  <mat-dialog-content>
+    <p class="pre-line">{{ t('ventasDetail.anularDialogSubtitle') }}</p>
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ t('ventasDetail.motivoLabel') }}</mat-label>
+        <textarea matInput formControlName="motivo" rows="3"></textarea>
+        @if (form.controls.motivo.hasError('required')) {
+          <mat-error>{{ t('ventasDetail.motivoRequired') }}</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">
+      {{ 'actions.cancel' | transloco }}
+    </button>
+    <button mat-flat-button class="sofia-btn-delete" (click)="onConfirm()">
+      {{ t('ventasDetail.btnAnular') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

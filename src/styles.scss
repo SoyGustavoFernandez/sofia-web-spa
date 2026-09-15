@@ -989,3 +989,66 @@ button:not([disabled]) .iconify.icon-delete {
   justify-content: flex-end;
   margin-top: 20px;
 }
+
+// ── Printable POS receipt ───────────────────────────────────────────────────
+
+.pos-print-receipt {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .pos-print-receipt,
+  .pos-print-receipt * {
+    visibility: visible;
+  }
+
+  .pos-print-receipt {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px;
+    font-size: 12px;
+  }
+
+  .pos-print-header {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .pos-print-empresa {
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .pos-print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+
+    th,
+    td {
+      border-bottom: 1px solid #ccc;
+      padding: 4px;
+      text-align: left;
+    }
+  }
+
+  .pos-print-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+  }
+
+  .pos-print-total {
+    font-weight: 700;
+    border-top: 1px solid #000;
+    margin-top: 4px;
+    padding-top: 4px;
+  }
+}

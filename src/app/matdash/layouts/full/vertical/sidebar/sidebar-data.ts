@@ -119,6 +119,11 @@ export const navItems: NavItem[] = [
         iconName: 'solar:cash-out-line-duotone',
         route: '/sesiones-caja',
       },
+      {
+        displayName: 'nav.ventas',
+        iconName: 'solar:bill-list-line-duotone',
+        route: '/pos',
+      },
     ],
   },
   {

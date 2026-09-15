@@ -48,6 +48,7 @@ export class AuthService {
 
   readonly currentUser = computed(() => this._payload());
   readonly empresaId = computed(() => this._payload()?.empresaId ?? null);
+  readonly sucursalId = computed(() => this._payload()?.sucursalId ?? null);
 
   login(req: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${BASE}/login`, req, { withCredentials: true }).pipe(

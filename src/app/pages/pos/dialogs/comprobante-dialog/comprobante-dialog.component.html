@@ -1,0 +1,120 @@
+<ng-container *transloco="let t; scope: 'pos'; read: 'pos'">
+  <h2 mat-dialog-title>{{ t('comprobante.title') }}</h2>
+
+  <mat-dialog-content>
+    <p class="pre-line">{{ t('comprobante.subtitle') }}</p>
+    <div class="row g-2">
+      @if (data.comprobante) {
+        <div class="col-6">
+          <strong>{{ t('comprobante.boletaNumero') }}</strong>
+        </div>
+        <div class="col-6">
+          {{ data.comprobante.tipo }} {{ data.comprobante.numero }}
+        </div>
+
+        <div class="col-6">
+          <strong>{{ t('comprobante.estadoSunat') }}</strong>
+        </div>
+        <div class="col-6">{{ data.comprobante.estadoAceptacion }}</div>
+      }
+
+      <div class="col-6">
+        <strong>{{ t('comprobante.totalPagado') }}</strong>
+      </div>
+      <div class="col-6">S/ {{ data.total | number: '1.2-2' }}</div>
+
+      <div class="col-6">
+        <strong>{{ t('comprobante.medioPago') }}</strong>
+      </div>
+      <div class="col-6">{{ data.metodosPago }}</div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="pos-comprobante-actions">
+      <button
+        mat-flat-button
+        color="primary"
+        class="pos-comprobante-actions-main"
+        (click)="nuevaVenta()">
+        {{ t('actions.nuevaVenta') }}
+      </button>
+      <div class="pos-comprobante-actions-row">
+        <button mat-stroked-button color="primary" (click)="imprimir()">
+          {{ t('actions.imprimirComprobante') }}
+        </button>
+        <button mat-button (click)="volverPOS()">
+          {{ t('actions.volverPOS') }}
+        </button>
+      </div>
+    </div>
+  </mat-dialog-actions>
+
+  <div class="pos-print-receipt">
+    <div class="pos-print-header">
+      <div class="pos-print-empresa">{{ data.empresaNombre || 'SOFIA' }}</div>
+      <div>{{ data.comprobante?.tipo }} {{ data.comprobante?.numero }}</div>
+      <div>{{ data.fecha | date: 'dd/MM/yyyy HH:mm' }}</div>
+    </div>
+
+    <table class="pos-print-table">
+      <thead>
+        <tr>
+          <th>{{ t('checkout.colItem') }}</th>
+          <th>{{ t('checkout.colCant') }}</th>
+          <th>{{ t('checkout.colPrecio') }}</th>
+          <th>{{ t('checkout.colTotal') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (linea of data.detalles; track linea.numeroLote) {
+          <tr>
+            <td>{{ linea.productoNombre }} ({{ linea.numeroLote }})</td>
+            <td>{{ linea.cantidad }}</td>
+            <td>{{ linea.precioUnitario | number: '1.2-2' }}</td>
+            <td>
+              {{ linea.cantidad * linea.precioUnitario | number: '1.2-2' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pos-print-row">
+      <span>{{ t('checkout.clienteTitle') }}:</span
+      ><span>{{ data.clienteNombre }}</span>
+    </div>
+    <div class="pos-print-row">
+      <span>{{ t('checkout.subtotalLabel') }}</span
+      ><span>S/ {{ data.subtotal | number: '1.2-2' }}</span>
+    </div>
+    <div class="pos-print-row">
+      <span>{{ t('checkout.igvLabel') }}</span
+      ><span>S/ {{ data.igv | number: '1.2-2' }}</span>
+    </div>
+    <div class="pos-print-row pos-print-total">
+      <span>{{ t('checkout.totalLabel') }}</span
+      ><span>S/ {{ data.total | number: '1.2-2' }}</span>
+    </div>
+
+    @for (pago of data.pagos; track pago.metodo) {
+      <div class="pos-print-row">
+        <span>{{ pago.metodo }}</span
+        ><span>S/ {{ pago.monto | number: '1.2-2' }}</span>
+      </div>
+    }
+
+    @if (data.comprobante) {
+      <div class="pos-print-row">
+        <span>{{ t('comprobante.estadoSunat') }}</span
+        ><span>{{ data.comprobante.estadoAceptacion }}</span>
+      </div>
+    }
+    @if (data.cajeroNombre) {
+      <div class="pos-print-row">
+        <span>{{ t('reportDialog.cajeroLabel') }}</span
+        ><span>{{ data.cajeroNombre }}</span>
+      </div>
+    }
+  </div>
+</ng-container>

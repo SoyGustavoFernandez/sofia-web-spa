@@ -21,6 +21,7 @@
     "lotes": "Lotes",
     "stockPorSucursal": "Stock por Sucursal",
     "sesionesCaja": "Sesiones de Caja",
+    "ventas": "Ventas",
     "recetasMedicas": "Recetas Médicas"
   },
   "breadcrumbs": {
@@ -51,6 +52,7 @@
     "stock-por-sucursal": "Stock por Sucursal",
     "puntoVenta": "Punto de Venta",
     "sesionesCaja": "Sesiones de Caja",
+    "ventas": "Ventas",
     "pacientesAtencion": "Pacientes & Atención",
     "recetasMedicas": "Recetas Médicas"
   },

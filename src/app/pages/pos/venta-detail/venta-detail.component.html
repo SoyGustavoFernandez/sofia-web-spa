@@ -1,0 +1,184 @@
+<ng-container *transloco="let t; scope: 'pos'; read: 'pos'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('ventasDetail.title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/pos" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    } @else if (venta()) {
+      @let v = venta()!;
+      <div class="sofia-detail-card">
+        <div
+          class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+          style="margin-bottom: 1rem">
+          <div>
+            <h4 class="mb-1">{{ v.codigoVenta }}</h4>
+            <div class="search-info-text">
+              {{ v.fechaHora | date: 'dd/MM/yyyy HH:mm' }} —
+              {{ estadoLabel(v.estado) }}
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            @if (puedeReimprimir()) {
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="reimprimirComprobante()">
+                {{ t('actions.reimprimirComprobante') }}
+              </button>
+            }
+            @if (puedeCobrar()) {
+              <button mat-flat-button color="primary" (click)="cobrar()">
+                {{ t('actions.cobrar') }}
+              </button>
+            }
+            @if (puedeAnular()) {
+              <button
+                mat-flat-button
+                class="sofia-btn-delete"
+                (click)="anular()"
+                [disabled]="anulando()">
+                @if (anulando()) {
+                  <mat-spinner diameter="18" />
+                } @else {
+                  {{ t('ventasDetail.btnAnular') }}
+                }
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (v.motivoAnulacion) {
+          <p class="pre-line">
+            <strong>{{ t('ventasDetail.motivoAnulacionLabel') }}</strong>
+            {{ v.motivoAnulacion }}
+          </p>
+        }
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <div class="search-info-text">
+              {{ t('ventasTable.colCliente') }}
+            </div>
+            <div>{{ v.clienteNombre ?? t('checkout.clienteEventual') }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="search-info-text">
+              {{ t('ventasTable.colEmpleado') }}
+            </div>
+            <div>{{ v.empleadoNombre }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="search-info-text">{{ t('ventasTable.colTotal') }}</div>
+            <div>S/ {{ v.total | number: '1.2-2' }}</div>
+          </div>
+        </div>
+
+        @if (v.comprobante; as c) {
+          <h5 class="mb-2">{{ t('ventasDetail.comprobanteTitle') }}</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="search-info-text">
+                {{ t('comprobante.boletaNumero') }}
+              </div>
+              <div>{{ c.tipo }} {{ c.numero }}</div>
+            </div>
+            <div class="col-md-4">
+              <div class="search-info-text">
+                {{ t('comprobante.estadoSunat') }}
+              </div>
+              <div>{{ c.estadoAceptacion }}</div>
+            </div>
+          </div>
+        }
+
+        <h5 class="mb-2">{{ t('ventasDetail.detallesTitle') }}</h5>
+        <div class="sofia-table-container mb-4">
+          <table mat-table [dataSource]="v.detalles">
+            <ng-container matColumnDef="productoNombre">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colProducto') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.productoNombre }}</td>
+            </ng-container>
+            <ng-container matColumnDef="numeroLote">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colLote') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.numeroLote }}</td>
+            </ng-container>
+            <ng-container matColumnDef="cantidad">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colCantidad') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.cantidad }}</td>
+            </ng-container>
+            <ng-container matColumnDef="precioUnitario">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colPrecioUnitario') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.precioUnitario | number: '1.2-2' }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="subtotal">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colSubtotal') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.subtotal | number: '1.2-2' }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="detallesColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: detallesColumns"></tr>
+          </table>
+        </div>
+
+        <h5 class="mb-2">{{ t('ventasDetail.pagosTitle') }}</h5>
+        <div class="sofia-table-container">
+          <table mat-table [dataSource]="v.pagos">
+            <ng-container matColumnDef="metodoPago">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colMetodoPago') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ metodoPagoLabel(row.metodoPago) }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="montoPagado">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colMonto') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.montoPagado | number: '1.2-2' }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="referenciaOperacion">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colReferencia') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.referenciaOperacion ?? '—' }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="fechaPago">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasDetail.colFechaPago') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.fechaPago | date: 'dd/MM/yyyy HH:mm' }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="pagosColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: pagosColumns"></tr>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>
