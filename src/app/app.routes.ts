@@ -113,6 +113,11 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('./pages/sesiones-caja/sesiones-caja.routes').then(m => m.SESIONES_CAJA_ROUTES),
       },
+      {
+        path: 'pos',
+        loadChildren: () =>
+          import('./pages/pos/pos.routes').then(m => m.POS_ROUTES),
+      },
       // Pacientes & Atención
       {
         path: 'pacientes',

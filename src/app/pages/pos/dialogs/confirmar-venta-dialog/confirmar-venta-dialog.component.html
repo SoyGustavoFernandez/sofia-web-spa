@@ -1,0 +1,46 @@
+<ng-container *transloco="let t; scope: 'pos'; read: 'pos'">
+  <h2 mat-dialog-title>{{ t('confirmarDialog.title') }}</h2>
+
+  <mat-dialog-content>
+    <p class="pre-line">{{ t('confirmarDialog.subtitle') }}</p>
+    <div class="row g-2">
+      <div class="col-6">
+        <strong>{{ t('confirmarDialog.clienteLabel') }}</strong>
+      </div>
+      <div class="col-6">{{ data.clienteNombre }}</div>
+
+      <div class="col-6">
+        <strong>{{ t('confirmarDialog.itemsLabel') }}</strong>
+      </div>
+      <div class="col-6">
+        {{ t('confirmarDialog.itemsCountText', { count: data.itemsCount }) }}
+      </div>
+
+      <div class="col-6">
+        <strong>{{ t('confirmarDialog.metodoLabel') }}</strong>
+      </div>
+      <div class="col-6">{{ data.metodosPago.join(', ') }}</div>
+
+      <div class="col-6">
+        <strong>{{ t('confirmarDialog.totalLabel') }}</strong>
+      </div>
+      <div class="col-6">S/ {{ data.total | number: '1.2-2' }}</div>
+
+      @if (data.montoPendiente < 0) {
+        <div class="col-6">
+          <strong>{{ t('confirmarDialog.vueltoLabel') }}</strong>
+        </div>
+        <div class="col-6">S/ {{ -data.montoPendiente | number: '1.2-2' }}</div>
+      }
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">
+      {{ 'actions.cancel' | transloco }}
+    </button>
+    <button mat-flat-button color="primary" (click)="onConfirm()">
+      {{ t('confirmarDialog.btnConfirmar') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

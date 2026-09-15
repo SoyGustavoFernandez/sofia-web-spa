@@ -1,0 +1,238 @@
+<ng-container *transloco="let t; scope: 'pos'; read: 'pos'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('ventasSearch.title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="false" />
+
+    <div class="sofia-filter-card">
+      <div
+        class="sofia-filter-header d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="mb-1">{{ t('ventasSearch.title') }}</h4>
+          <div class="search-info-text">{{ t('ventasSearch.subtitle') }}</div>
+        </div>
+        <div class="d-flex gap-2">
+          <button mat-flat-button color="primary" (click)="goToNew()">
+            <mat-icon>add</mat-icon>
+            {{ t('actions.nuevaVenta') }}
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="searchForm" class="row g-3 mt-1">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('ventasSearch.fieldEmpleado') }}</mat-label>
+            <input
+              matInput
+              formControlName="empleadoNombre"
+              [matAutocomplete]="empleadoAuto"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete
+              #empleadoAuto="matAutocomplete"
+              [displayWith]="displayEmpleado"
+              (optionSelected)="onEmpleadoSelected($event)">
+              @for (emp of empleadoOptions(); track emp.id) {
+                <mat-option [value]="emp">{{ emp.nombre_Completo }}</mat-option>
+              }
+              @if (
+                empleadoOptions().length === 0 &&
+                searchForm.controls.empleadoNombre.value
+              ) {
+                <mat-option disabled>{{
+                  t('ventasSearch.autocompleteNoResults')
+                }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('ventasSearch.fieldCliente') }}</mat-label>
+            <input
+              matInput
+              formControlName="clienteNombre"
+              [matAutocomplete]="clienteAuto"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete
+              #clienteAuto="matAutocomplete"
+              [displayWith]="displayCliente"
+              (optionSelected)="onClienteSelected($event)">
+              @for (cliente of clienteOptions(); track cliente.id) {
+                <mat-option [value]="cliente">{{
+                  cliente.nombreApellidos
+                }}</mat-option>
+              }
+              @if (
+                clienteOptions().length === 0 &&
+                searchForm.controls.clienteNombre.value
+              ) {
+                <mat-option disabled>{{
+                  t('ventasSearch.autocompleteNoResults')
+                }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('ventasSearch.fieldFechaInicio') }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerFechaInicio"
+              formControlName="fechaInicio" />
+            <mat-datepicker-toggle matIconSuffix [for]="pickerFechaInicio" />
+            <mat-datepicker #pickerFechaInicio />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('ventasSearch.fieldFechaFin') }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="pickerFechaFin"
+              formControlName="fechaFin" />
+            <mat-datepicker-toggle matIconSuffix [for]="pickerFechaFin" />
+            <mat-datepicker #pickerFechaFin />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('ventasSearch.fieldEstado') }}</mat-label>
+            <mat-select formControlName="estado">
+              <mat-option [value]="null"
+                >— {{ 'generic-labels.all' | transloco }} —</mat-option
+              >
+              @for (e of estadoOpciones; track e) {
+                <mat-option [value]="e">{{
+                  t('estado.' + EstadoVenta[e])
+                }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button mat-button (click)="clear()">
+          {{ 'actions.clear' | transloco }}
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="search()"
+          [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            {{ 'actions.search' | transloco }}
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (showResults()) {
+      <div class="sofia-results-card">
+        <div class="sofia-results-header">
+          {{ 'generic-labels.results' | transloco }} ({{ totalCount() }})
+        </div>
+        <div class="sofia-table-container">
+          <table mat-table [dataSource]="items()">
+            <ng-container matColumnDef="codigoVenta">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasTable.colCodigo') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <a [routerLink]="[row.id]" class="link-no-underline">{{
+                  row.codigoVenta
+                }}</a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaHora">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasTable.colFecha') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.fechaHora | date: 'dd/MM/yyyy HH:mm' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="clienteNombre">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasTable.colCliente') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.clienteNombre ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="empleadoNombre">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasTable.colEmpleado') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.empleadoNombre }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="total">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasTable.colTotal') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.total | number: '1.2-2' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasTable.colEstado') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ estadoLabel(row.estado) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="itemsCount">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('ventasTable.colItems') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.itemsCount }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td
+                class="mat-cell"
+                [attr.colspan]="displayedColumns.length"
+                style="text-align: center; padding: 2rem">
+                {{ 'generic-labels.no-results' | transloco }}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button mat-stroked-button (click)="exportar()">
+            <mat-icon>download</mat-icon>
+            {{ 'actions.export' | transloco }}
+          </button>
+          <mat-paginator
+            [length]="totalCount()"
+            [pageIndex]="pageIndex()"
+            [pageSize]="pageSize()"
+            [pageSizeOptions]="[10, 25, 50]"
+            [showFirstLastButtons]="true"
+            (page)="onPageChange($event)" />
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>

@@ -21,6 +21,7 @@
     "lotes": "Batches",
     "stockPorSucursal": "Stock by Branch",
     "sesionesCaja": "Cash Register Sessions",
+    "ventas": "Sales",
     "recetasMedicas": "Medical Prescriptions"
   },
   "breadcrumbs": {
@@ -51,6 +52,7 @@
     "stock-por-sucursal": "Stock by Branch",
     "puntoVenta": "Point of Sale",
     "sesionesCaja": "Cash Register Sessions",
+    "ventas": "Sales",
     "pacientesAtencion": "Patients & Care",
     "recetasMedicas": "Medical Prescriptions"
   },
