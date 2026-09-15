@@ -20,7 +20,7 @@ import { SidebarComponent } from './vertical/sidebar/sidebar.component';
 import { HeaderComponent } from './vertical/header/header.component';
 import { CSLoadingBarComponent } from '@shared/components/loading-bar/loading-bar.component';
 
-const MOBILE_VIEW = 'screen and (max-width: 768px)';
+const MOBILE_VIEW = 'screen and (max-width: 1023px)';
 
 @Component({
   selector: 'app-full',
@@ -53,6 +53,7 @@ export class FullComponent implements OnInit, OnDestroy {
   resView = false;
   options = this.settings.getOptions();
   private layoutChangesSubscription = Subscription.EMPTY;
+  private optionsSubscription = Subscription.EMPTY;
   private isMobileScreen = false;
   private htmlElement!: HTMLHtmlElement;
 
@@ -79,10 +80,15 @@ export class FullComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.optionsSubscription = this.settings.notify.subscribe((options) => {
+      this.receiveOptions(options);
+    });
+  }
 
   ngOnDestroy(): void {
     this.layoutChangesSubscription.unsubscribe();
+    this.optionsSubscription.unsubscribe();
   }
 
   toggleCollapsed() {

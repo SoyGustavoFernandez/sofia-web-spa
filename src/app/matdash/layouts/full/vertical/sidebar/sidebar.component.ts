@@ -4,11 +4,12 @@ import { MaterialModule } from '@shared/material.module';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { RouterModule } from '@angular/router';
 import { AppNavItemComponent } from './nav-item/nav-item.component';
+import { BrandingComponent } from './branding.component';
 import { navItems } from './sidebar-data';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [TablerIconsModule, MaterialModule, NgScrollbarModule, RouterModule, AppNavItemComponent],
+  imports: [TablerIconsModule, MaterialModule, NgScrollbarModule, RouterModule, AppNavItemComponent, BrandingComponent],
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {

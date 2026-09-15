@@ -25,6 +25,13 @@
     }
 
     .sidebar-list {
+      // Hide section subheaders (e.g. "ADMINISTRACIÓN") entirely while
+      // collapsed — at 80px they only fit a clipped, unreadable fragment
+      // of the word, not the full label.
+      .mdc-list-group__subheader {
+        display: none;
+      }
+
       .menu-list-item {
         padding: 8px 17px;
 
@@ -40,11 +47,22 @@
     }
 
     &:hover {
+      // Peek back to the full width so labels have room to render on one
+      // line instead of wrapping inside the still-80px collapsed box.
+      // The sidebar is `position: fixed`, so this widening overlays the
+      // content instead of reflowing it.
+      width: $sidenav-desktop;
+      box-shadow: 2px 0 8px 0 rgba(0, 0, 0, 0.15);
+
       .profile-bar {
         display: block;
       }
 
       .sidebar-list {
+        .mdc-list-group__subheader {
+          display: block;
+        }
+
         .menu-list-item {
           padding: 8px 10px;
 
@@ -65,6 +83,18 @@
           }
         }
       }
+
+      // Peeking back to full width: show the "SOFIA" wordmark again
+      // alongside the icon.
+      .branding {
+        width: auto;
+        padding: 11px 20px;
+        justify-content: flex-start;
+
+        .branding-text {
+          display: inline;
+        }
+      }
     }
   }
 
@@ -73,9 +103,18 @@
     width: $sidenav-mini;
   }
 
+  // Collapsed: keep just the "⚕" mark so the brand still reads as SOFIA
+  // at a glance, instead of clipping the wordmark into an unreadable
+  // sliver.
   .branding {
     width: $sidenav-mini - 15px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+
+    .branding-text {
+      display: none;
+    }
   }
 
   .sidebar-list {
