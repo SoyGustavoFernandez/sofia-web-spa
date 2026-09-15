@@ -1,10 +1,10 @@
 <mat-toolbar class="topbar gap-4">
   <!-- Left group: hamburger toggles + date -->
   <div class="left-group d-flex align-items-center gap-2 m-l-16">
-    <button mat-icon-button (click)="toggleMobileNav.emit()" class="d-flex d-lg-none">
+    <button mat-icon-button (click)="toggleMobileNav.emit()" class="d-flex d-sidebar-toggle-mobile">
       <i class="iconify" data-icon="solar:hamburger-menu-line-duotone"></i>
     </button>
-    <button mat-icon-button (click)="toggleCollapsed.emit()" class="d-none d-lg-flex">
+    <button mat-icon-button (click)="toggleCollapsed.emit()" class="d-none d-sidebar-toggle-desktop">
       <i class="iconify" data-icon="solar:hamburger-menu-line-duotone"></i>
     </button>
     <span class="date-text text-muted">{{ currentDate | date: "EEEE d 'de' MMMM y" }}</span>

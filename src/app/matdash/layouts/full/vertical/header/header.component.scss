@@ -94,3 +94,22 @@
     display: none;
   }
 }
+
+// Sidebar toggle buttons must switch at the same breakpoint as the
+// sidenav's own mobile/desktop logic (MOBILE_VIEW in full.component.ts
+// and the fixed-layout media query in _sidebar.scss), both 1024px.
+// A mismatch here leaves the sidenav forced open with its backdrop
+// visible but no content push in the gap between breakpoints.
+.d-sidebar-toggle-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .d-sidebar-toggle-mobile {
+    display: none !important;
+  }
+
+  .d-sidebar-toggle-desktop {
+    display: flex !important;
+  }
+}
