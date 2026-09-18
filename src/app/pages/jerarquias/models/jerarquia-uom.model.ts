@@ -34,3 +34,9 @@ export interface CreateJerarquiaUoMRequest {
 }
 
 export type UpdateJerarquiaUoMRequest = CreateJerarquiaUoMRequest;
+
+export interface UnidadVendible {
+  unidadMedidaId: string;
+  descripcion: string;
+  cantidadUnidadesBase: number;
+}

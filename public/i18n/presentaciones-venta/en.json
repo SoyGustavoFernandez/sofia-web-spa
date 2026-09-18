@@ -1,0 +1,60 @@
+{
+  "title": "Sale Presentations",
+  "search": {
+    "title": "Sale Presentations Search",
+    "search-error": "Error searching sale presentations",
+    "export-filename": "sale-presentations.xlsx"
+  },
+  "detail": {
+    "load-error": "Error loading the sale presentation",
+    "save-success": "Sale presentation saved successfully",
+    "save-error": "Error saving the sale presentation",
+    "delete-success": "Sale presentation deleted successfully",
+    "delete-error": "Error deleting the sale presentation",
+    "delete-in-use": "Cannot delete a presentation that has sales registered.",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this sale presentation?",
+    "producto-hint": "A presentation's product cannot be changed after it is created",
+    "unidadVenta-error": "You must select a sale unit",
+    "precioVenta-error": "The sale price cannot be negative",
+    "sin-jerarquia": "This product doesn't have a Jerarquía de Unidades registered yet. Register it first to define sale presentations.",
+    "ir-a-jerarquias-btn": "Go to Jerarquía de Unidades",
+    "unidad-duplicada": "This product already has a sale presentation for that unit."
+  },
+  "modal": {
+    "title": "Sale Presentations",
+    "empty": "This product doesn't have any sale presentations yet.",
+    "add-btn": "Add presentation",
+    "close-btn": "Close",
+    "edit-tooltip": "Edit",
+    "delete-tooltip": "Delete",
+    "sin-jerarquia": "This product doesn't have a Jerarquía de Unidades registered yet. Register it first to define sale presentations.",
+    "ir-a-jerarquias-btn": "Go to Jerarquía de Unidades",
+    "sin-unidades-disponibles": "There's already a presentation for every unit defined in this product's Jerarquía.",
+    "unidad-duplicada": "There's already a sale presentation for that unit.",
+    "load-error": "Error loading sale presentations",
+    "save-success": "Sale presentation saved successfully",
+    "save-error": "Error saving the sale presentation",
+    "delete-success": "Sale presentation deleted successfully",
+    "delete-error": "Error deleting the sale presentation",
+    "delete-in-use": "Cannot delete a presentation that has sales registered.",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this sale presentation?"
+  },
+  "fields": {
+    "producto": "Product",
+    "descripcion": "Sale Unit",
+    "unidadVenta": "Sale Unit",
+    "precioVenta": "Sale Price"
+  },
+  "table": {
+    "producto": "Product",
+    "descripcion": "Sale Unit",
+    "cantidadUnidadesBase": "Equivalence",
+    "precioVenta": "Sale Price"
+  },
+  "autocomplete": {
+    "producto-placeholder": "Search product...",
+    "no-results": "No results"
+  }
+}

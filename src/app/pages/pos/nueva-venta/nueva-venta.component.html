@@ -51,24 +51,67 @@
                     <mat-label>{{
                       t('checkout.searchProductPlaceholder')
                     }}</mat-label>
-                    <input
-                      matInput
-                      formControlName="productoNombre"
-                      [matAutocomplete]="productoAuto" />
+                    <input matInput formControlName="productoNombre" />
                     <mat-icon matSuffix>search</mat-icon>
-                    <mat-autocomplete
-                      #productoAuto="matAutocomplete"
-                      [displayWith]="displayMedicamento"
-                      (optionSelected)="onMedicamentoSelected($event)">
-                      @for (m of medicamentoOptions(); track m.id) {
-                        <mat-option [value]="m"
-                          >{{ m.nombreComercial }} —
-                          {{ m.codigoNacional }}</mat-option
-                        >
-                      }
-                    </mat-autocomplete>
                   </mat-form-field>
                 </form>
+
+                <div class="pos3-chips">
+                  <button
+                    type="button"
+                    class="pos3-chip"
+                    [class.active]="condicionFiltro() === null"
+                    (click)="setCondicionFiltro(null)">
+                    {{ t('checkout.condicionTodos') }}
+                  </button>
+                  @for (label of condicionLabels(); track $index) {
+                    <button
+                      type="button"
+                      class="pos3-chip"
+                      [class.active]="condicionFiltro() === $index"
+                      (click)="setCondicionFiltro($index)">
+                      {{ label }}
+                    </button>
+                  }
+                </div>
+
+                @if (medicamentoOptions().length > 0) {
+                  <div class="pos3-product-grid">
+                    @for (m of medicamentoOptions(); track m.id) {
+                      <button
+                        type="button"
+                        class="pos3-product-card"
+                        [class.active]="selectedMedicamentoId() === m.id"
+                        [disabled]="!m.stockTotal"
+                        (click)="selectMedicamento(m)">
+                        <div class="pos3-product-name">
+                          {{ m.nombreComercial }}
+                        </div>
+                        <div class="pos3-product-sub">
+                          {{ m.laboratorioNombre }} · {{ m.codigoNacional }}
+                        </div>
+                        <div class="pos3-product-footer">
+                          <span
+                            class="pos3-badge"
+                            [class]="
+                              'badge-stock-' + stockBadgeClass(m.stockTotal)
+                            "
+                            >{{ stockBadgeLabel(m.stockTotal) }}</span
+                          >
+                          @if (m.stockTotal) {
+                            <span class="pos3-product-add"
+                              ><mat-icon>add</mat-icon></span
+                            >
+                          }
+                        </div>
+                      </button>
+                    }
+                  </div>
+                } @else {
+                  <div class="pos3-empty-hint">
+                    {{ t('checkout.noCatalogData') }}
+                  </div>
+                }
 
                 @if (loteOptions().length > 0) {
                   <div class="pos3-sugg-label">
@@ -92,7 +135,7 @@
                       <div class="pos3-sugg-add"><mat-icon>add</mat-icon></div>
                     </div>
                   }
-                } @else if (catalogoForm.value.productoNombre) {
+                } @else if (selectedMedicamentoId()) {
                   <div class="pos3-empty-hint">
                     {{ t('checkout.noCatalogData') }}
                   </div>
@@ -101,23 +144,58 @@
                 @if (selectedLote(); as lote) {
                   <form [formGroup]="addForm" class="pos3-add-form">
                     <div class="pos3-add-title">{{ lote.productoNombre }}</div>
+                    @if (presentacionOptions().length > 0) {
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>{{
+                          t('checkout.presentacionLabel')
+                        }}</mat-label>
+                        <mat-select
+                          [value]="selectedPresentacionId()"
+                          (selectionChange)="
+                            onPresentacionChange($event.value)
+                          ">
+                          <mat-option [value]="''">{{
+                            t('checkout.presentacionUnidad')
+                          }}</mat-option>
+                          @for (p of presentacionOptions(); track p.id) {
+                            <mat-option [value]="p.id"
+                              >{{ p.descripcion }} (S/
+                              {{ p.precioVenta | number: '1.2-2' }})</mat-option
+                            >
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    }
                     <div class="row g-2">
                       <div class="col-6">
                         <mat-form-field appearance="outline" class="w-100">
                           <mat-label>{{
-                            t('checkout.cantidadLabel')
+                            selectedPresentacion()
+                              ? t('checkout.cantidadPresentacionLabel')
+                              : t('checkout.cantidadLabel')
                           }}</mat-label>
                           <input
                             matInput
                             type="number"
                             formControlName="cantidad"
                             min="1"
-                            [max]="lote.cantidadFisica" />
+                            [max]="
+                              selectedPresentacion()
+                                ? floorDiv(
+                                    lote.cantidadFisica,
+                                    selectedPresentacion()!.cantidadUnidadesBase
+                                  )
+                                : lote.cantidadFisica
+                            " />
                         </mat-form-field>
                       </div>
                       <div class="col-6">
                         <mat-form-field appearance="outline" class="w-100">
-                          <mat-label>{{ t('checkout.precioLabel') }}</mat-label>
+                          <mat-label>{{
+                            selectedPresentacion()
+                              ? t('checkout.precioPresentacionLabel')
+                              : t('checkout.precioLabel')
+                          }}</mat-label>
                           <input
                             matInput
                             type="number"
@@ -275,120 +353,44 @@
             }
           </div>
 
-          <!-- ── Column B: cart ───────────────────────────────────── -->
-          <div class="pos3-col">
-            <div class="pos3-cart-header">
-              <div class="pos3-cart-count">
-                {{ t('checkout.cartTitle') }} · {{ cart().length }}
+          <!-- ── Column B: sidebar (cliente / ticket / pago) ───────── -->
+          <div class="pos3-col pos3-sidebar">
+            <div class="pos3-panel">
+              <div class="pos3-card-header">
+                <mat-icon>person</mat-icon>
+                <span>{{ t('checkout.clienteTitle') }}</span>
               </div>
-              @if (cart().length > 0) {
-                <button class="pos3-link-clear" (click)="vaciarCarrito()">
-                  {{ t('checkout.vaciarCart') }}
-                </button>
-              }
-            </div>
-
-            @if (cart().length === 0) {
-              <div class="pos3-panel pos3-empty-cart">
-                <mat-icon>shopping_cart</mat-icon>
-                <div>{{ t('checkout.emptyCart') }}</div>
-              </div>
-            } @else {
-              @for (line of cart(); track $index) {
-                <div class="pos3-cart-item">
-                  <div class="pos3-cart-item-icon">
-                    <mat-icon>medication</mat-icon>
-                  </div>
-                  <div class="pos3-cart-item-info">
-                    <div class="pos3-cart-item-name">
-                      {{ line.productoNombre }}
-                    </div>
-                    <div class="pos3-cart-item-sub">
-                      {{ line.numeroLote }} ·
-                      <input
-                        class="pos3-price-input"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        [value]="line.precioUnitario"
-                        (input)="
-                          actualizarPrecioCarrito(
-                            $index,
-                            +$any($event.target).value
-                          )
-                        " />
-                      S/ c/u
-                    </div>
-                  </div>
-                  <div class="pos3-cart-item-qty">
-                    <button
-                      class="pos3-qty-btn"
-                      (click)="ajustarCantidadCarrito($index, -1)">
-                      <mat-icon>remove</mat-icon>
-                    </button>
-                    <span class="pos3-qty-val">{{ line.cantidad }}</span>
-                    <button
-                      class="pos3-qty-btn"
-                      (click)="ajustarCantidadCarrito($index, 1)">
-                      <mat-icon>add</mat-icon>
-                    </button>
-                  </div>
-                  <div class="pos3-cart-item-total">
-                    S/
-                    {{ line.cantidad * line.precioUnitario | number: '1.2-2' }}
-                  </div>
-                  <button
-                    class="pos3-cart-item-remove"
-                    (click)="quitarDelCarrito($index)">
-                    <mat-icon>close</mat-icon>
-                  </button>
+              <form [formGroup]="clienteForm">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{
+                    t('checkout.clienteSearchPlaceholder')
+                  }}</mat-label>
+                  <input
+                    matInput
+                    formControlName="clienteNombre"
+                    [matAutocomplete]="clienteAuto" />
+                  <mat-icon matSuffix>search</mat-icon>
+                  <mat-autocomplete
+                    #clienteAuto="matAutocomplete"
+                    [displayWith]="displayCliente"
+                    (optionSelected)="onClienteSelected($event)">
+                    @for (p of clienteOptions(); track p.id) {
+                      <mat-option [value]="p">{{
+                        p.nombreApellidos
+                      }}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
+              @if (!selectedCliente()) {
+                <div class="pos3-hint-sm">
+                  {{ t('checkout.clienteEventual') }}
                 </div>
               }
-            }
-          </div>
 
-          <!-- ── Column C: payment stepper ────────────────────────── -->
-          <div class="pos3-col">
-            <div class="pos3-panel pos3-stepper">
-              <div class="pos3-step">
-                <div class="pos3-step-num done"><mat-icon>check</mat-icon></div>
-                <div class="pos3-step-body">
-                  <div class="pos3-step-label">
-                    {{ t('checkout.clienteTitle') }}
-                  </div>
-                  <form [formGroup]="clienteForm">
-                    <mat-form-field appearance="outline" class="w-100">
-                      <mat-label>{{
-                        t('checkout.clienteSearchPlaceholder')
-                      }}</mat-label>
-                      <input
-                        matInput
-                        formControlName="clienteNombre"
-                        [matAutocomplete]="clienteAuto" />
-                      <mat-autocomplete
-                        #clienteAuto="matAutocomplete"
-                        [displayWith]="displayCliente"
-                        (optionSelected)="onClienteSelected($event)">
-                        @for (p of clienteOptions(); track p.id) {
-                          <mat-option [value]="p">{{
-                            p.nombreApellidos
-                          }}</mat-option>
-                        }
-                      </mat-autocomplete>
-                    </mat-form-field>
-                  </form>
-                  @if (!selectedCliente()) {
-                    <div class="pos3-hint-sm">
-                      {{ t('checkout.clienteEventual') }}
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <div class="pos3-step">
-                <div class="pos3-step-num muted">2</div>
-                <div class="pos3-step-body">
-                  <div class="pos3-step-label">
+              @if (mostrarAseguradora) {
+                <div class="pos3-insurance-block">
+                  <div class="pos3-card-subheader">
                     {{ t('checkout.aseguradoraTitle') }}
                   </div>
                   @if (!seguroExpanded()) {
@@ -407,6 +409,7 @@
                             matInput
                             formControlName="aseguradoraNombre"
                             [matAutocomplete]="aseguradoraAuto" />
+                          <mat-icon matSuffix>search</mat-icon>
                           <mat-autocomplete
                             #aseguradoraAuto="matAutocomplete"
                             [displayWith]="displayAseguradora"
@@ -435,104 +438,291 @@
                     </form>
                   }
                 </div>
+              }
+            </div>
+
+            <div class="pos3-panel">
+              <div class="pos3-card-header">
+                <mat-icon>shopping_cart</mat-icon>
+                <span>{{ t('checkout.cartTitle') }} · {{ cart().length }}</span>
+                @if (cart().length > 0) {
+                  <button class="pos3-link-clear" (click)="vaciarCarrito()">
+                    {{ t('checkout.vaciarCart') }}
+                  </button>
+                }
               </div>
 
-              <div class="pos3-step">
-                <div class="pos3-step-num">3</div>
-                <div class="pos3-step-body" style="padding-bottom: 0">
-                  <div class="pos3-step-label">
-                    {{ t('checkout.pagoTitle') }}
+              @if (cart().length === 0) {
+                <div class="pos3-empty-cart">
+                  <mat-icon>shopping_cart</mat-icon>
+                  <div>{{ t('checkout.emptyCart') }}</div>
+                </div>
+              } @else {
+                <div class="pos3-cart-list">
+                  @for (line of cart(); track $index) {
+                    <div class="pos3-cart-item">
+                      <div class="pos3-cart-item-icon">
+                        <mat-icon>medication</mat-icon>
+                      </div>
+                      <div class="pos3-cart-item-info">
+                        <div class="pos3-cart-item-name">
+                          {{ line.productoNombre }}
+                        </div>
+                        @if (line.presentacionDescripcion) {
+                          <div class="pos3-cart-item-sub">
+                            {{ line.cantidadEnPresentacion }} ×
+                            {{ line.presentacionDescripcion }}
+                          </div>
+                        }
+                        <div class="pos3-cart-item-sub">
+                          {{ line.numeroLote }} ·
+                          <input
+                            class="pos3-price-input"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            [value]="line.precioUnitario"
+                            (input)="
+                              actualizarPrecioCarrito(
+                                $index,
+                                +$any($event.target).value
+                              )
+                            " />
+                          S/ c/u
+                        </div>
+                      </div>
+                      <div class="pos3-cart-item-qty">
+                        <button
+                          class="pos3-qty-btn"
+                          (click)="ajustarCantidadCarrito($index, -1)">
+                          <mat-icon>remove</mat-icon>
+                        </button>
+                        <span class="pos3-qty-val">{{ line.cantidad }}</span>
+                        <button
+                          class="pos3-qty-btn"
+                          (click)="ajustarCantidadCarrito($index, 1)">
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                      <div class="pos3-cart-item-total">
+                        S/
+                        {{
+                          line.cantidad * line.precioUnitario | number: '1.2-2'
+                        }}
+                      </div>
+                      <button
+                        class="pos3-cart-item-remove"
+                        (click)="quitarDelCarrito($index)">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+
+                <div class="pos3-totals-box">
+                  <div class="pos3-confirm-row">
+                    <span>{{ t('checkout.subtotalLabel') }}</span
+                    ><span>S/ {{ subtotalSinIgv() | number: '1.2-2' }}</span>
                   </div>
-                  <div class="pos3-pay-tokens">
-                    @for (pago of pagos(); track $index) {
-                      <div class="pos3-pay-token">
-                        <select
-                          class="pos3-token-select"
-                          (change)="
-                            updatePago($index, {
-                              metodoPago: +$any($event.target).value,
-                            })
-                          ">
-                          @for (m of metodoPagoOpciones; track m) {
-                            <option
-                              [value]="m"
-                              [selected]="m === pago.metodoPago">
-                              {{ metodoPagoLabel(m) }}
-                            </option>
-                          }
-                        </select>
+                  <div class="pos3-confirm-row">
+                    <span>{{ t('checkout.igvLabel') }}</span
+                    ><span>S/ {{ igv() | number: '1.2-2' }}</span>
+                  </div>
+                  <div class="pos3-confirm-row">
+                    <span>{{
+                      montoPendiente() > 0
+                        ? t('checkout.montoPendienteLabel')
+                        : t('checkout.vueltoDisponibleLabel')
+                    }}</span>
+                    <span
+                      >S/
+                      {{
+                        (montoPendiente() > 0
+                          ? montoPendiente()
+                          : -montoPendiente()
+                        ) | number: '1.2-2'
+                      }}</span
+                    >
+                  </div>
+                  <div class="pos3-confirm-total-row">
+                    <span class="pos3-confirm-total-label">{{
+                      t('checkout.totalLabel')
+                    }}</span>
+                    <span class="pos3-confirm-total-val"
+                      >S/ {{ montoAPagar() | number: '1.2-2' }}</span
+                    >
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="pos3-panel">
+              <div class="pos3-card-header">
+                <mat-icon>payments</mat-icon>
+                <span>{{ t('checkout.pagoTitle') }}</span>
+              </div>
+
+              @if (!modoPagoAvanzado()) {
+                <div class="pos3-pay-tiles">
+                  @for (m of metodoPagoOpciones; track m) {
+                    <button
+                      type="button"
+                      class="pos3-pay-tile"
+                      [class.active]="metodoPagoSimpleSeleccionado() === m"
+                      (click)="seleccionarMetodoPagoSimple(m)">
+                      <mat-icon>{{ metodoPagoIcon(m) }}</mat-icon>
+                      <span>{{ metodoPagoLabel(m) }}</span>
+                    </button>
+                  }
+                </div>
+
+                @if (metodoPagoSimpleSeleccionado() === MetodoPago.Efectivo) {
+                  <div class="row g-2 pos3-cash-row">
+                    <div class="col-6">
+                      <mat-form-field
+                        appearance="outline"
+                        subscriptSizing="dynamic"
+                        class="w-100">
+                        <mat-label>{{
+                          t('checkout.efectivoRecibidoLabel')
+                        }}</mat-label>
                         <input
-                          class="pos3-token-input"
+                          matInput
                           type="number"
                           min="0"
                           step="0.01"
-                          [value]="pago.monto"
+                          [value]="pagos()[0].monto"
                           (input)="
-                            updatePago($index, {
-                              monto: +$any($event.target).value,
-                            })
+                            actualizarMontoPagoSimple(
+                              +$any($event.target).value
+                            )
                           " />
-                        @if (pago.metodoPago !== MetodoPago.Efectivo) {
-                          <input
-                            class="pos3-token-ref"
-                            type="text"
-                            [placeholder]="t('checkout.referenciaPlaceholder')"
-                            [value]="pago.referencia"
-                            (input)="
-                              updatePago($index, {
-                                referencia: $any($event.target).value,
-                              })
-                            " />
-                        }
-                        @if (pagos().length > 1) {
-                          <div
-                            class="pos3-token-x"
-                            (click)="quitarPago($index)">
-                            <mat-icon>close</mat-icon>
-                          </div>
-                        }
+                      </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                      <div class="pos3-change-box">
+                        <span>{{ t('checkout.vueltoCortoLabel') }}</span>
+                        <strong
+                          >S/ {{ cambioAEntregar() | number: '1.2-2' }}</strong
+                        >
                       </div>
-                    }
-                    <div class="pos3-add-token" (click)="agregarPago()">
-                      <mat-icon>add</mat-icon>{{ t('checkout.agregarPagoBtn') }}
                     </div>
                   </div>
-                </div>
-              </div>
+                } @else if (metodoPagoSimpleSeleccionado() !== null) {
+                  <div class="row g-2 pos3-cash-row">
+                    <div class="col-6">
+                      <mat-form-field
+                        appearance="outline"
+                        subscriptSizing="dynamic"
+                        class="w-100">
+                        <mat-label>{{
+                          t('checkout.montoPagoLabel')
+                        }}</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          [value]="pagos()[0].monto"
+                          (input)="
+                            actualizarMontoPagoSimple(
+                              +$any($event.target).value
+                            )
+                          " />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                      <mat-form-field
+                        appearance="outline"
+                        subscriptSizing="dynamic"
+                        class="w-100">
+                        <mat-label>{{
+                          t('checkout.referenciaLabel')
+                        }}</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          [placeholder]="t('checkout.referenciaPlaceholder')"
+                          [value]="pagos()[0].referencia"
+                          (input)="
+                            updatePago(0, {
+                              referencia: $any($event.target).value,
+                            })
+                          " />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                }
 
-              <div class="pos3-confirm-box">
-                <div class="pos3-confirm-row">
-                  <span>{{ t('checkout.subtotalLabel') }}</span
-                  ><span>S/ {{ subtotalSinIgv() | number: '1.2-2' }}</span>
+                <button
+                  type="button"
+                  class="pos3-link-advanced"
+                  (click)="activarPagoAvanzado()">
+                  {{ t('checkout.dividirPagoBtn') }}
+                </button>
+              } @else {
+                <div class="pos3-pay-tokens">
+                  @for (pago of pagos(); track $index) {
+                    <div class="pos3-pay-token">
+                      <select
+                        class="pos3-token-select"
+                        (change)="
+                          updatePago($index, {
+                            metodoPago: +$any($event.target).value,
+                          })
+                        ">
+                        @for (m of metodoPagoOpciones; track m) {
+                          <option
+                            [value]="m"
+                            [selected]="m === pago.metodoPago">
+                            {{ metodoPagoLabel(m) }}
+                          </option>
+                        }
+                      </select>
+                      <input
+                        class="pos3-token-input"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        [value]="pago.monto"
+                        (input)="
+                          updatePago($index, {
+                            monto: +$any($event.target).value,
+                          })
+                        " />
+                      @if (pago.metodoPago !== MetodoPago.Efectivo) {
+                        <input
+                          class="pos3-token-ref"
+                          type="text"
+                          [placeholder]="t('checkout.referenciaPlaceholder')"
+                          [value]="pago.referencia"
+                          (input)="
+                            updatePago($index, {
+                              referencia: $any($event.target).value,
+                            })
+                          " />
+                      }
+                      @if (pagos().length > 1) {
+                        <div class="pos3-token-x" (click)="quitarPago($index)">
+                          <mat-icon>close</mat-icon>
+                        </div>
+                      }
+                    </div>
+                  }
+                  <div class="pos3-add-token" (click)="agregarPago()">
+                    <mat-icon>add</mat-icon>{{ t('checkout.agregarPagoBtn') }}
+                  </div>
                 </div>
-                <div class="pos3-confirm-row">
-                  <span>{{ t('checkout.igvLabel') }}</span
-                  ><span>S/ {{ igv() | number: '1.2-2' }}</span>
-                </div>
-                <div class="pos3-confirm-row">
-                  <span>{{
-                    montoPendiente() > 0
-                      ? t('checkout.montoPendienteLabel')
-                      : t('checkout.vueltoDisponibleLabel')
-                  }}</span>
-                  <span
-                    >S/
-                    {{
-                      (montoPendiente() > 0
-                        ? montoPendiente()
-                        : -montoPendiente()
-                      ) | number: '1.2-2'
-                    }}</span
-                  >
-                </div>
-                <div class="pos3-confirm-total-row">
-                  <span class="pos3-confirm-total-label">{{
-                    t('checkout.totalLabel')
-                  }}</span>
-                  <span class="pos3-confirm-total-val"
-                    >S/ {{ montoAPagar() | number: '1.2-2' }}</span
-                  >
-                </div>
+
+                <button
+                  type="button"
+                  class="pos3-link-advanced"
+                  (click)="volverAPagoSimple()">
+                  {{ t('checkout.volverPagoSimpleBtn') }}
+                </button>
+              }
+
+              <div class="pos3-pay-actions">
                 <button
                   class="pos3-btn-confirm"
                   [disabled]="!puedeProcesar()"

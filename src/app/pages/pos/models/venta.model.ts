@@ -38,6 +38,9 @@ export interface VentaDetalle {
   cantidad: number;
   precioUnitario: number;
   subtotal: number;
+  presentacionVentaId?: string | null;
+  presentacionDescripcion?: string | null;
+  cantidadEnPresentacion?: number | null;
 }
 
 export interface ComprobanteDto {
@@ -97,6 +100,7 @@ export interface CreateVentaDetalleRequest {
   precioUnitario: number;
   costoHistorico: number;
   recetaId?: string;
+  presentacionVentaId?: string;
 }
 
 export interface CreateVentaPagoRequest {

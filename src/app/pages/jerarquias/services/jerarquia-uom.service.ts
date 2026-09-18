@@ -8,6 +8,7 @@ import {
   CreateJerarquiaUoMRequest,
   UpdateJerarquiaUoMRequest,
   SearchJerarquiaUoMParams,
+  UnidadVendible,
 } from '../models/jerarquia-uom.model';
 
 @Injectable({ providedIn: 'root' })
@@ -29,6 +30,10 @@ export class JerarquiaUoMService {
 
   getById(id: string): Observable<JerarquiaUoM> {
     return this.http.get<JerarquiaUoM>(`${this.base}/${id}`);
+  }
+
+  getUnidadesVendibles(productoId: string): Observable<UnidadVendible[]> {
+    return this.http.get<UnidadVendible[]>(`${this.base}/unidades-vendibles`, { params: { productoId } });
   }
 
   create(body: CreateJerarquiaUoMRequest): Observable<string> {
