@@ -14,6 +14,7 @@ export interface MedicamentoListItem {
   unidadBaseId: string;
   unidadBaseNombre: string;
   condicionVenta: number;
+  precioVentaBase: number | null;
   stockTotal: number | null;
 }
 
@@ -32,6 +33,7 @@ export interface MedicamentoDetail {
   unidadBaseId: string;
   unidadBaseNombre: string;
   condicionVenta: number;
+  precioVentaBase: number | null;
   stockTotal: number | null;
   stockPorSucursal: StockSucursalDto[] | null;
 }
@@ -42,6 +44,8 @@ export interface SearchMedicamentoParams {
   laboratorioNombre?: string;
   unidadBaseNombre?: string;
   condicionVenta?: number;
+  incluirStock?: boolean;
+  ordenarPorMasVendidos?: boolean;
   pageNumber: number;
   pageSize: number;
 }
@@ -52,6 +56,7 @@ export interface CreateMedicamentoRequest {
   laboratorioId: string;
   unidadBaseId: string;
   condicionVenta: number;
+  precioVentaBase: number;
 }
 
 export interface UpdateMedicamentoRequest {
@@ -60,4 +65,5 @@ export interface UpdateMedicamentoRequest {
   laboratorioId: string;
   unidadBaseId: string;
   condicionVenta: number;
+  precioVentaBase: number;
 }

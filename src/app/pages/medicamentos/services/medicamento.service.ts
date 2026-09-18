@@ -31,6 +31,8 @@ export class MedicamentoService {
     if (params.condicionVenta !== undefined && params.condicionVenta !== null) {
       httpParams = httpParams.set('condicionVenta', params.condicionVenta);
     }
+    if (params.incluirStock) httpParams = httpParams.set('incluirStock', params.incluirStock);
+    if (params.ordenarPorMasVendidos) httpParams = httpParams.set('ordenarPorMasVendidos', params.ordenarPorMasVendidos);
     return this.http.get<PaginatedList<MedicamentoListItem>>(this.base, { params: httpParams });
   }
 

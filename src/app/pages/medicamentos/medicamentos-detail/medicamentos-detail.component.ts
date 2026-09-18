@@ -17,6 +17,7 @@ import { LaboratorioService } from '../../laboratorios/services/laboratorio.serv
 import { LaboratorioListItem } from '../../laboratorios/models/laboratorio.model';
 import { UnidadMedidaService } from '../../unidades-medida/services/unidad-medida.service';
 import { UnidadMedidaListItem } from '../../unidades-medida/models/unidad-medida.model';
+import { PresentacionesVentaModalComponent } from '../../presentaciones-venta/presentaciones-venta-modal/presentaciones-venta-modal.component';
 
 @Component({
   selector: 'app-medicamentos-detail',
@@ -70,6 +71,7 @@ export class MedicamentosDetailComponent implements OnInit {
     codigoNacional: ['', [Validators.required, Validators.maxLength(50)]],
     nombreComercial: ['', [Validators.required, Validators.maxLength(150)]],
     condicionVenta: [null as number | null, Validators.required],
+    precioVentaBase: [null as number | null, [Validators.required, Validators.min(0)]],
   });
 
   readonly breadcrumbs: BreadcrumbItem[] = [
@@ -128,6 +130,7 @@ export class MedicamentosDetailComponent implements OnInit {
           codigoNacional: data.codigoNacional,
           nombreComercial: data.nombreComercial,
           condicionVenta: data.condicionVenta,
+          precioVentaBase: data.precioVentaBase,
         });
         const lab: LaboratorioListItem = {
           id: data.laboratorioId,
@@ -187,6 +190,7 @@ export class MedicamentosDetailComponent implements OnInit {
         codigoNacional: this.snapshot?.codigoNacional ?? '',
         nombreComercial: this.snapshot?.nombreComercial ?? '',
         condicionVenta: this.snapshot?.condicionVenta ?? null,
+        precioVentaBase: this.snapshot?.precioVentaBase ?? null,
       });
       this.form.disable();
       this.selectedLab.set(this.snapshotLab);
@@ -218,13 +222,14 @@ export class MedicamentosDetailComponent implements OnInit {
     }
 
     this.saving.set(true);
-    const { codigoNacional, nombreComercial, condicionVenta } = this.form.value;
+    const { codigoNacional, nombreComercial, condicionVenta, precioVentaBase } = this.form.value;
     const body = {
       codigoNacional: codigoNacional!,
       nombreComercial: nombreComercial!,
       laboratorioId: this.selectedLab()!.id,
       unidadBaseId: this.selectedUnidad()!.id,
       condicionVenta: condicionVenta!,
+      precioVentaBase: precioVentaBase!,
     };
 
     if (this.isNew()) {
@@ -257,6 +262,17 @@ export class MedicamentosDetailComponent implements OnInit {
         },
       });
     }
+  }
+
+  abrirPresentacionesVenta(): void {
+    this.dialog.open(PresentacionesVentaModalComponent, {
+      data: {
+        productoId: this.entityId!,
+        productoNombre: this.snapshot!.nombreComercial,
+        unidadBaseNombre: this.snapshot!.unidadBaseNombre,
+      },
+      width: '700px',
+    });
   }
 
   confirmDelete(): void {

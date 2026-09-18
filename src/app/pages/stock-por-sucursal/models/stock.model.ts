@@ -15,6 +15,7 @@ export interface StockPorSucursal {
   productoNombre: string;
   fechaCaducidad: string;
   cantidadFisica: number;
+  precioVentaBase: number | null;
 }
 
 export interface SearchStockParams {

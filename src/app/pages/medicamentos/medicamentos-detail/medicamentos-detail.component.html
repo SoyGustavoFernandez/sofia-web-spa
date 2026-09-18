@@ -23,6 +23,13 @@
               </div>
             </div>
             <div class="d-flex gap-2">
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="abrirPresentacionesVenta()">
+                <mat-icon>sell</mat-icon>
+                {{ t('detail.presentaciones-btn') }}
+              </button>
               <button mat-flat-button color="primary" (click)="enterEditMode()">
                 {{ 'actions.edit' | transloco }}
               </button>
@@ -134,6 +141,21 @@
                 }
               </mat-select>
               <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Precio de Venta Base -->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.precioVentaBase') }}</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="precioVentaBase"
+                min="0"
+                step="0.01" />
+              <span matTextPrefix>S/&nbsp;</span>
+              <mat-error>{{ t('detail.precioVentaBase-error') }}</mat-error>
             </mat-form-field>
           </div>
         </form>
