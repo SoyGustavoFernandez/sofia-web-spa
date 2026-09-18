@@ -16,6 +16,7 @@ module.exports = tseslint.config(
     files: [
       "src/app/pages/**/*.ts",
       "src/app/shared/**/*.ts",
+      "src/app/core/**/*.ts",
     ],
     languageOptions: {
       parser: tsParser,
