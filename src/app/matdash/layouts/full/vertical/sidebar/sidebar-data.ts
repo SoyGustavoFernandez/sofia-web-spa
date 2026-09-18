@@ -76,6 +76,11 @@ export const navItems: NavItem[] = [
         route: '/medicamentos',
       },
       {
+        displayName: 'nav.presentacionesVenta',
+        iconName: 'solar:tag-price-line-duotone',
+        route: '/presentaciones-venta',
+      },
+      {
         displayName: 'nav.formulacionesClinicas',
         iconName: 'solar:test-tube-minimalistic-line-duotone',
         route: '/formulaciones-clinicas',

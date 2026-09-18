@@ -116,7 +116,14 @@
               <th mat-header-cell *matHeaderCellDef>
                 {{ t('ventasDetail.colCantidad') }}
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.cantidad }}</td>
+              <td mat-cell *matCellDef="let row">
+                @if (row.presentacionDescripcion) {
+                  {{ row.cantidadEnPresentacion }} ×
+                  {{ row.presentacionDescripcion }} ({{ row.cantidad }})
+                } @else {
+                  {{ row.cantidad }}
+                }
+              </td>
             </ng-container>
             <ng-container matColumnDef="precioUnitario">
               <th mat-header-cell *matHeaderCellDef>

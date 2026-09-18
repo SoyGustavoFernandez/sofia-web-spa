@@ -6,20 +6,22 @@ import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsver
 import { MatDialog } from '@angular/material/dialog';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { AuthService } from '@core/auth/auth.service';
 import { VentaService } from '../services/venta.service';
-import { CreateVentaRequest, MetodoPago, EstadoVenta } from '../models/venta.model';
+import { CreateVentaRequest, CreateVentaDetalleRequest, MetodoPago, EstadoVenta } from '../models/venta.model';
 import { SesionCajaService } from '../../sesiones-caja/services/sesion-caja.service';
 import { EstadoSesion } from '../../sesiones-caja/models/sesion-caja.model';
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
 import { StockService } from '../../stock-por-sucursal/services/stock.service';
 import { StockPorSucursal } from '../../stock-por-sucursal/models/stock.model';
+import { PresentacionVentaService } from '../../presentaciones-venta/services/presentacion-venta.service';
+import { PresentacionVenta } from '../../presentaciones-venta/models/presentacion-venta.model';
 import { PacienteService } from '../../pacientes/services/paciente.service';
 import { PacienteListItem } from '../../pacientes/models/paciente.model';
 import { AseguradoraService } from '../../aseguradoras/services/aseguradora.service';
@@ -37,6 +39,10 @@ interface CartLine {
   cantidadDisponible: number;
   cantidad: number;
   precioUnitario: number;
+  presentacionVentaId?: string;
+  presentacionDescripcion?: string;
+  cantidadEnPresentacion?: number;
+  presentacionCantidadUnidadesBase?: number;
 }
 
 interface PagoLine {
@@ -66,6 +72,7 @@ export class NuevaVentaComponent implements OnInit {
   private readonly sesionCajaService = inject(SesionCajaService);
   private readonly medicamentoService = inject(MedicamentoService);
   private readonly stockService = inject(StockService);
+  private readonly presentacionVentaService = inject(PresentacionVentaService);
   private readonly pacienteService = inject(PacienteService);
   private readonly aseguradoraService = inject(AseguradoraService);
   private readonly ventaService = inject(VentaService);
@@ -96,9 +103,20 @@ export class NuevaVentaComponent implements OnInit {
 
   readonly catalogoForm = this.fb.group({ productoNombre: [''] });
   readonly medicamentoOptions = signal<MedicamentoListItem[]>([]);
+  readonly condicionLabels = signal<string[]>([]);
+  readonly condicionFiltro = signal<number | null>(null);
+  private readonly buscarProductos$ = new Subject<string>();
+  readonly selectedMedicamentoId = signal<string | null>(null);
   readonly loteOptions = signal<StockPorSucursal[]>([]);
   readonly selectedLote = signal<StockPorSucursal | null>(null);
   readonly addForm = this.fb.group({ cantidad: [1], precio: [0] });
+  readonly presentacionOptions = signal<PresentacionVenta[]>([]);
+  // '' (not null) marks "unidad base": mat-select's option-matching skips options whose value is null/undefined,
+  // so a mat-option [value]="null" can never render as the selected trigger text.
+  readonly selectedPresentacionId = signal<string>('');
+  readonly selectedPresentacion = computed(
+    () => this.presentacionOptions().find(p => p.id === this.selectedPresentacionId()) ?? null,
+  );
 
   // Scan prescription
   readonly recetaImagen = signal<File | null>(null);
@@ -114,12 +132,16 @@ export class NuevaVentaComponent implements OnInit {
   readonly clienteOptions = signal<PacienteListItem[]>([]);
   readonly selectedCliente = signal<PacienteListItem | null>(null);
 
+  // Insurance coverage is built but hidden from the UI until the pharmacy starts working with aseguradoras.
+  readonly mostrarAseguradora = false;
   readonly seguroExpanded = signal(false);
   readonly seguroForm = this.fb.group({ aseguradoraNombre: [''], montoCubierto: [null as number | null] });
   readonly aseguradoraOptions = signal<AseguradoraListItem[]>([]);
   readonly selectedAseguradora = signal<AseguradoraListItem | null>(null);
 
   readonly pagos = signal<PagoLine[]>([{ metodoPago: MetodoPago.Efectivo, monto: 0, referencia: '' }]);
+  readonly modoPagoAvanzado = signal(false);
+  readonly metodoPagoSimpleSeleccionado = computed(() => (this.pagos().length === 1 ? this.pagos()[0].metodoPago : null));
 
   readonly subtotalBruto = computed(() => this.cart().reduce((s, l) => s + l.cantidad * l.precioUnitario, 0));
   readonly montoCubiertoSeguro = computed(() => this.seguroForm.value.montoCubierto ?? 0);
@@ -129,6 +151,7 @@ export class NuevaVentaComponent implements OnInit {
   readonly tieneEfectivo = computed(() => this.pagos().some(p => p.metodoPago === MetodoPago.Efectivo));
   readonly subtotalSinIgv = computed(() => this.subtotalBruto() / 1.18);
   readonly igv = computed(() => this.subtotalBruto() - this.subtotalSinIgv());
+  readonly cambioAEntregar = computed(() => Math.max(0, -this.montoPendiente()));
 
   readonly puedeProcesar = computed(() => {
     const pendiente = this.montoPendiente();
@@ -149,17 +172,27 @@ export class NuevaVentaComponent implements OnInit {
   }
 
   constructor() {
-    this.catalogoForm.controls.productoNombre.valueChanges
+    this.buscarProductos$
       .pipe(
         debounceTime(300),
-        distinctUntilChanged(),
-        switchMap(term => {
-          if (!term || typeof term !== 'string') return of({ items: [] as MedicamentoListItem[] });
-          return this.medicamentoService.search({ nombreComercial: term, pageNumber: 1, pageSize: 20 });
-        }),
+        switchMap(term =>
+          this.medicamentoService.search({
+            nombreComercial: term || undefined,
+            condicionVenta: this.condicionFiltro() ?? undefined,
+            incluirStock: true,
+            // Only rank by sales when the cashier hasn't narrowed the catalog down themselves.
+            ordenarPorMasVendidos: !term && this.condicionFiltro() === null,
+            pageNumber: 1,
+            pageSize: 12,
+          }),
+        ),
         takeUntilDestroyed(),
       )
       .subscribe(result => this.medicamentoOptions.set(result.items));
+
+    this.catalogoForm.controls.productoNombre.valueChanges
+      .pipe(distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe(term => this.buscarProductos$.next(typeof term === 'string' ? term : ''));
 
     this.clienteForm.controls.clienteNombre.valueChanges
       .pipe(
@@ -204,6 +237,8 @@ export class NuevaVentaComponent implements OnInit {
     }
 
     this.checkSesionCaja();
+    this.medicamentoService.getCondicionesVenta().subscribe(labels => this.condicionLabels.set(labels));
+    this.buscarProductos$.next('');
   }
 
   private checkSesionCaja(): void {
@@ -253,6 +288,7 @@ export class NuevaVentaComponent implements OnInit {
         (stockLookups.length > 0 ? forkJoin(stockLookups) : of([])).subscribe(resultados => {
           const cart: CartLine[] = venta.detalles.map((d, i) => {
             const lote = resultados[i]?.items.find(l => l.loteId === d.loteId && l.sucursalId === sucursalId);
+            const tienePresentacion = !!d.presentacionVentaId && !!d.cantidadEnPresentacion;
             return {
               loteId: d.loteId,
               productoNombre: d.productoNombre,
@@ -260,6 +296,10 @@ export class NuevaVentaComponent implements OnInit {
               cantidadDisponible: (lote?.cantidadFisica ?? 0) + d.cantidad,
               cantidad: d.cantidad,
               precioUnitario: d.precioUnitario,
+              presentacionVentaId: d.presentacionVentaId ?? undefined,
+              presentacionDescripcion: d.presentacionDescripcion ?? undefined,
+              cantidadEnPresentacion: d.cantidadEnPresentacion ?? undefined,
+              presentacionCantidadUnidadesBase: tienePresentacion ? d.cantidad / d.cantidadEnPresentacion! : undefined,
             };
           });
           this.cart.set(cart);
@@ -317,7 +357,10 @@ export class NuevaVentaComponent implements OnInit {
     try {
       const draft = JSON.parse(raw);
       if (Array.isArray(draft.cart) && draft.cart.length > 0) this.cart.set(draft.cart);
-      if (Array.isArray(draft.pagos) && draft.pagos.length > 0) this.pagos.set(draft.pagos);
+      if (Array.isArray(draft.pagos) && draft.pagos.length > 0) {
+        this.pagos.set(draft.pagos);
+        if (draft.pagos.length > 1) this.modoPagoAvanzado.set(true);
+      }
       if (draft.cliente) {
         this.selectedCliente.set(draft.cliente);
         this.clienteForm.controls.clienteNombre.setValue(draft.cliente, { emitEvent: false });
@@ -350,21 +393,36 @@ export class NuevaVentaComponent implements OnInit {
     if (!raw) return;
     try {
       const draft = JSON.parse(raw);
-      if (Array.isArray(draft.pagos) && draft.pagos.length > 0) this.pagos.set(draft.pagos);
+      if (Array.isArray(draft.pagos) && draft.pagos.length > 0) {
+        this.pagos.set(draft.pagos);
+        if (draft.pagos.length > 1) this.modoPagoAvanzado.set(true);
+      }
     } catch {
       localStorage.removeItem(this.draftKey);
     }
   }
 
   // ── Search product ─────────────────────────────────────
-  displayMedicamento = (m: MedicamentoListItem | string | null): string => (m && typeof m === 'object' ? m.nombreComercial : (m ?? ''));
+  setCondicionFiltro(value: number | null): void {
+    this.condicionFiltro.set(value);
+    const term = this.catalogoForm.value.productoNombre;
+    this.buscarProductos$.next(typeof term === 'string' ? term : '');
+  }
 
-  onMedicamentoSelected(event: MatAutocompleteSelectedEvent): void {
-    this.selectMedicamento(event.option.value as MedicamentoListItem);
+  stockBadgeClass(stockTotal: number | null): 'ok' | 'low' | 'bad' {
+    if (!stockTotal) return 'bad';
+    return stockTotal <= 10 ? 'low' : 'ok';
+  }
+
+  stockBadgeLabel(stockTotal: number | null): string {
+    const t = (k: string): string => this.transloco.translate(k, {}, 'pos');
+    if (!stockTotal) return t('checkout.stockAgotado');
+    return stockTotal <= 10 ? t('checkout.stockBajo') : t('checkout.stockDisponible');
   }
 
   selectMedicamento(medicamento: MedicamentoListItem): void {
-    this.medicamentoOptions.set([]);
+    if (!medicamento.stockTotal) return;
+    this.selectedMedicamentoId.set(medicamento.id);
     const sucursalId = this.authService.sucursalId();
     this.stockService.search({ productoNombre: medicamento.nombreComercial, soloConStock: true, pageNumber: 1, pageSize: 50 }).subscribe({
       next: result => this.loteOptions.set(result.items.filter(l => l.sucursalId === sucursalId)),
@@ -374,7 +432,24 @@ export class NuevaVentaComponent implements OnInit {
 
   selectLote(lote: StockPorSucursal): void {
     this.selectedLote.set(lote);
-    this.addForm.setValue({ cantidad: 1, precio: 0 });
+    this.addForm.setValue({ cantidad: 1, precio: lote.precioVentaBase ?? 0 });
+    this.presentacionOptions.set([]);
+    this.selectedPresentacionId.set('');
+    this.presentacionVentaService.search({ productoId: lote.productoId, pageNumber: 1, pageSize: 50 }).subscribe({
+      next: result => this.presentacionOptions.set(result.items),
+      error: () => this.presentacionOptions.set([]),
+    });
+  }
+
+  floorDiv(a: number, b: number): number {
+    return b > 0 ? Math.floor(a / b) : 0;
+  }
+
+  onPresentacionChange(presentacionId: string): void {
+    this.selectedPresentacionId.set(presentacionId);
+    const presentacion = this.presentacionOptions().find(p => p.id === presentacionId);
+    const precioBase = this.selectedLote()?.precioVentaBase ?? 0;
+    this.addForm.patchValue({ cantidad: 1, precio: presentacion ? presentacion.precioVenta : precioBase });
   }
 
   agregarAlCarrito(): void {
@@ -382,33 +457,60 @@ export class NuevaVentaComponent implements OnInit {
     if (!lote) {
       return;
     }
-    const cantidad = Number(this.addForm.value.cantidad);
-    const precio = Number(this.addForm.value.precio);
+    const cantidadIngresada = Number(this.addForm.value.cantidad);
+    const precioIngresado = Number(this.addForm.value.precio);
+    const presentacion = this.selectedPresentacion();
 
-    if (cantidad > lote.cantidadFisica) {
+    // Cantidad/precio are entered in the chosen presentación's own units (e.g. "Cajas x10" at S/45/caja);
+    // the cart — and the backend — always work in base units, so convert before any stock/cart math.
+    const cantidadBase = presentacion ? cantidadIngresada * presentacion.cantidadUnidadesBase : cantidadIngresada;
+    const precioUnitarioBase = presentacion ? precioIngresado / presentacion.cantidadUnidadesBase : precioIngresado;
+
+    if (cantidadBase > lote.cantidadFisica) {
       this.notifier.showError(this.transloco.translate('pos.messages.stockMaxReached', { stock: lote.cantidadFisica }));
       return;
     }
-    if (cantidad <= 0 || precio <= 0) {
+    if (cantidadIngresada <= 0 || precioIngresado <= 0) {
       this.notifier.showError(this.transloco.translate('pos.messages.cantidadPrecioInvalidos'));
       return;
     }
 
-    this.pushCartLine(lote, cantidad, precio);
+    this.pushCartLine(lote, cantidadBase, precioUnitarioBase, presentacion, cantidadIngresada);
     this.selectedLote.set(null);
+    this.selectedMedicamentoId.set(null);
     this.loteOptions.set([]);
-    this.catalogoForm.controls.productoNombre.setValue('', { emitEvent: false });
+    this.presentacionOptions.set([]);
+    this.selectedPresentacionId.set('');
   }
 
-  private pushCartLine(lote: StockPorSucursal, cantidad: number, precio: number): void {
-    const existente = this.cart().find(l => l.loteId === lote.loteId);
+  private pushCartLine(
+    lote: StockPorSucursal,
+    cantidad: number,
+    precio: number,
+    presentacion?: PresentacionVenta | null,
+    cantidadEnPresentacion?: number,
+  ): void {
+    const key = (l: { loteId: string; presentacionVentaId?: string }): string => `${l.loteId}|${l.presentacionVentaId ?? ''}`;
+    const nuevaKey = key({ loteId: lote.loteId, presentacionVentaId: presentacion?.id });
+    const existente = this.cart().find(l => key(l) === nuevaKey);
     if (existente) {
       const cantidadDeseada = existente.cantidad + cantidad;
       if (cantidadDeseada > lote.cantidadFisica) {
         this.notifier.showError(this.transloco.translate('pos.messages.stockMaxReached', { stock: lote.cantidadFisica }));
       }
       const cantidadFinal = Math.min(cantidadDeseada, lote.cantidadFisica);
-      this.cart.update(items => items.map(it => (it.loteId === lote.loteId ? { ...it, cantidad: cantidadFinal, precioUnitario: precio || it.precioUnitario } : it)));
+      this.cart.update(items =>
+        items.map(it =>
+          key(it) === nuevaKey
+            ? {
+                ...it,
+                cantidad: cantidadFinal,
+                precioUnitario: precio || it.precioUnitario,
+                cantidadEnPresentacion: presentacion ? (it.cantidadEnPresentacion ?? 0) + (cantidadEnPresentacion ?? 0) : undefined,
+              }
+            : it,
+        ),
+      );
       return;
     }
     this.cart.update(items => [
@@ -420,6 +522,10 @@ export class NuevaVentaComponent implements OnInit {
         cantidadDisponible: lote.cantidadFisica,
         cantidad,
         precioUnitario: precio,
+        presentacionVentaId: presentacion?.id,
+        presentacionDescripcion: presentacion?.descripcion,
+        cantidadEnPresentacion: presentacion ? cantidadEnPresentacion : undefined,
+        presentacionCantidadUnidadesBase: presentacion?.cantidadUnidadesBase,
       },
     ]);
   }
@@ -524,13 +630,16 @@ export class NuevaVentaComponent implements OnInit {
     this.cart.update(items =>
       items.map((it, i) => {
         if (i !== index) return it;
-        const nueva = it.cantidad + delta;
+        // A line sold "por presentación" (e.g. Caja x10) steps by whole presentaciones, not single base units.
+        const paso = it.presentacionCantidadUnidadesBase ?? 1;
+        const nueva = it.cantidad + delta * paso;
         if (nueva <= 0) return it;
         if (nueva > it.cantidadDisponible) {
           this.notifier.showError(this.transloco.translate('pos.messages.stockMaxReached', { stock: it.cantidadDisponible }));
           return it;
         }
-        return { ...it, cantidad: nueva };
+        const nuevaEnPresentacion = it.cantidadEnPresentacion !== undefined ? it.cantidadEnPresentacion + delta : undefined;
+        return { ...it, cantidad: nueva, cantidadEnPresentacion: nuevaEnPresentacion };
       }),
     );
   }
@@ -587,6 +696,36 @@ export class NuevaVentaComponent implements OnInit {
   }
 
   // ── Payments ────────────────────────────────────────────
+  seleccionarMetodoPagoSimple(metodo: MetodoPago): void {
+    this.pagos.set([{ metodoPago: metodo, monto: this.montoAPagar(), referencia: '' }]);
+  }
+
+  actualizarMontoPagoSimple(monto: number): void {
+    this.updatePago(0, { monto });
+  }
+
+  activarPagoAvanzado(): void {
+    this.modoPagoAvanzado.set(true);
+  }
+
+  volverAPagoSimple(): void {
+    this.modoPagoAvanzado.set(false);
+    this.pagos.set([{ metodoPago: MetodoPago.Efectivo, monto: this.montoAPagar(), referencia: '' }]);
+  }
+
+  metodoPagoIcon(metodo: MetodoPago): string {
+    switch (metodo) {
+      case MetodoPago.Efectivo:
+        return 'payments';
+      case MetodoPago.YapePlin:
+        return 'smartphone';
+      case MetodoPago.Tarjeta:
+        return 'credit_card';
+      default:
+        return 'account_balance';
+    }
+  }
+
   agregarPago(): void {
     const usados = new Set(this.pagos().map(p => p.metodoPago));
     const metodo = this.metodoPagoOpciones.find(m => !usados.has(m)) ?? MetodoPago.Efectivo;
@@ -618,6 +757,18 @@ export class NuevaVentaComponent implements OnInit {
   metodoPagoLabel(metodo: MetodoPago): string {
     const key = MetodoPago[metodo].charAt(0).toLowerCase() + MetodoPago[metodo].slice(1);
     return this.transloco.translate(`pos.checkout.${key}`);
+  }
+
+  // Cantidad sent to the backend is base units, unless a presentación was picked — then it's the
+  // quantity in that presentación's own units (e.g. 2 Cajas), and the backend resolves the conversion.
+  private buildDetalleRequests(): CreateVentaDetalleRequest[] {
+    return this.cart().map(l => ({
+      loteId: l.loteId,
+      cantidad: l.presentacionVentaId ? l.cantidadEnPresentacion! : l.cantidad,
+      precioUnitario: l.precioUnitario,
+      costoHistorico: 0,
+      presentacionVentaId: l.presentacionVentaId,
+    }));
   }
 
   // ── Process sale ────────────────────────────────────────
@@ -653,7 +804,7 @@ export class NuevaVentaComponent implements OnInit {
     if (continuandoId) {
       this.ventaService
         .actualizarDetalles(continuandoId, {
-          detalles: this.cart().map(l => ({ loteId: l.loteId, cantidad: l.cantidad, precioUnitario: l.precioUnitario, costoHistorico: 0 })),
+          detalles: this.buildDetalleRequests(),
           clienteId: this.selectedCliente()?.id,
         })
         .subscribe({
@@ -674,12 +825,7 @@ export class NuevaVentaComponent implements OnInit {
     const request: CreateVentaRequest = {
       clienteId: this.selectedCliente()?.id,
       sesionId: this.sesionId()!,
-      detalles: this.cart().map(l => ({
-        loteId: l.loteId,
-        cantidad: l.cantidad,
-        precioUnitario: l.precioUnitario,
-        costoHistorico: 0,
-      })),
+      detalles: this.buildDetalleRequests(),
       pagos: [],
       estado: EstadoVenta.Pendiente,
     };
@@ -701,12 +847,7 @@ export class NuevaVentaComponent implements OnInit {
   private enviarVenta(): void {
     this.procesando.set(true);
 
-    const detalles = this.cart().map(l => ({
-      loteId: l.loteId,
-      cantidad: l.cantidad,
-      precioUnitario: l.precioUnitario,
-      costoHistorico: 0,
-    }));
+    const detalles = this.buildDetalleRequests();
     const pagosRequest = this.pagos().map(p => ({
       metodoPago: p.metodoPago,
       montoPagado: p.monto,
@@ -768,12 +909,16 @@ export class NuevaVentaComponent implements OnInit {
   private resetVenta(): void {
     this.cart.set([]);
     this.pagos.set([{ metodoPago: MetodoPago.Efectivo, monto: 0, referencia: '' }]);
+    this.modoPagoAvanzado.set(false);
     this.limpiarCliente();
     this.seguroForm.reset();
     this.selectedAseguradora.set(null);
     this.seguroExpanded.set(false);
     this.selectedLote.set(null);
+    this.selectedMedicamentoId.set(null);
     this.loteOptions.set([]);
+    this.presentacionOptions.set([]);
+    this.selectedPresentacionId.set('');
     this.limpiarReceta();
     this.activeTab.set('buscar');
     this.continuandoVentaId.set(null);

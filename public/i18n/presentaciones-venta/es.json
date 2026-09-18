@@ -1,0 +1,60 @@
+{
+  "title": "Presentaciones de Venta",
+  "search": {
+    "title": "Búsqueda de Presentaciones de Venta",
+    "search-error": "Error al buscar presentaciones de venta",
+    "export-filename": "presentaciones-venta.xlsx"
+  },
+  "detail": {
+    "load-error": "Error al cargar la presentación de venta",
+    "save-success": "Presentación de venta guardada correctamente",
+    "save-error": "Error al guardar la presentación de venta",
+    "delete-success": "Presentación de venta eliminada correctamente",
+    "delete-error": "Error al eliminar la presentación de venta",
+    "delete-in-use": "No se puede eliminar la presentación porque tiene ventas registradas.",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar esta presentación de venta?",
+    "producto-hint": "El producto de una presentación no se puede modificar luego de creada",
+    "unidadVenta-error": "Debe seleccionar una unidad de venta",
+    "precioVenta-error": "El precio de venta no puede ser negativo",
+    "sin-jerarquia": "Este producto no tiene una Jerarquía de Unidades registrada. Cárguela primero para poder definir presentaciones de venta.",
+    "ir-a-jerarquias-btn": "Ir a Jerarquías de Unidades",
+    "unidad-duplicada": "Ya existe una presentación de venta para esa unidad en este producto."
+  },
+  "modal": {
+    "title": "Presentaciones de Venta",
+    "empty": "Este producto todavía no tiene presentaciones de venta.",
+    "add-btn": "Agregar presentación",
+    "close-btn": "Cerrar",
+    "edit-tooltip": "Editar",
+    "delete-tooltip": "Eliminar",
+    "sin-jerarquia": "Este producto no tiene una Jerarquía de Unidades registrada. Cárguela primero para poder definir presentaciones de venta.",
+    "ir-a-jerarquias-btn": "Ir a Jerarquías de Unidades",
+    "sin-unidades-disponibles": "Ya existe una presentación para cada unidad definida en la Jerarquía de este producto.",
+    "unidad-duplicada": "Ya existe una presentación de venta para esa unidad.",
+    "load-error": "Error al cargar las presentaciones de venta",
+    "save-success": "Presentación de venta guardada correctamente",
+    "save-error": "Error al guardar la presentación de venta",
+    "delete-success": "Presentación de venta eliminada correctamente",
+    "delete-error": "Error al eliminar la presentación de venta",
+    "delete-in-use": "No se puede eliminar la presentación porque tiene ventas registradas.",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Está seguro de que desea eliminar esta presentación de venta?"
+  },
+  "fields": {
+    "producto": "Producto",
+    "descripcion": "Unidad de Venta",
+    "unidadVenta": "Unidad de Venta",
+    "precioVenta": "Precio de Venta"
+  },
+  "table": {
+    "producto": "Producto",
+    "descripcion": "Unidad de Venta",
+    "cantidadUnidadesBase": "Equivalencia",
+    "precioVenta": "Precio de Venta"
+  },
+  "autocomplete": {
+    "producto-placeholder": "Buscar producto...",
+    "no-results": "Sin resultados"
+  }
+}
