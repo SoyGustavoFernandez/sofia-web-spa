@@ -1,7 +1,7 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, map, catchError, EMPTY } from 'rxjs';
+import { Observable, tap, map, catchError, finalize, shareReplay, EMPTY } from 'rxjs';
 import { environment } from '@environment/environment';
 
 interface JwtPayload {
@@ -56,12 +56,20 @@ export class AuthService {
     );
   }
 
-  // Called by the interceptor on 401 — returns the new access token
+  // Dedupes concurrent refresh calls from the guard and the interceptor into one request.
+  private refreshInProgress$: Observable<string> | null = null;
+
+  // Called by the guard and the interceptor to get a fresh access token.
   refreshAccessToken(): Observable<string> {
-    return this.http.post<AuthResponse>(`${BASE}/refresh`, {}, { withCredentials: true }).pipe(
-      tap(res => this.storeToken(res.accessToken)),
-      map(res => res.accessToken)
-    );
+    if (!this.refreshInProgress$) {
+      this.refreshInProgress$ = this.http.post<AuthResponse>(`${BASE}/refresh`, {}, { withCredentials: true }).pipe(
+        tap(res => this.storeToken(res.accessToken)),
+        map(res => res.accessToken),
+        finalize(() => { this.refreshInProgress$ = null; }),
+        shareReplay(1)
+      );
+    }
+    return this.refreshInProgress$;
   }
 
   logout(): void {
