@@ -1,5 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '@environment/environment';
 
 export interface IconMenuItem {
   id: number;
@@ -45,7 +46,7 @@ export class MenuService {
   }
 
   load(): void {
-    this.http.get<{ iconMenu: IconMenuItem[]; sidebar: SidebarGroup[] }>('/api/v1/menu').subscribe({
+    this.http.get<{ iconMenu: IconMenuItem[]; sidebar: SidebarGroup[] }>(`${environment.api.baseurl}/api/v1/menu`).subscribe({
       next: data => {
         this.iconMenu.set(data.iconMenu ?? []);
         this.sidebar.set(data.sidebar ?? []);
