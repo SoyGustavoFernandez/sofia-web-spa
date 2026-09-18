@@ -20,7 +20,9 @@
     "stock-total": "Total Stock",
     "sin-stock": "No stock registered",
     "stock-col-sucursal": "Branch",
-    "stock-col-cantidad": "Stock"
+    "stock-col-cantidad": "Stock",
+    "presentaciones-btn": "Sale Presentations",
+    "precioVentaBase-error": "The price cannot be negative"
   },
   "fields": {
     "codigoNacional": "National Code",
@@ -28,6 +30,7 @@
     "laboratorio": "Laboratory",
     "unidadBase": "Base Unit",
     "condicionVenta": "Sale Condition",
+    "precioVentaBase": "Base Sale Price",
     "stockTotal": "Total Stock"
   },
   "table": {
