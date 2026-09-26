@@ -157,6 +157,8 @@
   },
   "errors": {
     "forbidden": "You do not have permission for this operation.",
+    "forbiddenPage": "You do not have permission to access this page.",
+    "permissionsLoad": "Your permissions could not be loaded. Reload the page or sign in again.",
     "unauthorized": "Your session has expired. Please log in again.",
     "notFound": "The requested resource was not found.",
     "serverError": "An unexpected server error occurred. Please try again later.",

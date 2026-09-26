@@ -118,15 +118,83 @@ describe('AuthService', () => {
     expect(service.sucursalId()).toBe('suc-2');
   });
 
-  it('hasRole()/hasAnyRole() reflect the roles claim', () => {
+  it('loadPermissions() fetches /auth/me once and reuses it for later calls', () => {
     createService();
-    const token = buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600, roles: ['Admin', 'Farmaceutico'] });
-    service.storeToken(token);
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
 
-    expect(service.hasRole('Admin')).toBeTrue();
-    expect(service.hasRole('Cajero')).toBeFalse();
-    expect(service.hasAnyRole('Cajero', 'Farmaceutico')).toBeTrue();
-    expect(service.hasAnyRole('Cajero', 'Supervisor')).toBeFalse();
+    service.loadPermissions().subscribe();
+    service.loadPermissions().subscribe();
+    httpMock.expectOne(`${AUTH_BASE}/me`).flush({ roles: ['Cajero'], permisos: [] });
+    service.loadPermissions().subscribe();
+
+    httpMock.expectNone(`${AUTH_BASE}/me`);
+  });
+
+  it('hasPermission() matches module and action case-insensitively and defaults to Leer', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+
+    service.loadPermissions().subscribe();
+    httpMock.expectOne(`${AUTH_BASE}/me`).flush({
+      roles: ['Cajero'],
+      permisos: [{ modulo: 'ventas', accion: 'leer' }, { modulo: 'POS', accion: 'AperturarCaja' }],
+    });
+
+    expect(service.hasPermission('Ventas')).toBeTrue();
+    expect(service.hasPermission('POS', 'AperturarCaja')).toBeTrue();
+    expect(service.hasPermission('POS')).toBeFalse();
+    expect(service.hasPermission('Seguridad')).toBeFalse();
+  });
+
+  it('hasPermission() lets the Admin role through every module, like the API does', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+
+    service.loadPermissions().subscribe();
+    httpMock.expectOne(`${AUTH_BASE}/me`).flush({ roles: ['admin'], permisos: [] });
+
+    expect(service.hasPermission('Seguridad', 'GestionarPermisos')).toBeTrue();
+  });
+
+  it('hasPermission() denies everything until permissions are loaded', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+
+    expect(service.hasPermission('Ventas')).toBeFalse();
+  });
+
+  it('clearLocalSession() forgets permissions so the next user loads their own', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+    service.loadPermissions().subscribe();
+    httpMock.expectOne(`${AUTH_BASE}/me`).flush({ roles: ['Admin'], permisos: [] });
+
+    service.clearLocalSession();
+
+    expect(service.hasPermission('Ventas')).toBeFalse();
+  });
+
+  it('storeToken() for a different user drops the previous user permissions', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+    service.loadPermissions().subscribe();
+    httpMock.expectOne(`${AUTH_BASE}/me`).flush({ roles: ['Admin'], permisos: [] });
+
+    service.storeToken(buildJwt({ sub: 'u2', exp: Math.floor(Date.now() / 1000) + 3600 }));
+
+    expect(service.hasPermission('Ventas')).toBeFalse();
+  });
+
+  it('loadPermissions() discards a response that arrives after the user logged out', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+    service.loadPermissions().subscribe();
+    const pending = httpMock.expectOne(`${AUTH_BASE}/me`);
+
+    service.clearLocalSession();
+    pending.flush({ roles: ['Admin'], permisos: [] });
+
+    expect(service.hasPermission('Ventas')).toBeFalse();
   });
 
   it('refreshAccessToken() dedupes concurrent calls into a single HTTP request', () => {

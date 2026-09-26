@@ -13,7 +13,7 @@
 
 <ng-scrollbar class="position-relative" style="height: calc(100vh - 20px)">
   <mat-nav-list class="sidebar-list top-parent">
-    @for (group of navItems; track group.id) {
+    @for (group of navItems(); track group.id) {
       @for (item of group.children!; track item.displayName) {
         <app-nav-item [item]="item" (notify)="toggleMobileNav.emit()"></app-nav-item>
       }

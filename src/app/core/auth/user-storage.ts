@@ -1,4 +1,5 @@
 // localStorage prefixes that hold per-user data: keys are scoped by user id and wiped on logout.
+// Legacy: menu cache from the removed MenuService, kept only so logout wipes what older builds left.
 export const MENU_CACHE_PREFIX = 'sofia_menu_cache';
 export const POS_DRAFT_PREFIX = 'pos-nueva-venta-draft';
 

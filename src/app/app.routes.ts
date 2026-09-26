@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { FullComponent } from '@matdash/layouts/full/full.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from '@core/auth/auth.guard';
+import { permissionGuard } from '@core/auth/permission.guard';
 
 export const appRoutes: Route[] = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -21,6 +22,8 @@ export const appRoutes: Route[] = [
     path: '',
     component: FullComponent,
     canActivate: [authGuard],
+    // Each child is checked against ROUTE_PERMISSIONS (core/auth/route-permissions.ts)
+    canActivateChild: [permissionGuard],
     children: [
       {
         path: 'dashboard',

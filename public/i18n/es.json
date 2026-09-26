@@ -157,6 +157,8 @@
   },
   "errors": {
     "forbidden": "No tienes permisos para esta operación.",
+    "forbiddenPage": "No tienes permisos para acceder a esta pantalla.",
+    "permissionsLoad": "No se pudieron cargar tus permisos. Recarga la página o vuelve a iniciar sesión.",
     "unauthorized": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
     "notFound": "El recurso solicitado no fue encontrado.",
     "serverError": "Ocurrió un error inesperado en el servidor. Por favor, inténtalo de nuevo más tarde.",
