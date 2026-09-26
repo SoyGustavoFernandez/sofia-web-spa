@@ -202,7 +202,7 @@
               <input
                 matInput
                 [value]="
-                  s.montoCierreDeclarado != null
+                  s.montoCierreDeclarado !== null
                     ? (s.montoCierreDeclarado | number: '1.2-2')
                     : '—'
                 "
@@ -216,7 +216,7 @@
               <input
                 matInput
                 [value]="
-                  s.montoCierreCalculado != null
+                  s.montoCierreCalculado !== null
                     ? (s.montoCierreCalculado | number: '1.2-2')
                     : '—'
                 "
@@ -230,7 +230,7 @@
               <input
                 matInput
                 [value]="
-                  s.diferenciaArqueo != null
+                  s.diferenciaArqueo !== null
                     ? (s.diferenciaArqueo | number: '1.2-2')
                     : '—'
                 "

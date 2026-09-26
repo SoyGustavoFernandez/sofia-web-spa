@@ -13,9 +13,10 @@ export interface SesionCaja {
   fechaHoraApertura: string;
   fechaHoraCierre?: string;
   montoAperturaEfectivo: number;
-  montoCierreCalculado?: number;
-  montoCierreDeclarado?: number;
-  diferenciaArqueo?: number;
+  // The API sends explicit nulls (decimal?) while the session is still open
+  montoCierreCalculado: number | null;
+  montoCierreDeclarado: number | null;
+  diferenciaArqueo: number | null;
   estadoSesion: EstadoSesion;
 }
 
