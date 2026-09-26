@@ -86,8 +86,20 @@ export class CargaMasivaPageComponent {
     });
   }
 
+  // Fetched via HttpClient so the auth interceptor attaches the Bearer token (window.open cannot).
   downloadTemplate(): void {
-    window.open(this.config().downloadUrl, '_blank');
+    const entity = this.config().backRoute.replace(/^\//, '');
+    this.http.get(this.config().downloadUrl, { responseType: 'blob' }).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.transloco.translate('carga-masiva.template-filename', { entity });
+        a.click();
+        URL.revokeObjectURL(url);
+      },
+      error: err => this.notifier.showServerError(err, this.transloco.translate('carga-masiva.download-error')),
+    });
   }
 
   saveValid(): void {

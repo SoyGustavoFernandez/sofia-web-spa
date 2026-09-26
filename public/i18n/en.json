@@ -223,6 +223,7 @@
     "upload-success": "File uploaded successfully.",
     "upload-error": "Error uploading the file. Please check the format and try again.",
     "download-error": "Error downloading the template. Please try again.",
+    "template-filename": "template-{{entity}}.xlsx",
     "title": "Bulk Upload",
     "btn": "Bulk Upload",
     "upload-zone": "Drag your Excel file here or click to select",

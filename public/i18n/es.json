@@ -223,6 +223,7 @@
     "upload-success": "Archivo cargado correctamente.",
     "upload-error": "Error al cargar el archivo. Verifique el formato e intente de nuevo.",
     "download-error": "Error al descargar la plantilla. Intente de nuevo.",
+    "template-filename": "plantilla-{{entity}}.xlsx",
     "title": "Carga Masiva",
     "btn": "Carga Masiva",
     "upload-zone": "Arrastra tu archivo Excel aquí o haz clic para seleccionar",
