@@ -427,7 +427,7 @@ button:not([disabled]) .iconify.icon-delete {
 }
 
 .sunat-status-tooltip {
-  --mdc-plain-tooltip-container-shape: 8px;
+  --mat-tooltip-container-shape: 8px;
 }
 
 .sunat-status-tooltip .mat-mdc-tooltip-surface,
@@ -445,7 +445,7 @@ button:not([disabled]) .iconify.icon-delete {
 /* Tooltip de ítems del sidebar: bordes solo levemente redondeados para textos de dos o más líneas */
 .sidebar-nav-item-tooltip {
   /* Sobrescribir la variable del tema (corner-full) para que el surface herede 8px */
-  --mdc-plain-tooltip-container-shape: 8px;
+  --mat-tooltip-container-shape: 8px;
   /* Acercar el tooltip al ítem del menú (reducir hueco a la derecha) */
   margin-inline-start: -6px;
 }
