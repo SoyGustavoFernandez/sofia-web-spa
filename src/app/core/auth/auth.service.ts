@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, map, catchError, finalize, shareReplay, EMPTY } from 'rxjs';
 import { environment } from '@environment/environment';
+import { SearchStateService } from '@core/services/shared/search-state.service';
+import { clearUserStorage } from './user-storage';
 
 interface JwtPayload {
   sub: string;
@@ -26,6 +28,7 @@ const BASE = `${environment.api.baseurl}/api/v1/auth`;
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly searchState = inject(SearchStateService);
 
   private readonly _token = signal<string | null>(this.loadToken());
   readonly token = this._token.asReadonly();
@@ -47,6 +50,7 @@ export class AuthService {
   });
 
   readonly currentUser = computed(() => this._payload());
+  readonly userId = computed(() => this._payload()?.sub ?? null);
   readonly empresaId = computed(() => this._payload()?.empresaId ?? null);
   readonly sucursalId = computed(() => this._payload()?.sucursalId ?? null);
 
@@ -78,8 +82,9 @@ export class AuthService {
       catchError(() => EMPTY)
     ).subscribe();
 
-    localStorage.removeItem(TOKEN_KEY);
-    this._token.set(null);
+    // Explicit logout: the user is leaving, so their drafts and caches go too (shared pharmacy PCs)
+    clearUserStorage();
+    this.clearLocalSession();
     void this.router.navigate(['/auth/login']);
   }
 
@@ -97,9 +102,11 @@ export class AuthService {
     this._token.set(token);
   }
 
+  // Keeps per-user storage (POS drafts survive an expired session), but drops in-memory search filters
   clearLocalSession(): void {
     localStorage.removeItem(TOKEN_KEY);
     this._token.set(null);
+    this.searchState.clearAll();
   }
 
   private loadToken(): string | null {

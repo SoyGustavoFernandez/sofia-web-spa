@@ -21,4 +21,8 @@ export class SearchStateService {
   clear(key: string): void {
     this.states.delete(key);
   }
+
+  clearAll(): void {
+    this.states.clear();
+  }
 }

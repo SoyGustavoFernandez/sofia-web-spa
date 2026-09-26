@@ -3,10 +3,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { environment } from '@environment/environment';
+import { SearchStateService } from '@core/services/shared/search-state.service';
 import { AuthService } from './auth.service';
+import { MENU_CACHE_PREFIX, POS_DRAFT_PREFIX, userStorageKey } from './user-storage';
 
 const AUTH_BASE = `${environment.api.baseurl}/api/v1/auth`;
 const TOKEN_KEY = 'sofia_token';
+const DEVICE_PREF_KEY = 'sofia_timezone_test';
 
 /** Builds a syntactically valid (unsigned) JWT carrying the given payload, for decoding tests. */
 function buildJwt(payload: Record<string, unknown>): string {
@@ -32,6 +35,9 @@ describe('AuthService', () => {
   afterEach(() => {
     TestBed.inject(HttpTestingController).verify();
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(userStorageKey(POS_DRAFT_PREFIX, 'u1'));
+    localStorage.removeItem(userStorageKey(MENU_CACHE_PREFIX, 'u1'));
+    localStorage.removeItem(DEVICE_PREF_KEY);
   });
 
   function createService(): void {
@@ -187,5 +193,47 @@ describe('AuthService', () => {
     expect(service.token()).toBeNull();
     expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
     expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('exposes userId from the sub claim', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+
+    expect(service.userId()).toBe('u1');
+  });
+
+  it('logout() wipes per-user drafts and caches but keeps device preferences', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+    localStorage.setItem(userStorageKey(POS_DRAFT_PREFIX, 'u1'), '{"cart":[1]}');
+    localStorage.setItem(userStorageKey(MENU_CACHE_PREFIX, 'u1'), '{}');
+    localStorage.setItem(DEVICE_PREF_KEY, 'America/Lima');
+
+    service.logout();
+    httpMock.expectOne(`${AUTH_BASE}/logout`).flush({});
+
+    expect(localStorage.getItem(userStorageKey(POS_DRAFT_PREFIX, 'u1'))).toBeNull();
+    expect(localStorage.getItem(userStorageKey(MENU_CACHE_PREFIX, 'u1'))).toBeNull();
+    expect(localStorage.getItem(DEVICE_PREF_KEY)).toBe('America/Lima');
+  });
+
+  it('clearLocalSession() keeps the POS draft so an expired cashier can resume the sale', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+    localStorage.setItem(userStorageKey(POS_DRAFT_PREFIX, 'u1'), '{"cart":[1]}');
+
+    service.clearLocalSession();
+
+    expect(localStorage.getItem(userStorageKey(POS_DRAFT_PREFIX, 'u1'))).toBe('{"cart":[1]}');
+  });
+
+  it('clearLocalSession() drops in-memory search filters so the next user never sees them', () => {
+    createService();
+    const searchState = TestBed.inject(SearchStateService);
+    searchState.save('pacientes', { formValues: { nombre: 'Juan Pérez' }, pageIndex: 0, pageSize: 10 });
+
+    service.clearLocalSession();
+
+    expect(searchState.restore('pacientes')).toBeNull();
   });
 });

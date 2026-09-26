@@ -12,6 +12,7 @@ import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { AuthService } from '@core/auth/auth.service';
+import { POS_DRAFT_PREFIX, userStorageKey } from '@core/auth/user-storage';
 import { VentaService } from '../services/venta.service';
 import { CreateVentaRequest, CreateVentaDetalleRequest, MetodoPago, EstadoVenta } from '../models/venta.model';
 import { SesionCajaService } from '../../sesiones-caja/services/sesion-caja.service';
@@ -94,8 +95,13 @@ export class NuevaVentaComponent implements OnInit {
   readonly continuandoVentaId = signal<string | null>(null);
   readonly cargandoContinuacion = signal(false);
   private get draftKey(): string {
-    const continuandoId = this.continuandoVentaId();
-    return continuandoId ? `pos-nueva-venta-draft-${continuandoId}` : 'pos-nueva-venta-draft';
+    return this.draftKeyFor(this.continuandoVentaId());
+  }
+
+  // Scoped by cashier so a shared POS terminal never shows another user's cart or customer
+  private draftKeyFor(ventaId: string | null): string {
+    const base = userStorageKey(POS_DRAFT_PREFIX, this.authService.userId());
+    return ventaId ? `${base}-${ventaId}` : base;
   }
 
   // ── Column A: catalog tabs ────────────────────────────
@@ -336,6 +342,8 @@ export class NuevaVentaComponent implements OnInit {
     // Skip while a pending sale's server data is still loading: cart/pagos are momentarily
     // empty/default at that point, and saving would wipe the per-venta draft before it's read.
     if (this.cargandoContinuacion()) return;
+    // On logout userId turns null and re-triggers this effect: never persist the cart without an owner
+    if (!this.authService.userId()) return;
     const draft = {
       cart: this.cart(),
       pagos: this.pagos(),
@@ -383,7 +391,7 @@ export class NuevaVentaComponent implements OnInit {
   private persistPagosDraftForVenta(ventaId: string): void {
     const pagos = this.pagos();
     if (!pagos.some(p => p.monto > 0)) return;
-    localStorage.setItem(`pos-nueva-venta-draft-${ventaId}`, JSON.stringify({ cart: [], pagos, cliente: null, aseguradora: null, montoCubierto: null, seguroExpanded: false }));
+    localStorage.setItem(this.draftKeyFor(ventaId), JSON.stringify({ cart: [], pagos, cliente: null, aseguradora: null, montoCubierto: null, seguroExpanded: false }));
   }
 
   // Restores only the payment rows the cashier had typed for a pending sale before navigating away,

@@ -2,9 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { environment } from '@environment/environment';
+import { MENU_CACHE_PREFIX, userStorageKey } from '@core/auth/user-storage';
 import { MenuService } from './menu.service';
 
-const CACHE_KEY = 'sofia_menu_cache';
+// No token in these tests, so the service caches under the anonymous user key
+const CACHE_KEY = userStorageKey(MENU_CACHE_PREFIX, null);
+const OTHER_USER_KEY = userStorageKey(MENU_CACHE_PREFIX, 'other-user');
 const MENU_URL = `${environment.api.baseurl}/api/v1/menu`;
 
 describe('MenuService', () => {
@@ -23,6 +26,7 @@ describe('MenuService', () => {
   afterEach(() => {
     httpMock.verify();
     localStorage.removeItem(CACHE_KEY);
+    localStorage.removeItem(OTHER_USER_KEY);
   });
 
   it('load() requests the menu against the configured API base URL, not a relative path', () => {
@@ -74,6 +78,25 @@ describe('MenuService', () => {
     localStorage.setItem(CACHE_KEY, 'not-json');
 
     expect(() => service.restoreFromCache()).not.toThrow();
+    expect(service.sidebar()).toEqual([]);
+  });
+
+  it('restoreFromCache() never reuses a menu cached by another user', () => {
+    localStorage.setItem(
+      OTHER_USER_KEY,
+      JSON.stringify({ iconMenu: [], sidebar: [{ id: 1, name: 'Administración', children: [] }] }),
+    );
+
+    service.restoreFromCache();
+
+    expect(service.sidebar()).toEqual([]);
+  });
+
+  it('restoreFromCache() clears the in-memory menu of the previous user on a cache miss', () => {
+    service.sidebar.set([{ id: 1, name: 'Administración', children: [] }]);
+
+    service.restoreFromCache();
+
     expect(service.sidebar()).toEqual([]);
   });
 });
