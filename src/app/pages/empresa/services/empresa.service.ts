@@ -41,7 +41,8 @@ export class EmpresaService {
   }
 
   register(body: RegistrarEmpresaRequest): Observable<RegistrarEmpresaResponse> {
-    return this.http.post<RegistrarEmpresaResponse>(`${this.base}/registrar`, body);
+    // withCredentials lets the browser keep the refresh_token cookie set by the API
+    return this.http.post<RegistrarEmpresaResponse>(`${this.base}/registrar`, body, { withCredentials: true });
   }
 
   exportar(request: EmpresaExportRequest): Observable<Blob> {
