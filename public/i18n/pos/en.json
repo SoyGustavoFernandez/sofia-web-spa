@@ -96,7 +96,8 @@
     "motivoLabel": "Cancellation Reason",
     "motivoRequired": "Reason is required.",
     "anularSuccess": "Sale cancelled successfully.",
-    "anularError": "Error cancelling the sale."
+    "anularError": "Error cancelling the sale.",
+    "anularConDevoluciones": "This sale has registered returns and can no longer be cancelled. Handle any changes from Returns."
   },
   "checkout": {
     "catalogTitle": "Products & Batches Catalog",
@@ -275,6 +276,7 @@
     "seguroSinAseguradora": "Select an insurer to apply the insurance coverage.",
     "aseguradoraNoEncontrada": "The selected insurer does not exist or was deleted.",
     "cajaNoPropia": "The selected register belongs to another cashier or branch. Reload the page to use your own open register.",
-    "cajaSinSesionAbierta": "You need your own open register in this branch to collect the sale."
+    "cajaSinSesionAbierta": "You need your own open register in this branch to collect the sale.",
+    "vueltoExcedeEfectivo": "The change cannot exceed the cash received. Adjust the payment amounts."
   }
 }

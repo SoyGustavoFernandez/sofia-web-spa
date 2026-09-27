@@ -1,15 +1,22 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
+import { AuthService } from '@core/auth/auth.service';
 import { VentaService } from '../services/venta.service';
 import { VentaConDetalle, EstadoVenta } from '../models/venta.model';
 import { AnularVentaDialogComponent } from '../dialogs/anular-venta-dialog/anular-venta-dialog.component';
 import { ComprobanteDialogComponent, ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
+
+// Backend void-rule codes that have a specific message instead of the generic void error
+const ANULAR_ERROR_KEYS: Record<string, string> = {
+  'Venta.Anular.ConDevoluciones': 'pos.ventasDetail.anularConDevoluciones',
+};
 
 @Component({
   selector: 'app-venta-detail',
@@ -25,6 +32,7 @@ export class VentaDetailComponent implements OnInit {
   private readonly transloco = inject(TranslocoService);
   private readonly notifier = inject(ErrorNotifierService);
   private readonly dialog = inject(MatDialog);
+  private readonly auth = inject(AuthService);
 
   readonly loading = signal(true);
   readonly anulando = signal(false);
@@ -76,7 +84,8 @@ export class VentaDetailComponent implements OnInit {
 
   puedeAnular(): boolean {
     const estado = this.venta()?.estado;
-    return estado === EstadoVenta[EstadoVenta.Completada] || estado === EstadoVenta[EstadoVenta.Pendiente];
+    const anulable = estado === EstadoVenta[EstadoVenta.Completada] || estado === EstadoVenta[EstadoVenta.Pendiente];
+    return anulable && this.auth.hasPermission('Ventas', 'Anular');
   }
 
   puedeCobrar(): boolean {
@@ -137,9 +146,11 @@ export class VentaDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('pos.ventasDetail.anularSuccess'));
           this.load(this.venta()!.id);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.anulando.set(false);
-          this.notifier.showError(this.transloco.translate('pos.ventasDetail.anularError'));
+          const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+          const key = typeof code === 'string' ? ANULAR_ERROR_KEYS[code] : undefined;
+          this.notifier.showError(this.transloco.translate(key ?? 'pos.ventasDetail.anularError'));
         },
       });
     });

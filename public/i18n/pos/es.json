@@ -96,7 +96,8 @@
     "motivoLabel": "Motivo de Anulación",
     "motivoRequired": "El motivo es obligatorio.",
     "anularSuccess": "Venta anulada correctamente.",
-    "anularError": "Error al anular la venta."
+    "anularError": "Error al anular la venta.",
+    "anularConDevoluciones": "Esta venta tiene devoluciones registradas y ya no puede anularse. Gestiona los cambios desde Devoluciones."
   },
   "checkout": {
     "catalogTitle": "Catálogo de Productos y Lotes",
@@ -275,6 +276,7 @@
     "seguroSinAseguradora": "Selecciona una aseguradora para aplicar la cobertura del seguro.",
     "aseguradoraNoEncontrada": "La aseguradora seleccionada no existe o fue eliminada.",
     "cajaNoPropia": "La caja seleccionada pertenece a otro cajero o sucursal. Recarga la página para usar tu propia caja abierta.",
-    "cajaSinSesionAbierta": "Necesitas tener tu propia caja abierta en esta sucursal para cobrar la venta."
+    "cajaSinSesionAbierta": "Necesitas tener tu propia caja abierta en esta sucursal para cobrar la venta.",
+    "vueltoExcedeEfectivo": "El vuelto no puede ser mayor que el efectivo recibido. Ajusta los montos de pago."
   }
 }

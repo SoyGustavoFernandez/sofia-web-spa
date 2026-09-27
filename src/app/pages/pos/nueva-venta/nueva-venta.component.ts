@@ -66,6 +66,7 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   'Aseguradora.NotFound': 'pos.messages.aseguradoraNoEncontrada',
   'Venta.Caja.NoPropia': 'pos.messages.cajaNoPropia',
   'Venta.Caja.SinSesionAbierta': 'pos.messages.cajaSinSesionAbierta',
+  'Venta.Pagos.VueltoExcedeEfectivo': 'pos.messages.vueltoExcedeEfectivo',
 };
 
 @Component({
@@ -174,14 +175,17 @@ export class NuevaVentaComponent implements OnInit {
   readonly montoAPagar = computed(() => this.subtotalBruto() - this.montoCubiertoSeguro());
   readonly totalPagado = computed(() => this.pagos().reduce((s, p) => s + (p.monto || 0), 0));
   readonly montoPendiente = computed(() => this.montoAPagar() - this.totalPagado());
-  readonly tieneEfectivo = computed(() => this.pagos().some(p => p.metodoPago === MetodoPago.Efectivo));
+  readonly efectivoRecibido = computed(() =>
+    this.pagos().filter(p => p.metodoPago === MetodoPago.Efectivo).reduce((s, p) => s + (p.monto || 0), 0),
+  );
   readonly subtotalSinIgv = computed(() => this.subtotalBruto() / 1.18);
   readonly igv = computed(() => this.subtotalBruto() - this.subtotalSinIgv());
   readonly cambioAEntregar = computed(() => Math.max(0, -this.montoPendiente()));
 
   readonly puedeProcesar = computed(() => {
     const pendiente = this.montoPendiente();
-    const cubierto = pendiente === 0 || (pendiente < 0 && this.tieneEfectivo());
+    // Change leaves the drawer, so it must be covered by the cash handed over (mirrors Venta.Pagos.VueltoExcedeEfectivo)
+    const cubierto = pendiente === 0 || (pendiente < 0 && this.cambioAEntregar() <= this.efectivoRecibido());
     return this.cart().length > 0 && !!this.sesionId() && cubierto && this.montoCubiertoValido() && !this.procesando();
   });
 
