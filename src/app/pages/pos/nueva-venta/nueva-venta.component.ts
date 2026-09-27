@@ -64,6 +64,8 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   'CreateVentaCommand.AseguradoraId': 'pos.messages.seguroSinAseguradora',
   'CompletarVentaCommand.AseguradoraId': 'pos.messages.seguroSinAseguradora',
   'Aseguradora.NotFound': 'pos.messages.aseguradoraNoEncontrada',
+  'Venta.Caja.NoPropia': 'pos.messages.cajaNoPropia',
+  'Venta.Caja.SinSesionAbierta': 'pos.messages.cajaSinSesionAbierta',
 };
 
 @Component({
@@ -275,14 +277,16 @@ export class NuevaVentaComponent implements OnInit {
     this.buscarProductos$.next('');
   }
 
+  // Only the cashier's own open drawer in the active branch can take this sale's cash
   private checkSesionCaja(): void {
     const sucursalId = this.authService.sucursalId();
-    if (!sucursalId) {
+    const empleadoId = this.authService.empleadoId();
+    if (!sucursalId || !empleadoId) {
       this.checkingSesion.set(false);
       return;
     }
     this.checkingSesion.set(true);
-    this.sesionCajaService.search({ sucursalId, estadoSesion: EstadoSesion.Abierta, pageNumber: 1, pageSize: 1 }).subscribe({
+    this.sesionCajaService.search({ sucursalId, empleadoId, estadoSesion: EstadoSesion.Abierta, pageNumber: 1, pageSize: 1 }).subscribe({
       next: result => {
         this.sesionId.set(result.items[0]?.id ?? null);
         this.checkingSesion.set(false);

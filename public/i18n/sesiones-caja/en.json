@@ -21,7 +21,8 @@
     "title": "Close Session",
     "save-success": "Session closed successfully",
     "save-error": "Error closing the session",
-    "monto-requerido": "Enter the declared closing amount"
+    "monto-requerido": "Enter the declared closing amount",
+    "no-propia": "Only the cashier who opened the register or an administrator can close it."
   },
   "fields": {
     "sucursal": "Branch",

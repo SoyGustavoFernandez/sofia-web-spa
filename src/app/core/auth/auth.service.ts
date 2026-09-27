@@ -15,6 +15,7 @@ interface JwtPayload {
   email?: string;
   empresaId?: string;
   sucursalId?: string;
+  empleadoId?: string;
   exp?: number;
 }
 
@@ -57,6 +58,7 @@ export class AuthService {
   readonly userId = computed(() => this._payload()?.sub ?? null);
   readonly empresaId = computed(() => this._payload()?.empresaId ?? null);
   readonly sucursalId = computed(() => this._payload()?.sucursalId ?? null);
+  readonly empleadoId = computed(() => this._payload()?.empleadoId ?? null);
 
   private readonly _profile = signal<UserProfile | null>(null);
   private profileLoad$: Observable<UserProfile> | null = null;

@@ -122,9 +122,10 @@ export class SesionesDetailComponent implements OnInit {
         this.notifier.showSuccess(this.transloco.translate('sesionesCaja.cierre.save-success'));
         this.router.navigate(['/sesiones-caja']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.saving.set(false);
-        this.notifier.showError(this.transloco.translate('sesionesCaja.cierre.save-error'));
+        const noPropia = err instanceof HttpErrorResponse && err.error?.code === 'PosSesionCaja.NoPropia';
+        this.notifier.showError(this.transloco.translate(noPropia ? 'sesionesCaja.cierre.no-propia' : 'sesionesCaja.cierre.save-error'));
       },
     });
   }

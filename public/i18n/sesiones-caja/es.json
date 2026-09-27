@@ -21,7 +21,8 @@
     "title": "Cerrar Sesión",
     "save-success": "Sesión cerrada correctamente",
     "save-error": "Error al cerrar la sesión",
-    "monto-requerido": "Ingrese el monto declarado al cierre"
+    "monto-requerido": "Ingrese el monto declarado al cierre",
+    "no-propia": "Solo el cajero que abrió la caja o un administrador puede cerrarla."
   },
   "fields": {
     "sucursal": "Sucursal",

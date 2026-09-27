@@ -273,6 +273,8 @@
     "ventaYaNoPendiente": "Esta venta ya no está en espera; te llevamos a su detalle.",
     "seguroMontoInvalido": "El monto cubierto por el seguro debe estar entre 0 y el total de la venta.",
     "seguroSinAseguradora": "Selecciona una aseguradora para aplicar la cobertura del seguro.",
-    "aseguradoraNoEncontrada": "La aseguradora seleccionada no existe o fue eliminada."
+    "aseguradoraNoEncontrada": "La aseguradora seleccionada no existe o fue eliminada.",
+    "cajaNoPropia": "La caja seleccionada pertenece a otro cajero o sucursal. Recarga la página para usar tu propia caja abierta.",
+    "cajaSinSesionAbierta": "Necesitas tener tu propia caja abierta en esta sucursal para cobrar la venta."
   }
 }

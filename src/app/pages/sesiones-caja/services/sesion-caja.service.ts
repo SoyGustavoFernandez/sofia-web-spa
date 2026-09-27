@@ -20,6 +20,7 @@ export class SesionCajaService {
       .set('pageNumber', filter.pageNumber)
       .set('pageSize', filter.pageSize);
     if (filter.sucursalId) params = params.set('sucursalId', filter.sucursalId);
+    if (filter.empleadoId) params = params.set('empleadoId', filter.empleadoId);
     if (filter.estadoSesion !== undefined && filter.estadoSesion !== null)
       params = params.set('estadoSesion', filter.estadoSesion);
     if (filter.fechaInicio) params = params.set('fechaInicio', filter.fechaInicio);

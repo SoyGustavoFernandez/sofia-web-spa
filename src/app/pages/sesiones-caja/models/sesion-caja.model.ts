@@ -29,6 +29,7 @@ export interface PaginatedList<T> {
 
 export interface SesionCajaFilter {
   sucursalId?: string;
+  empleadoId?: string;
   estadoSesion?: EstadoSesion;
   fechaInicio?: string;
   fechaFin?: string;
