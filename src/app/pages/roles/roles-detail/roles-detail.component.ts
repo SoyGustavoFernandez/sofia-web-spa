@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -258,9 +259,12 @@ export class RolesDetailComponent implements OnInit {
           this.loadSucursales();
           this.loadPermisos();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('roles.detail.save-error'));
+          const permisosPropios = err instanceof HttpErrorResponse && err.error?.code === 'Rol.PermisosPropios';
+          this.notifier.showError(
+            this.transloco.translate(permisosPropios ? 'roles.detail.permisos-propios-error' : 'roles.detail.save-error')
+          );
         },
       });
     }

@@ -50,6 +50,11 @@
     "remove-success": "Branch removed successfully",
     "remove-error": "Error removing branch"
   },
+  "errors": {
+    "auto-asignacion": "An account cannot change its own roles",
+    "admin-reservado": "Only an administrator can assign or remove the Admin role",
+    "admin-protegida": "Only an administrator can modify or delete an administrator account"
+  },
   "table": {
     "nombreUsuario": "Username",
     "empleado": "Employee",

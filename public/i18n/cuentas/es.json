@@ -50,6 +50,11 @@
     "remove-success": "Sucursal eliminada correctamente",
     "remove-error": "Error al eliminar la sucursal"
   },
+  "errors": {
+    "auto-asignacion": "Una cuenta no puede modificar sus propios roles",
+    "admin-reservado": "Solo un administrador puede asignar o quitar el rol Admin",
+    "admin-protegida": "Solo un administrador puede modificar o eliminar la cuenta de un administrador"
+  },
   "table": {
     "nombreUsuario": "Usuario",
     "empleado": "Empleado",

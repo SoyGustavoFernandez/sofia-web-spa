@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -15,6 +16,13 @@ import { CuentaDto, EmpleadoItem } from '../models/cuenta.model';
 import { RolService } from '../../roles/services/rol.service';
 import { RolResponse } from '../../roles/models/rol.model';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';
+
+// Backend business-rule codes that have a specific message instead of the generic error
+const ERROR_KEYS: Record<string, string> = {
+  'Rol.AutoAsignacion': 'cuentas.errors.auto-asignacion',
+  'Rol.AdminReservado': 'cuentas.errors.admin-reservado',
+  'Cuenta.AdminProtegida': 'cuentas.errors.admin-protegida',
+};
 
 @Component({
   selector: 'app-cuentas-detail',
@@ -190,10 +198,16 @@ export class CuentasDetailComponent implements OnInit {
         },
         error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showServerError(err, this.transloco.translate('cuentas.detail.save-error'));
+          this.notifier.showServerError(err, this.errorMessage(err, 'cuentas.detail.save-error'));
         },
       });
     }
+  }
+
+  private errorMessage(err: unknown, fallbackKey: string): string {
+    const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+    const key = typeof code === 'string' ? ERROR_KEYS[code] : undefined;
+    return this.transloco.translate(key ?? fallbackKey);
   }
 
   confirmDelete(): void {
@@ -220,7 +234,7 @@ export class CuentasDetailComponent implements OnInit {
       },
       error: (err: unknown) => {
         this.deleting.set(false);
-        this.notifier.showServerError(err, this.transloco.translate('cuentas.detail.delete-error'));
+        this.notifier.showServerError(err, this.errorMessage(err, 'cuentas.detail.delete-error'));
       },
     });
   }

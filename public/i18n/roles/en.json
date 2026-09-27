@@ -11,6 +11,7 @@
     "nombreRolHint": "The role name is a system identifier and cannot be changed.",
     "save-success": "Role saved successfully",
     "save-error": "Error saving role",
+    "permisos-propios-error": "Permissions cannot be expanded on a role assigned to your own account",
     "delete-success": "Role deleted successfully",
     "delete-error": "Error deleting role",
     "delete-confirm-title": "Confirm deletion",

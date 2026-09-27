@@ -11,6 +11,7 @@
     "nombreRolHint": "El nombre del rol es un identificador del sistema y no puede modificarse.",
     "save-success": "Rol guardado correctamente",
     "save-error": "Error al guardar el rol",
+    "permisos-propios-error": "No se pueden ampliar los permisos de un rol que la propia cuenta tiene asignado",
     "delete-success": "Rol eliminado correctamente",
     "delete-error": "Error al eliminar el rol",
     "delete-confirm-title": "Confirmar eliminación",

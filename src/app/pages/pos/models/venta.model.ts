@@ -97,8 +97,6 @@ export interface VentaExportFilters {
 export interface CreateVentaDetalleRequest {
   loteId: string;
   cantidad: number;
-  precioUnitario: number;
-  costoHistorico: number;
   recetaId?: string;
   presentacionVentaId?: string;
 }

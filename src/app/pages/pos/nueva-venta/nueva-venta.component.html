@@ -200,8 +200,7 @@
                             matInput
                             type="number"
                             formControlName="precio"
-                            min="0"
-                            step="0.01" />
+                            readonly />
                         </mat-form-field>
                       </div>
                     </div>
@@ -475,20 +474,8 @@
                           </div>
                         }
                         <div class="pos3-cart-item-sub">
-                          {{ line.numeroLote }} ·
-                          <input
-                            class="pos3-price-input"
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            [value]="line.precioUnitario"
-                            (input)="
-                              actualizarPrecioCarrito(
-                                $index,
-                                +$any($event.target).value
-                              )
-                            " />
-                          S/ c/u
+                          {{ line.numeroLote }} · S/
+                          {{ line.precioUnitario | number: '1.2-2' }} c/u
                         </div>
                       </div>
                       <div class="pos3-cart-item-qty">

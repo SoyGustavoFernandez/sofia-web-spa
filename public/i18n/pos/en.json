@@ -269,6 +269,7 @@
     "cobrarError": "An error occurred while charging the sale.",
     "continuandoVentaPendiente": "You're resuming a pending sale: you can add, remove or change products before charging.",
     "ventaYaNoPendiente": "This sale is no longer pending; taking you to its details.",
-    "cantidadPrecioInvalidos": "Enter a valid quantity and unit price to add the product."
+    "cantidadPrecioInvalidos": "Enter a valid quantity to add the product.",
+    "sinPrecio": "This product has no sale price set in the catalog. Ask an administrator to register it."
   }
 }

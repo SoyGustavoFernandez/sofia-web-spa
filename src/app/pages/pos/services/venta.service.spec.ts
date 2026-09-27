@@ -40,7 +40,7 @@ describe('VentaService', () => {
   it('crear() POSTs the new sale payload', () => {
     const body = {
       sesionId: 'sesion-1',
-      detalles: [{ loteId: 'lote-1', cantidad: 2, precioUnitario: 10, costoHistorico: 6 }],
+      detalles: [{ loteId: 'lote-1', cantidad: 2 }],
       pagos: [{ metodoPago: MetodoPago.Efectivo, montoPagado: 20 }],
     };
 
@@ -64,7 +64,7 @@ describe('VentaService', () => {
   });
 
   it('actualizarDetalles() PUTs the pending sale details', () => {
-    const body = { detalles: [{ loteId: 'lote-1', cantidad: 1, precioUnitario: 10, costoHistorico: 6 }] };
+    const body = { detalles: [{ loteId: 'lote-1', cantidad: 1 }] };
 
     service.actualizarDetalles('venta-1', body).subscribe();
 

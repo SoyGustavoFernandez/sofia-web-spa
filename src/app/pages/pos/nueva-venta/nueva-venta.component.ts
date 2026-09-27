@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal, computed, effect } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -478,7 +479,11 @@ export class NuevaVentaComponent implements OnInit {
       this.notifier.showError(this.transloco.translate('pos.messages.stockMaxReached', { stock: lote.cantidadFisica }));
       return;
     }
-    if (cantidadIngresada <= 0 || precioIngresado <= 0) {
+    if (precioIngresado <= 0) {
+      this.notifier.showError(this.transloco.translate('pos.messages.sinPrecio'));
+      return;
+    }
+    if (cantidadIngresada <= 0) {
       this.notifier.showError(this.transloco.translate('pos.messages.cantidadPrecioInvalidos'));
       return;
     }
@@ -652,10 +657,6 @@ export class NuevaVentaComponent implements OnInit {
     );
   }
 
-  actualizarPrecioCarrito(index: number, precio: number): void {
-    this.cart.update(items => items.map((it, i) => (i === index ? { ...it, precioUnitario: precio } : it)));
-  }
-
   quitarDelCarrito(index: number): void {
     this.cart.update(items => items.filter((_, i) => i !== index));
   }
@@ -769,12 +770,11 @@ export class NuevaVentaComponent implements OnInit {
 
   // Cantidad sent to the backend is base units, unless a presentación was picked — then it's the
   // quantity in that presentación's own units (e.g. 2 Cajas), and the backend resolves the conversion.
+  // Price is never sent: the backend always charges the catalog price.
   private buildDetalleRequests(): CreateVentaDetalleRequest[] {
     return this.cart().map(l => ({
       loteId: l.loteId,
       cantidad: l.presentacionVentaId ? l.cantidadEnPresentacion! : l.cantidad,
-      precioUnitario: l.precioUnitario,
-      costoHistorico: 0,
       presentacionVentaId: l.presentacionVentaId,
     }));
   }
@@ -822,9 +822,9 @@ export class NuevaVentaComponent implements OnInit {
             this.resetVenta();
             this.router.navigate(['/pos/nueva']);
           },
-          error: () => {
+          error: (err: unknown) => {
             this.guardandoPendiente.set(false);
-            this.notifier.showError(this.transloco.translate('pos.messages.ventaError'));
+            this.notifier.showError(this.ventaErrorMessage(err));
           },
         });
       return;
@@ -845,9 +845,9 @@ export class NuevaVentaComponent implements OnInit {
         this.persistPagosDraftForVenta(res.ventaId);
         this.resetVenta();
       },
-      error: () => {
+      error: (err: unknown) => {
         this.guardandoPendiente.set(false);
-        this.notifier.showError(this.transloco.translate('pos.messages.ventaError'));
+        this.notifier.showError(this.ventaErrorMessage(err));
       },
     });
   }
@@ -907,11 +907,16 @@ export class NuevaVentaComponent implements OnInit {
           }
         });
       },
-      error: () => {
+      error: (err: unknown) => {
         this.procesando.set(false);
-        this.notifier.showError(this.transloco.translate('pos.messages.ventaError'));
+        this.notifier.showError(this.ventaErrorMessage(err));
       },
     });
+  }
+
+  private ventaErrorMessage(err: unknown): string {
+    const sinPrecio = err instanceof HttpErrorResponse && err.error?.code === 'Venta.SinPrecio';
+    return this.transloco.translate(sinPrecio ? 'pos.messages.sinPrecio' : 'pos.messages.ventaError');
   }
 
   private resetVenta(): void {
