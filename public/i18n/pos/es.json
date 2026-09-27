@@ -270,6 +270,9 @@
     "cobrarSuccess": "Venta cobrada correctamente.",
     "cobrarError": "Ocurrió un error al cobrar la venta.",
     "continuandoVentaPendiente": "Estás retomando una venta en espera: puedes agregar, quitar o modificar productos antes de cobrar.",
-    "ventaYaNoPendiente": "Esta venta ya no está en espera; te llevamos a su detalle."
+    "ventaYaNoPendiente": "Esta venta ya no está en espera; te llevamos a su detalle.",
+    "seguroMontoInvalido": "El monto cubierto por el seguro debe estar entre 0 y el total de la venta.",
+    "seguroSinAseguradora": "Selecciona una aseguradora para aplicar la cobertura del seguro.",
+    "aseguradoraNoEncontrada": "La aseguradora seleccionada no existe o fue eliminada."
   }
 }

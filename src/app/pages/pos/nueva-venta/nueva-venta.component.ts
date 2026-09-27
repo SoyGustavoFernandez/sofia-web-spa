@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed, effect } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { MatDialog } from '@angular/material/dialog';
@@ -54,6 +54,17 @@ interface PagoLine {
 }
 
 type CatalogTab = 'buscar' | 'receta';
+
+// Backend business-rule codes that have a specific message instead of the generic sale error
+const VENTA_ERROR_KEYS: Record<string, string> = {
+  'Venta.SinPrecio': 'pos.messages.sinPrecio',
+  'Venta.Seguro.MontoInvalido': 'pos.messages.seguroMontoInvalido',
+  'CreateVentaCommand.MontoCubiertoSeguro': 'pos.messages.seguroMontoInvalido',
+  'CompletarVentaCommand.MontoCubiertoSeguro': 'pos.messages.seguroMontoInvalido',
+  'CreateVentaCommand.AseguradoraId': 'pos.messages.seguroSinAseguradora',
+  'CompletarVentaCommand.AseguradoraId': 'pos.messages.seguroSinAseguradora',
+  'Aseguradora.NotFound': 'pos.messages.aseguradoraNoEncontrada',
+};
 
 @Component({
   selector: 'app-nueva-venta',
@@ -142,7 +153,8 @@ export class NuevaVentaComponent implements OnInit {
   // Insurance coverage is built but hidden from the UI until the pharmacy starts working with aseguradoras.
   readonly mostrarAseguradora = false;
   readonly seguroExpanded = signal(false);
-  readonly seguroForm = this.fb.group({ aseguradoraNombre: [''], montoCubierto: [null as number | null] });
+  readonly seguroForm = this.fb.group({ aseguradoraNombre: [''], montoCubierto: [null as number | null, [Validators.min(0)]] });
+  private readonly montoCubiertoValue = signal<number | null>(null);
   readonly aseguradoraOptions = signal<AseguradoraListItem[]>([]);
   readonly selectedAseguradora = signal<AseguradoraListItem | null>(null);
 
@@ -151,7 +163,12 @@ export class NuevaVentaComponent implements OnInit {
   readonly metodoPagoSimpleSeleccionado = computed(() => (this.pagos().length === 1 ? this.pagos()[0].metodoPago : null));
 
   readonly subtotalBruto = computed(() => this.cart().reduce((s, l) => s + l.cantidad * l.precioUnitario, 0));
-  readonly montoCubiertoSeguro = computed(() => this.seguroForm.value.montoCubierto ?? 0);
+  // Coverage only counts when an insurer is selected; the backend ignores it otherwise
+  readonly montoCubiertoSeguro = computed(() => (this.selectedAseguradora() ? (this.montoCubiertoValue() ?? 0) : 0));
+  readonly montoCubiertoValido = computed(() => {
+    const monto = this.montoCubiertoValue();
+    return monto == null || (monto >= 0 && monto <= this.subtotalBruto());
+  });
   readonly montoAPagar = computed(() => this.subtotalBruto() - this.montoCubiertoSeguro());
   readonly totalPagado = computed(() => this.pagos().reduce((s, p) => s + (p.monto || 0), 0));
   readonly montoPendiente = computed(() => this.montoAPagar() - this.totalPagado());
@@ -163,7 +180,7 @@ export class NuevaVentaComponent implements OnInit {
   readonly puedeProcesar = computed(() => {
     const pendiente = this.montoPendiente();
     const cubierto = pendiente === 0 || (pendiente < 0 && this.tieneEfectivo());
-    return this.cart().length > 0 && !!this.sesionId() && cubierto && !this.procesando();
+    return this.cart().length > 0 && !!this.sesionId() && cubierto && this.montoCubiertoValido() && !this.procesando();
   });
 
   readonly puedeGuardarPendiente = computed(
@@ -230,7 +247,17 @@ export class NuevaVentaComponent implements OnInit {
       )
       .subscribe(result => this.aseguradoraOptions.set(result.items));
 
-    this.seguroForm.controls.montoCubierto.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.saveDraft());
+    this.seguroForm.controls.montoCubierto.valueChanges.pipe(takeUntilDestroyed()).subscribe(monto => {
+      this.montoCubiertoValue.set(monto);
+      this.saveDraft();
+    });
+
+    // Coverage can never exceed the sale total, which changes with the cart
+    effect(() => {
+      const control = this.seguroForm.controls.montoCubierto;
+      control.setValidators([Validators.min(0), Validators.max(this.subtotalBruto())]);
+      control.updateValueAndValidity({ emitEvent: false });
+    });
 
     effect(() => this.saveDraft());
   }
@@ -380,6 +407,7 @@ export class NuevaVentaComponent implements OnInit {
       }
       if (draft.montoCubierto != null) {
         this.seguroForm.controls.montoCubierto.setValue(draft.montoCubierto, { emitEvent: false });
+        this.montoCubiertoValue.set(draft.montoCubierto);
       }
       if (draft.seguroExpanded) this.seguroExpanded.set(true);
     } catch {
@@ -869,7 +897,7 @@ export class NuevaVentaComponent implements OnInit {
           detalles,
           clienteId: this.selectedCliente()?.id,
           aseguradoraId: this.selectedAseguradora()?.id,
-          montoCubiertoSeguro: this.seguroForm.value.montoCubierto ?? undefined,
+          montoCubiertoSeguro: this.montoCubiertoRequest(),
         })
       : this.ventaService.crear({
           clienteId: this.selectedCliente()?.id,
@@ -877,7 +905,7 @@ export class NuevaVentaComponent implements OnInit {
           detalles,
           pagos: pagosRequest,
           aseguradoraId: this.selectedAseguradora()?.id,
-          montoCubiertoSeguro: this.seguroForm.value.montoCubierto ?? undefined,
+          montoCubiertoSeguro: this.montoCubiertoRequest(),
         });
 
     venta$.subscribe({
@@ -914,9 +942,14 @@ export class NuevaVentaComponent implements OnInit {
     });
   }
 
+  private montoCubiertoRequest(): number | undefined {
+    return this.selectedAseguradora() ? (this.montoCubiertoValue() ?? undefined) : undefined;
+  }
+
   private ventaErrorMessage(err: unknown): string {
-    const sinPrecio = err instanceof HttpErrorResponse && err.error?.code === 'Venta.SinPrecio';
-    return this.transloco.translate(sinPrecio ? 'pos.messages.sinPrecio' : 'pos.messages.ventaError');
+    const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+    const key = typeof code === 'string' ? VENTA_ERROR_KEYS[code] : undefined;
+    return this.transloco.translate(key ?? 'pos.messages.ventaError');
   }
 
   private resetVenta(): void {

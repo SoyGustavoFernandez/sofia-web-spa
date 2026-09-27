@@ -431,7 +431,13 @@
                             type="number"
                             formControlName="montoCubierto"
                             min="0"
+                            [max]="subtotalBruto()"
                             step="0.01" />
+                          @if (seguroForm.controls.montoCubierto.invalid) {
+                            <mat-error>{{
+                              t('messages.seguroMontoInvalido')
+                            }}</mat-error>
+                          }
                         </mat-form-field>
                       </div>
                     </form>
