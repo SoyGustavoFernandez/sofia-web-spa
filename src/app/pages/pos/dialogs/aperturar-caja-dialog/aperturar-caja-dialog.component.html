@@ -6,21 +6,7 @@
 
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>{{ t('checkout.empleadoLabel') }}</mat-label>
-      <input
-        matInput
-        [formControl]="empleadoCtrl"
-        [matAutocomplete]="empleadoAuto" />
-      <mat-autocomplete
-        #empleadoAuto="matAutocomplete"
-        [displayWith]="displayEmpleado"
-        (optionSelected)="onEmpleadoSelected($event)">
-        @for (e of empleadoOptions(); track e.id) {
-          <mat-option [value]="e">{{ e.nombre_Completo }}</mat-option>
-        }
-      </mat-autocomplete>
-      @if (empleadoTouched() && !selectedEmpleado()) {
-        <mat-error>{{ t('checkout.empleadoRequired') }}</mat-error>
-      }
+      <input matInput [value]="cajero()" disabled />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">

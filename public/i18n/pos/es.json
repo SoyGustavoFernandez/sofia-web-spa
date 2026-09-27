@@ -145,7 +145,6 @@
     "aperturarCajaDialogTitle": "Aperturar Caja",
     "aperturarCajaDialogSubtitle": "Ingresa los datos para aperturar la caja de esta sucursal y continuar con la venta.",
     "empleadoLabel": "Empleado",
-    "empleadoRequired": "Selecciona un empleado de la lista",
     "montoAperturaLabel": "Monto de Apertura (S/)",
     "montoAperturaRequired": "Ingresa un monto válido",
     "aperturarCajaSuccess": "Caja aperturada correctamente",
@@ -160,7 +159,8 @@
     "efectivoRecibidoLabel": "Recibido (S/)",
     "vueltoCortoLabel": "Vuelto:",
     "dividirPagoBtn": "+ Dividir en varios métodos de pago",
-    "volverPagoSimpleBtn": "Volver a pago simple"
+    "volverPagoSimpleBtn": "Volver a pago simple",
+    "cajaYaAbierta": "Ya tienes una caja abierta. Ciérrala antes de abrir otra."
   },
   "transferDialog": {
     "title": "Solicitar Transferencia entre Sedes",

@@ -145,7 +145,6 @@
     "aperturarCajaDialogTitle": "Open Register",
     "aperturarCajaDialogSubtitle": "Enter the details to open this branch's register and continue with the sale.",
     "empleadoLabel": "Employee",
-    "empleadoRequired": "Select an employee from the list",
     "montoAperturaLabel": "Opening Amount (S/)",
     "montoAperturaRequired": "Enter a valid amount",
     "aperturarCajaSuccess": "Register opened successfully",
@@ -160,7 +159,8 @@
     "efectivoRecibidoLabel": "Received (S/)",
     "vueltoCortoLabel": "Change:",
     "dividirPagoBtn": "+ Split into multiple payment methods",
-    "volverPagoSimpleBtn": "Back to single payment"
+    "volverPagoSimpleBtn": "Back to single payment",
+    "cajaYaAbierta": "You already have an open register. Close it before opening another one."
   },
   "transferDialog": {
     "title": "Request Inter-Branch Transfer",

@@ -36,10 +36,8 @@ export interface SesionCajaFilter {
   pageSize: number;
 }
 
+// Cashier, branch and opening time are taken from the session by the backend
 export interface AperturarCajaRequest {
-  sucursalId: string;
-  empleadoId: string;
-  fechaHoraApertura: string;
   montoAperturaEfectivo: number;
 }
 

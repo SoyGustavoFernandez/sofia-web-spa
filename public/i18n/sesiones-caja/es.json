@@ -12,7 +12,10 @@
   "create": {
     "title": "Nueva Sesión de Caja",
     "save-success": "Sesión aperturada correctamente",
-    "save-error": "Error al aperturar la sesión"
+    "save-error": "Error al aperturar la sesión",
+    "subtitle": "La caja se abrirá a tu nombre, en tu sucursal activa y con la hora actual.",
+    "monto-requerido": "Ingresa un monto válido",
+    "ya-abierta": "Ya tienes una caja abierta. Ciérrala antes de abrir otra."
   },
   "cierre": {
     "title": "Cerrar Sesión",
@@ -45,13 +48,6 @@
     "Abierta": "Abierta",
     "Cerrada": "Cerrada",
     "Cuadrada": "Cuadrada"
-  },
-  "autocomplete": {
-    "sucursal-placeholder": "Buscar sucursal...",
-    "empleado-placeholder": "Buscar cajero...",
-    "sucursal-required": "Debe seleccionar una sucursal",
-    "empleado-required": "Debe seleccionar un cajero",
-    "no-results": "Sin resultados"
   },
   "actions": {
     "aperturar": "Aperturar",

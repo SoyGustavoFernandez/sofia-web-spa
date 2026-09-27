@@ -12,7 +12,10 @@
   "create": {
     "title": "New Cash Register Session",
     "save-success": "Session opened successfully",
-    "save-error": "Error opening the session"
+    "save-error": "Error opening the session",
+    "subtitle": "The register will be opened under your name, in your active branch, at the current time.",
+    "monto-requerido": "Enter a valid amount",
+    "ya-abierta": "You already have an open register. Close it before opening another one."
   },
   "cierre": {
     "title": "Close Session",
@@ -45,13 +48,6 @@
     "Abierta": "Open",
     "Cerrada": "Closed",
     "Cuadrada": "Balanced"
-  },
-  "autocomplete": {
-    "sucursal-placeholder": "Search branch...",
-    "empleado-placeholder": "Search cashier...",
-    "sucursal-required": "You must select a branch",
-    "empleado-required": "You must select a cashier",
-    "no-results": "No results"
   },
   "actions": {
     "aperturar": "Open Session",

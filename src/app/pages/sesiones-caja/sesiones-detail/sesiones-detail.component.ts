@@ -1,20 +1,15 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
-import { of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
+import { AuthService } from '@core/auth/auth.service';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SesionCajaService } from '../services/sesion-caja.service';
 import { SesionCaja, EstadoSesion } from '../models/sesion-caja.model';
-import { SucursalService } from '../../sucursales/services/sucursal.service';
-import { SucursalListItem } from '../../sucursales/models/sucursal.model';
-import { EmpleadoService } from '../../empleados/services/empleado.service';
-import { Empleado } from '../../empleados/models/empleado.model';
 
 @Component({
   selector: 'app-sesiones-detail',
@@ -34,8 +29,7 @@ export class SesionesDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly service = inject(SesionCajaService);
-  private readonly sucursalService = inject(SucursalService);
-  private readonly empleadoService = inject(EmpleadoService);
+  private readonly authService = inject(AuthService);
   private readonly transloco = inject(TranslocoService);
   private readonly notifier = inject(ErrorNotifierService);
 
@@ -46,19 +40,12 @@ export class SesionesDetailComponent implements OnInit {
   readonly showCierrePanel = signal(false);
   readonly snapshot = signal<SesionCaja | null>(null);
 
-  readonly sucursalCtrl = new FormControl('');
-  readonly empleadoCtrl = new FormControl('');
-  readonly selectedSucursal = signal<SucursalListItem | null>(null);
-  readonly selectedEmpleado = signal<Empleado | null>(null);
-  readonly sucursalOptions = signal<SucursalListItem[]>([]);
-  readonly empleadoOptions = signal<Empleado[]>([]);
-  readonly sucursalTouched = signal(false);
-  readonly empleadoTouched = signal(false);
+  // The backend opens the session for the logged-in cashier, in their active branch, at server time
+  readonly cajero = computed(() => this.authService.currentUser()?.fullName ?? '');
 
   private entityId = '';
 
   readonly form = this.fb.group({
-    fechaHoraApertura: [new Date(), Validators.required],
     montoAperturaEfectivo: [0, [Validators.required, Validators.min(0)]],
   });
 
@@ -72,28 +59,6 @@ export class SesionesDetailComponent implements OnInit {
     { label: 'breadcrumbs.sesionesCaja', route: '/sesiones-caja' },
   ];
 
-  constructor() {
-    this.sucursalCtrl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(term => {
-        if (!term || typeof term !== 'string') return of({ items: [] as SucursalListItem[] });
-        return this.sucursalService.search({ nombre: term, pageNumber: 1, pageSize: 20 });
-      }),
-      takeUntilDestroyed(),
-    ).subscribe(result => this.sucursalOptions.set(result.items));
-
-    this.empleadoCtrl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(term => {
-        if (!term || typeof term !== 'string') return of({ items: [] as Empleado[] });
-        return this.empleadoService.search({ nombres: term, pageNumber: 1, pageSize: 20 });
-      }),
-      takeUntilDestroyed(),
-    ).subscribe(result => this.empleadoOptions.set(result.items));
-  }
-
   ngOnInit(): void {
     if (this.route.snapshot.data['isNew'] === true) {
       this.isNew.set(true);
@@ -106,18 +71,6 @@ export class SesionesDetailComponent implements OnInit {
     }
     this.entityId = id;
     this.load();
-  }
-
-  selectSucursal(s: SucursalListItem): void {
-    this.selectedSucursal.set(s);
-    this.sucursalCtrl.setValue(s.nombre, { emitEvent: false });
-    this.sucursalCtrl.setErrors(null);
-  }
-
-  selectEmpleado(e: Empleado): void {
-    this.selectedEmpleado.set(e);
-    this.empleadoCtrl.setValue(e.nombre_Completo, { emitEvent: false });
-    this.empleadoCtrl.setErrors(null);
   }
 
   private load(): void {
@@ -135,34 +88,21 @@ export class SesionesDetailComponent implements OnInit {
   }
 
   aperturar(): void {
-    if (this.sucursalCtrl.value !== this.selectedSucursal()?.nombre) this.selectedSucursal.set(null);
-    if (this.empleadoCtrl.value !== this.selectedEmpleado()?.nombre_Completo) this.selectedEmpleado.set(null);
-    if (!this.selectedSucursal()) {
-      this.sucursalCtrl.setErrors({ required: true });
-      this.sucursalCtrl.markAsTouched();
-    }
-    if (!this.selectedEmpleado()) {
-      this.empleadoCtrl.setErrors({ required: true });
-      this.empleadoCtrl.markAsTouched();
-    }
     this.form.markAllAsTouched();
-    if (!this.selectedSucursal() || !this.selectedEmpleado() || this.form.invalid) return;
+    if (this.form.invalid) return;
 
     this.saving.set(true);
-    const v = this.form.value;
     this.service.aperturar({
-      sucursalId: this.selectedSucursal()!.id,
-      empleadoId: this.selectedEmpleado()!.id,
-      fechaHoraApertura: (v.fechaHoraApertura as Date).toISOString(),
-      montoAperturaEfectivo: v.montoAperturaEfectivo ?? 0,
+      montoAperturaEfectivo: this.form.value.montoAperturaEfectivo ?? 0,
     }).subscribe({
       next: () => {
         this.notifier.showSuccess(this.transloco.translate('sesionesCaja.create.save-success'));
         this.router.navigate(['/sesiones-caja']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.saving.set(false);
-        this.notifier.showError(this.transloco.translate('sesionesCaja.create.save-error'));
+        const yaAbierta = err instanceof HttpErrorResponse && err.error?.code === 'PosSesionCaja.YaAbierta';
+        this.notifier.showError(this.transloco.translate(yaAbierta ? 'sesionesCaja.create.ya-abierta' : 'sesionesCaja.create.save-error'));
       },
     });
   }
