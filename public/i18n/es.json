@@ -167,6 +167,7 @@
     "serverError": "Ocurrió un error inesperado en el servidor. Por favor, inténtalo de nuevo más tarde.",
     "networkError": "Ocurrió un error de red. Por favor, verifica tu conexión a internet e inténtalo de nuevo.",
     "unknownError": "Ocurrió un error desconocido. Por favor, inténtalo de nuevo más tarde.",
+    "concurrencyConflict": "Otra operación modificó estos datos al mismo tiempo. Actualiza la pantalla e inténtalo de nuevo.",
     "alert": {
       "denied_access": "Acceso denegado",
       "session": "Sesión",

@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
@@ -199,9 +200,10 @@ export class StockDetailComponent implements OnInit {
         this.notifier.showSuccess(this.transloco.translate('stockPorSucursal.detail.save-success'));
         this.router.navigate(['/stock-por-sucursal']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.saving.set(false);
-        this.notifier.showError(this.transloco.translate('stockPorSucursal.detail.save-error'));
+        const conflict = err instanceof HttpErrorResponse && err.error?.code === 'Concurrency.Conflict';
+        this.notifier.showError(this.transloco.translate(conflict ? 'errors.concurrencyConflict' : 'stockPorSucursal.detail.save-error'));
       },
     });
   }

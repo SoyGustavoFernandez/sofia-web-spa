@@ -73,6 +73,7 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   'Venta.Receta.Agotada': 'pos.messages.recetaAgotada',
   'Venta.Lote.Vencido': 'pos.messages.loteVencido',
   'Venta.SerieBoleta.NoConfigurada': 'pos.messages.serieBoletaNoConfigurada',
+  'Concurrency.Conflict': 'errors.concurrencyConflict',
 };
 
 @Component({

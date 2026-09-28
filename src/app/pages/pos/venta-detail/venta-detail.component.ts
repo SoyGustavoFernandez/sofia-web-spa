@@ -16,6 +16,7 @@ import { ComprobanteDialogComponent, ComprobanteDialogData } from '../dialogs/co
 // Backend void-rule codes that have a specific message instead of the generic void error
 const ANULAR_ERROR_KEYS: Record<string, string> = {
   'Venta.Anular.ConDevoluciones': 'pos.ventasDetail.anularConDevoluciones',
+  'Concurrency.Conflict': 'errors.concurrencyConflict',
 };
 
 @Component({

@@ -11,6 +11,12 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SesionCajaService } from '../services/sesion-caja.service';
 import { SesionCaja, EstadoSesion } from '../models/sesion-caja.model';
 
+// Backend close-rule codes that have a specific message instead of the generic close error
+const CIERRE_ERROR_KEYS: Record<string, string> = {
+  'PosSesionCaja.NoPropia': 'sesionesCaja.cierre.no-propia',
+  'Concurrency.Conflict': 'errors.concurrencyConflict',
+};
+
 @Component({
   selector: 'app-sesiones-detail',
   standalone: true,
@@ -124,8 +130,9 @@ export class SesionesDetailComponent implements OnInit {
       },
       error: (err: unknown) => {
         this.saving.set(false);
-        const noPropia = err instanceof HttpErrorResponse && err.error?.code === 'PosSesionCaja.NoPropia';
-        this.notifier.showError(this.transloco.translate(noPropia ? 'sesionesCaja.cierre.no-propia' : 'sesionesCaja.cierre.save-error'));
+        const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+        const key = typeof code === 'string' ? CIERRE_ERROR_KEYS[code] : undefined;
+        this.notifier.showError(this.transloco.translate(key ?? 'sesionesCaja.cierre.save-error'));
       },
     });
   }

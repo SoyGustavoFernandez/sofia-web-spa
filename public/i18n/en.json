@@ -167,6 +167,7 @@
     "serverError": "An unexpected server error occurred. Please try again later.",
     "networkError": "A network error occurred. Please check your internet connection and try again.",
     "unknownError": "An unknown error occurred. Please try again later.",
+    "concurrencyConflict": "Another operation changed this data at the same time. Refresh the screen and try again.",
     "alert": {
       "denied_access": "Access denied",
       "session": "Session",
