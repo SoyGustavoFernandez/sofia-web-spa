@@ -132,6 +132,12 @@ export const MENU_CATALOG: MenuCatalogGroup[] = [
     ],
   },
   {
+    label: 'SUNAT',
+    items: [
+      { label: 'Series Fiscales', route: '/series-fiscales', modules: ['SeriesFiscales'] },
+    ],
+  },
+  {
     label: 'Sistema',
     items: [
       { label: 'Auditoría de Seguridad', route: '/auditoria', modules: ['Auditoria'] },

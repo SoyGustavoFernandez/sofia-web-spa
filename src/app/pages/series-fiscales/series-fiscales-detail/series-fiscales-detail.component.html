@@ -1,0 +1,163 @@
+<ng-container
+  *transloco="let t; scope: 'series-fiscales'; read: 'seriesFiscales'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="true"
+      backRoute="/series-fiscales" />
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="40" />
+      </div>
+    } @else {
+      <div class="sofia-detail-card">
+        @if (!isNew() && !isEditMode()) {
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('title') }}</h4>
+              <div class="search-info-text">
+                {{ 'generic-labels.detail-subtitle' | transloco }}
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button mat-flat-button color="primary" (click)="enterEditMode()">
+                {{ 'actions.edit' | transloco }}
+              </button>
+            </div>
+          </div>
+        }
+
+        @if (isEditMode() && tieneComprobantes()) {
+          <div class="search-info-text mb-3">
+            {{ t('detail.locked-hint') }}
+          </div>
+        }
+
+        <form [formGroup]="form" class="row g-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.sucursal') }}</mat-label>
+              <mat-select formControlName="sucursalId">
+                @for (s of sucursales(); track s.id) {
+                  <mat-option [value]="s.id">{{ s.nombre }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.tipoComprobante') }}</mat-label>
+              <mat-select formControlName="tipoComprobante">
+                @for (tipo of tipos; track tipo) {
+                  <mat-option [value]="tipo">{{
+                    t('tipos.' + tipoName(tipo))
+                  }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.prefijoSerie') }}</mat-label>
+              <input
+                matInput
+                formControlName="prefijoSerie"
+                maxlength="4"
+                (input)="toUpperPrefijo()" />
+              @if (isEditMode()) {
+                <mat-hint>{{ t('detail.prefijo-hint') }}</mat-hint>
+              }
+              @if (form.controls.prefijoSerie.hasError('required')) {
+                <mat-error>{{
+                  'general.errors.required' | transloco
+                }}</mat-error>
+              } @else {
+                <mat-error>{{ t('errors.prefijoInvalido') }}</mat-error>
+              }
+            </mat-form-field>
+            @if (
+              form.hasError('prefijoPorTipo') &&
+              form.controls.prefijoSerie.touched
+            ) {
+              <mat-error class="sofia-field-error">{{
+                t('errors.prefijoInvalido')
+              }}</mat-error>
+            }
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.correlativoActual') }}</mat-label>
+              <input
+                matInput
+                type="number"
+                min="0"
+                step="1"
+                formControlName="correlativoActual" />
+              @if (isEditMode()) {
+                <mat-hint>{{ t('detail.correlativo-hint') }}</mat-hint>
+              }
+              @if (form.controls.correlativoActual.hasError('required')) {
+                <mat-error>{{
+                  'general.errors.required' | transloco
+                }}</mat-error>
+              } @else {
+                <mat-error>{{ t('errors.correlativoInvalido') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.estadoSerie') }}</mat-label>
+              <mat-select formControlName="estadoSerie">
+                @for (estado of estados; track estado) {
+                  <mat-option [value]="estado">{{
+                    t('estados.' + estado)
+                  }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+        </form>
+
+        @if (isEditMode()) {
+          <div class="d-flex justify-content-end align-items-center mt-3 gap-4">
+            <button mat-button (click)="cancelEdit()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="save()"
+              [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'actions.save' | transloco }}
+              }
+            </button>
+            @if (!isNew()) {
+              <button
+                mat-flat-button
+                class="sofia-btn-delete"
+                (click)="confirmDelete()"
+                [disabled]="deleting()">
+                {{ 'actions.delete' | transloco }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-container>

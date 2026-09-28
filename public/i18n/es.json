@@ -23,7 +23,8 @@
     "stockPorSucursal": "Stock por Sucursal",
     "sesionesCaja": "Sesiones de Caja",
     "ventas": "Ventas",
-    "recetasMedicas": "Recetas Médicas"
+    "recetasMedicas": "Recetas Médicas",
+    "seriesFiscales": "Series Fiscales"
   },
   "breadcrumbs": {
     "home": "Inicio",
@@ -56,7 +57,9 @@
     "sesionesCaja": "Sesiones de Caja",
     "ventas": "Ventas",
     "pacientesAtencion": "Pacientes & Atención",
-    "recetasMedicas": "Recetas Médicas"
+    "recetasMedicas": "Recetas Médicas",
+    "sunat": "SUNAT",
+    "seriesFiscales": "Series Fiscales"
   },
   "actions": {
     "new": "Nuevo",

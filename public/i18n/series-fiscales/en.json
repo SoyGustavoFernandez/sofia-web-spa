@@ -1,0 +1,59 @@
+{
+  "title": "Fiscal Series",
+  "search": {
+    "title": "Fiscal Series Search",
+    "search-error": "Error searching fiscal series",
+    "export-error": "Error exporting fiscal series",
+    "sucursales-error": "Branches could not be loaded",
+    "export-filename": "fiscal-series.xlsx"
+  },
+  "detail": {
+    "load-error": "Error loading the fiscal series",
+    "save-success": "Fiscal series saved successfully",
+    "save-error": "Error saving the fiscal series",
+    "delete-success": "Fiscal series deleted successfully",
+    "delete-error": "Error deleting the fiscal series",
+    "delete-in-use": "A series that already issued documents cannot be deleted. You can deactivate it.",
+    "delete-confirm-title": "Confirm deletion",
+    "delete-confirm-message": "Are you sure you want to delete this fiscal series?",
+    "prefijo-hint": "4 uppercase characters. Receipts start with B, invoices with F, credit notes with B or F.",
+    "correlativo-hint": "Last issued number; the next document will use this value + 1.",
+    "locked-hint": "This series already issued documents: only its status can change."
+  },
+  "errors": {
+    "prefijoInvalido": "The prefix must be 4 uppercase characters starting with the letter required by the document type.",
+    "correlativoInvalido": "The correlative must be a whole number greater than or equal to 0.",
+    "prefijoDuplicado": "Another series of this document type already uses that prefix.",
+    "activaDuplicada": "The branch already has an active series of this type. Deactivate it before activating another one.",
+    "conComprobantes": "This series already issued documents: only its status can change.",
+    "noEncontrada": "The fiscal series does not exist.",
+    "sucursalNoEncontrada": "The selected branch does not exist."
+  },
+  "fields": {
+    "sucursal": "Branch",
+    "tipoComprobante": "Document Type",
+    "prefijoSerie": "Series Prefix",
+    "correlativoActual": "Current Correlative",
+    "estadoSerie": "Status",
+    "todas": "All",
+    "todos": "All"
+  },
+  "table": {
+    "prefijoSerie": "Series",
+    "tipoComprobante": "Document Type",
+    "sucursal": "Branch",
+    "correlativoActual": "Current Correlative",
+    "estadoSerie": "Status",
+    "createdAt": "Created On"
+  },
+  "tipos": {
+    "Boleta": "Receipt (Boleta)",
+    "Factura": "Invoice (Factura)",
+    "NotaCredito": "Credit Note",
+    "Proforma": "Pro Forma"
+  },
+  "estados": {
+    "Activa": "Active",
+    "Inactiva": "Inactive"
+  }
+}

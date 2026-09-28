@@ -23,7 +23,8 @@
     "stockPorSucursal": "Stock by Branch",
     "sesionesCaja": "Cash Register Sessions",
     "ventas": "Sales",
-    "recetasMedicas": "Medical Prescriptions"
+    "recetasMedicas": "Medical Prescriptions",
+    "seriesFiscales": "Fiscal Series"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -56,7 +57,9 @@
     "sesionesCaja": "Cash Register Sessions",
     "ventas": "Sales",
     "pacientesAtencion": "Patients & Care",
-    "recetasMedicas": "Medical Prescriptions"
+    "recetasMedicas": "Medical Prescriptions",
+    "sunat": "SUNAT",
+    "seriesFiscales": "Fiscal Series"
   },
   "actions": {
     "new": "New",

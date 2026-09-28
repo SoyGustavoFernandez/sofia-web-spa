@@ -280,6 +280,7 @@
     "aseguradoraNoEncontrada": "La aseguradora seleccionada no existe o fue eliminada.",
     "cajaNoPropia": "La caja seleccionada pertenece a otro cajero o sucursal. Recarga la página para usar tu propia caja abierta.",
     "cajaSinSesionAbierta": "Necesitas tener tu propia caja abierta en esta sucursal para cobrar la venta.",
+    "serieBoletaNoConfigurada": "Esta sucursal no tiene una serie de boletas activa. Configúrala en SUNAT > Series Fiscales para poder cobrar.",
     "vueltoExcedeEfectivo": "El vuelto no puede ser mayor que el efectivo recibido. Ajusta los montos de pago.",
     "recetaRequerida": "Uno de los productos requiere receta médica. Selecciona el cliente y una de sus recetas registradas.",
     "recetaNoEncontrada": "La receta médica seleccionada no existe o fue eliminada.",

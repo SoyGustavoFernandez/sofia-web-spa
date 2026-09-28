@@ -165,4 +165,16 @@ export const navItems: NavItem[] = [
       },
     ],
   },
+  {
+    id: 9,
+    name: 'SUNAT',
+    children: [
+      { navCap: 'breadcrumbs.sunat' },
+      {
+        displayName: 'nav.seriesFiscales',
+        iconName: 'solar:bill-check-line-duotone',
+        route: '/series-fiscales',
+      },
+    ],
+  },
 ];

@@ -1,0 +1,59 @@
+{
+  "title": "Series Fiscales",
+  "search": {
+    "title": "Búsqueda de Series Fiscales",
+    "search-error": "Error al buscar series fiscales",
+    "export-error": "Error al exportar las series fiscales",
+    "sucursales-error": "No se pudieron cargar las sucursales",
+    "export-filename": "series-fiscales.xlsx"
+  },
+  "detail": {
+    "load-error": "Error al cargar la serie fiscal",
+    "save-success": "Serie fiscal guardada correctamente",
+    "save-error": "Error al guardar la serie fiscal",
+    "delete-success": "Serie fiscal eliminada correctamente",
+    "delete-error": "Error al eliminar la serie fiscal",
+    "delete-in-use": "No se puede eliminar una serie que ya emitió comprobantes. Puedes desactivarla.",
+    "delete-confirm-title": "Confirmar eliminación",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar esta serie fiscal?",
+    "prefijo-hint": "4 caracteres en mayúsculas. Boleta empieza con B, Factura con F, Nota de Crédito con B o F.",
+    "correlativo-hint": "Último número emitido; el siguiente comprobante usará este valor + 1.",
+    "locked-hint": "Esta serie ya emitió comprobantes: solo puedes cambiar su estado."
+  },
+  "errors": {
+    "prefijoInvalido": "El prefijo debe tener 4 caracteres en mayúsculas y empezar con la letra que exige el tipo de comprobante.",
+    "correlativoInvalido": "El correlativo debe ser un número entero mayor o igual a 0.",
+    "prefijoDuplicado": "Ya existe otra serie de este tipo de comprobante con ese prefijo.",
+    "activaDuplicada": "La sucursal ya tiene una serie activa de este tipo. Desactívala antes de activar otra.",
+    "conComprobantes": "La serie ya emitió comprobantes: solo puedes cambiar su estado.",
+    "noEncontrada": "La serie fiscal no existe.",
+    "sucursalNoEncontrada": "La sucursal seleccionada no existe."
+  },
+  "fields": {
+    "sucursal": "Sucursal",
+    "tipoComprobante": "Tipo de Comprobante",
+    "prefijoSerie": "Prefijo de Serie",
+    "correlativoActual": "Correlativo Actual",
+    "estadoSerie": "Estado",
+    "todas": "Todas",
+    "todos": "Todos"
+  },
+  "table": {
+    "prefijoSerie": "Serie",
+    "tipoComprobante": "Tipo de Comprobante",
+    "sucursal": "Sucursal",
+    "correlativoActual": "Correlativo Actual",
+    "estadoSerie": "Estado",
+    "createdAt": "Fecha de Creación"
+  },
+  "tipos": {
+    "Boleta": "Boleta",
+    "Factura": "Factura",
+    "NotaCredito": "Nota de Crédito",
+    "Proforma": "Proforma"
+  },
+  "estados": {
+    "Activa": "Activa",
+    "Inactiva": "Inactiva"
+  }
+}

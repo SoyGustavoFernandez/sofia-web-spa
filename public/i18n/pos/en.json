@@ -280,6 +280,7 @@
     "aseguradoraNoEncontrada": "The selected insurer does not exist or was deleted.",
     "cajaNoPropia": "The selected register belongs to another cashier or branch. Reload the page to use your own open register.",
     "cajaSinSesionAbierta": "You need your own open register in this branch to collect the sale.",
+    "serieBoletaNoConfigurada": "This branch has no active receipt (boleta) series. Set one up in SUNAT > Fiscal Series to collect sales.",
     "vueltoExcedeEfectivo": "The change cannot exceed the cash received. Adjust the payment amounts.",
     "recetaRequerida": "One of the products requires a medical prescription. Select the customer and one of their registered prescriptions.",
     "recetaNoEncontrada": "The selected medical prescription does not exist or was deleted.",

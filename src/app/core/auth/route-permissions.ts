@@ -22,6 +22,7 @@ export const ROUTE_PERMISSIONS: Readonly<Record<string, string>> = {
   'profesionales-salud': 'ProfesionalesSalud',
   'recetas-medicas': 'Recetas',
   'digemid-catalogo': 'DIGEMID',
+  'series-fiscales': 'SeriesFiscales',
 };
 
 export const READ_ACTION = 'Leer';

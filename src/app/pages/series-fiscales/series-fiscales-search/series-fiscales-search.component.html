@@ -1,0 +1,179 @@
+<ng-container
+  *transloco="let t; scope: 'series-fiscales'; read: 'seriesFiscales'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="false" />
+
+    <div class="sofia-filter-card">
+      <div
+        class="sofia-filter-header d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="mb-1">{{ t('search.title') }}</h4>
+          <div class="search-info-text">
+            {{ 'generic-labels.search-subtitle' | transloco }}
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button mat-flat-button color="primary" (click)="goToNew()">
+            <mat-icon>add</mat-icon>
+            {{ 'actions.new' | transloco }}
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="searchForm" class="row g-3 mt-1">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.sucursal') }}</mat-label>
+            <mat-select formControlName="sucursalId">
+              <mat-option [value]="null">{{ t('fields.todas') }}</mat-option>
+              @for (s of sucursales(); track s.id) {
+                <mat-option [value]="s.id">{{ s.nombre }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.prefijoSerie') }}</mat-label>
+            <input
+              matInput
+              formControlName="prefijoSerie"
+              maxlength="4"
+              (keyup.enter)="search()" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.tipoComprobante') }}</mat-label>
+            <mat-select formControlName="tipoComprobante">
+              <mat-option [value]="null">{{ t('fields.todos') }}</mat-option>
+              @for (tipo of tipos; track tipo) {
+                <mat-option [value]="tipo">{{
+                  t('tipos.' + tipoName(tipo))
+                }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('fields.estadoSerie') }}</mat-label>
+            <mat-select formControlName="estadoSerie">
+              <mat-option [value]="null">{{ t('fields.todos') }}</mat-option>
+              @for (estado of estados; track estado) {
+                <mat-option [value]="estado">{{
+                  t('estados.' + estado)
+                }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button mat-button (click)="clear()">
+          {{ 'actions.clear' | transloco }}
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="search()"
+          [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            {{ 'actions.search' | transloco }}
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (showResults()) {
+      <div class="sofia-results-card">
+        <div class="sofia-results-header">
+          {{ 'generic-labels.results' | transloco }} ({{ totalCount() }})
+        </div>
+        <div class="sofia-table-container">
+          <table mat-table [dataSource]="items()">
+            <ng-container matColumnDef="prefijoSerie">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.prefijoSerie') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <a [routerLink]="[row.id]" class="link-no-underline">{{
+                  row.prefijoSerie
+                }}</a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tipoComprobante">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.tipoComprobante') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ t('tipos.' + tipoName(row.tipoComprobante)) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sucursalNombre">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.sucursal') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.sucursalNombre }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="correlativoActual">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.correlativoActual') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.correlativoActual }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estadoSerie">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.estadoSerie') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ t('estados.' + row.estadoSerie) }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td
+                class="mat-cell"
+                [attr.colspan]="displayedColumns.length"
+                style="text-align: center; padding: 2rem">
+                {{ 'generic-labels.no-results' | transloco }}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button mat-stroked-button (click)="exportar()">
+            <mat-icon>download</mat-icon>
+            {{ 'actions.export' | transloco }}
+          </button>
+          <mat-paginator
+            [length]="totalCount()"
+            [pageIndex]="pageIndex()"
+            [pageSize]="pageSize()"
+            [pageSizeOptions]="[10, 25, 50]"
+            [showFirstLastButtons]="true"
+            (page)="onPageChange($event)" />
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>

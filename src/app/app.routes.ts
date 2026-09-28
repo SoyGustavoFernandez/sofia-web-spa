@@ -150,6 +150,12 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('./pages/digemid-catalogo/digemid-catalogo.routes').then(m => m.DIGEMID_CATALOGO_ROUTES),
       },
+      // SUNAT
+      {
+        path: 'series-fiscales',
+        loadChildren: () =>
+          import('./pages/series-fiscales/series-fiscales.routes').then(m => m.SERIES_FISCALES_ROUTES),
+      },
     ],
   },
   {
