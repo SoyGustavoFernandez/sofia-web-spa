@@ -252,6 +252,22 @@ describe('AuthService', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
   });
 
+  it('logout() with an expired token still sends the refresh cookie and navigates only after the server answers', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) - 60 }));
+
+    service.logout();
+    const req = httpMock.expectOne(`${AUTH_BASE}/logout`);
+
+    expect(req.request.withCredentials).toBeTrue();
+    expect(service.token()).toBeNull();
+    expect(router.navigate).not.toHaveBeenCalled();
+
+    req.flush(null, { status: 204, statusText: 'No Content' });
+
+    expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
+  });
+
   it('clearLocalSession() removes the token without calling the server or navigating', () => {
     createService();
     service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));

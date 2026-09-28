@@ -86,15 +86,15 @@ export class AuthService {
   }
 
   logout(): void {
-    // Best-effort: tell the server to revoke the refresh token cookie
+    // The server revokes the session from the refresh cookie even with an expired access token; navigate once it answers
     this.http.post(`${BASE}/logout`, {}, { withCredentials: true }).pipe(
-      catchError(() => EMPTY)
+      catchError(() => EMPTY),
+      finalize(() => void this.router.navigate(['/auth/login']))
     ).subscribe();
 
     // Explicit logout: the user is leaving, so their drafts and caches go too (shared pharmacy PCs)
     clearUserStorage();
     this.clearLocalSession();
-    void this.router.navigate(['/auth/login']);
   }
 
   // Loads roles and permissions once per user; guards and the sidebar share the same request
