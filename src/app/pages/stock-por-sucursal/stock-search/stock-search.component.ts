@@ -6,7 +6,7 @@ import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsver
 import { PageEvent } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
@@ -14,7 +14,7 @@ import { SearchStateService } from '@core/services/shared/search-state.service';
 import { StockService } from '../services/stock.service';
 import { StockPorSucursal, StockFilters } from '../models/stock.model';
 import { SucursalService } from '../../sucursales/services/sucursal.service';
-import { SucursalListItem } from '../../sucursales/models/sucursal.model';
+import { SucursalPermitida } from '../../sucursales/models/sucursal.model';
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
 
@@ -48,8 +48,11 @@ export class StockSearchComponent implements OnInit {
   readonly totalCount = signal(0);
   readonly pageIndex = signal(0);
   readonly pageSize = signal(10);
-  readonly sucursalOptions = signal<SucursalListItem[]>([]);
+  readonly sucursalOptions = signal<SucursalPermitida[]>([]);
   readonly productoOptions = signal<MedicamentoListItem[]>([]);
+
+  // Only branches the user may operate on are offered; loaded once on first use
+  private readonly sucursalesPermitidas$ = this.sucursalService.getPermitidas().pipe(shareReplay(1));
 
   readonly searchForm = this.fb.group({
     sucursalNombre: [''],
@@ -82,12 +85,19 @@ export class StockSearchComponent implements OnInit {
         debounceTime(300),
         distinctUntilChanged(),
         switchMap(term => {
-          if (!term || typeof term !== 'string') return of({ items: [] as SucursalListItem[] });
-          return this.sucursalService.search({ nombre: term, pageNumber: 1, pageSize: 20 });
+          if (!term || typeof term !== 'string') return of([] as SucursalPermitida[]);
+          const needle = term.toLowerCase();
+          return this.sucursalesPermitidas$.pipe(
+            map(list => list.filter(s => s.nombre.toLowerCase().includes(needle))),
+            catchError(() => {
+              this.notifier.showError(this.transloco.translate('stockPorSucursal.autocomplete.sucursales-error'));
+              return of([] as SucursalPermitida[]);
+            }),
+          );
         }),
         takeUntilDestroyed(),
       )
-      .subscribe(result => this.sucursalOptions.set(result.items));
+      .subscribe(items => this.sucursalOptions.set(items));
 
     this.searchForm.controls.productoNombre.valueChanges
       .pipe(
@@ -120,7 +130,7 @@ export class StockSearchComponent implements OnInit {
     return date ? new Date(date).toISOString().split('T')[0] : undefined;
   }
 
-  selectSucursal(sucursal: SucursalListItem): void {
+  selectSucursal(sucursal: SucursalPermitida): void {
     this.searchForm.controls.sucursalNombre.setValue(sucursal.nombre, { emitEvent: false });
   }
 

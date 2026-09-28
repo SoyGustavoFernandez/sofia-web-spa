@@ -44,6 +44,10 @@
     "lote-placeholder": "Buscar por número de lote...",
     "sucursal-required": "Debe seleccionar una sucursal",
     "lote-required": "Debe seleccionar un lote",
-    "no-results": "Sin resultados"
+    "no-results": "Sin resultados",
+    "sucursales-error": "No se pudieron cargar tus sucursales"
+  },
+  "errors": {
+    "sucursal-no-permitida": "No tienes permiso para operar el stock de esta sucursal"
   }
 }

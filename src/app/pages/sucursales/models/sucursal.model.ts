@@ -13,6 +13,12 @@ export interface SucursalListItem {
   gerenteNombre: string | null;
 }
 
+// Branch the signed-in user may operate on (every tenant branch for Admin)
+export interface SucursalPermitida {
+  id: string;
+  nombre: string;
+}
+
 export interface SucursalDetail {
   id: string;
   nombre: string;

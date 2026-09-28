@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angu
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
@@ -13,7 +13,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { StockService } from '../services/stock.service';
 import { StockPorSucursal } from '../models/stock.model';
 import { SucursalService } from '../../sucursales/services/sucursal.service';
-import { SucursalListItem } from '../../sucursales/models/sucursal.model';
+import { SucursalPermitida } from '../../sucursales/models/sucursal.model';
 import { LoteService } from '../../lotes/services/lote.service';
 import { Lote } from '../../lotes/models/lote.model';
 
@@ -55,14 +55,17 @@ export class StockDetailComponent implements OnInit {
   // autocomplete fields for create mode
   readonly sucursalCtrl = new FormControl('');
   readonly loteCtrl = new FormControl('');
-  readonly selectedSucursal = signal<SucursalListItem | null>(null);
+  readonly selectedSucursal = signal<SucursalPermitida | null>(null);
   readonly selectedLote = signal<Lote | null>(null);
-  readonly sucursalOptions = signal<SucursalListItem[]>([]);
+  readonly sucursalOptions = signal<SucursalPermitida[]>([]);
   readonly loteOptions = signal<Lote[]>([]);
   readonly sucursalTouched = signal(false);
   readonly loteTouched = signal(false);
 
   private entityId = '';
+
+  // Stock can only be registered in branches the user may operate on; loaded once on first use
+  private readonly sucursalesPermitidas$ = this.sucursalService.getPermitidas().pipe(shareReplay(1));
 
   readonly form = this.fb.group({
     cantidadFisica: [0, [Validators.required, Validators.min(0)]],
@@ -79,11 +82,18 @@ export class StockDetailComponent implements OnInit {
       debounceTime(300),
       distinctUntilChanged(),
       switchMap(term => {
-        if (!term || typeof term !== 'string') return of({ items: [] as SucursalListItem[] });
-        return this.sucursalService.search({ nombre: term, pageNumber: 1, pageSize: 20 });
+        if (!term || typeof term !== 'string') return of([] as SucursalPermitida[]);
+        const needle = term.toLowerCase();
+        return this.sucursalesPermitidas$.pipe(
+          map(list => list.filter(s => s.nombre.toLowerCase().includes(needle))),
+          catchError(() => {
+            this.notifier.showError(this.transloco.translate('stockPorSucursal.autocomplete.sucursales-error'));
+            return of([] as SucursalPermitida[]);
+          }),
+        );
       }),
       takeUntilDestroyed(),
-    ).subscribe(result => this.sucursalOptions.set(result.items));
+    ).subscribe(items => this.sucursalOptions.set(items));
 
     this.loteCtrl.valueChanges.pipe(
       debounceTime(300),
@@ -116,7 +126,7 @@ export class StockDetailComponent implements OnInit {
     return `${lote.numeroLoteMfr} — ${lote.nombreProducto}`;
   }
 
-  selectSucursal(s: SucursalListItem): void {
+  selectSucursal(s: SucursalPermitida): void {
     this.selectedSucursal.set(s);
     this.sucursalCtrl.setValue(s.nombre, { emitEvent: false });
   }
@@ -182,9 +192,9 @@ export class StockDetailComponent implements OnInit {
         this.notifier.showSuccess(this.transloco.translate('stockPorSucursal.create.save-success'));
         this.router.navigate(['/stock-por-sucursal']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.saving.set(false);
-        this.notifier.showError(this.transloco.translate('stockPorSucursal.create.save-error'));
+        this.notifier.showError(this.transloco.translate(this.saveErrorKey(err, 'stockPorSucursal.create.save-error')));
       },
     });
   }
@@ -202,9 +212,15 @@ export class StockDetailComponent implements OnInit {
       },
       error: (err: unknown) => {
         this.saving.set(false);
-        const conflict = err instanceof HttpErrorResponse && err.error?.code === 'Concurrency.Conflict';
-        this.notifier.showError(this.transloco.translate(conflict ? 'errors.concurrencyConflict' : 'stockPorSucursal.detail.save-error'));
+        this.notifier.showError(this.transloco.translate(this.saveErrorKey(err, 'stockPorSucursal.detail.save-error')));
       },
     });
+  }
+
+  private saveErrorKey(err: unknown, fallback: string): string {
+    const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+    if (code === 'Concurrency.Conflict') return 'errors.concurrencyConflict';
+    if (code === 'Inventario.Sucursal.NoPermitida') return 'stockPorSucursal.errors.sucursal-no-permitida';
+    return fallback;
   }
 }

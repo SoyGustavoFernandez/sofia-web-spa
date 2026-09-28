@@ -44,6 +44,10 @@
     "lote-placeholder": "Search by batch number...",
     "sucursal-required": "You must select a branch",
     "lote-required": "You must select a batch",
-    "no-results": "No results"
+    "no-results": "No results",
+    "sucursales-error": "Your branches could not be loaded"
+  },
+  "errors": {
+    "sucursal-no-permitida": "You are not allowed to operate on this branch's stock"
   }
 }

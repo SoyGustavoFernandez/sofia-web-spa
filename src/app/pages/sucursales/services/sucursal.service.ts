@@ -5,6 +5,7 @@ import { environment } from '@environment/environment';
 import {
   PaginatedList,
   SucursalListItem,
+  SucursalPermitida,
   SucursalDetail,
   CreateSucursalRequest,
   UpdateSucursalRequest,
@@ -26,6 +27,10 @@ export class SucursalService {
     if (params.numeroLicencia) httpParams = httpParams.set('numeroLicencia', params.numeroLicencia);
     if (params.direccionFisica) httpParams = httpParams.set('direccionFisica', params.direccionFisica);
     return this.http.get<PaginatedList<SucursalListItem>>(this.base, { params: httpParams });
+  }
+
+  getPermitidas(): Observable<SucursalPermitida[]> {
+    return this.http.get<SucursalPermitida[]>(`${this.base}/permitidas`);
   }
 
   getById(id: string): Observable<SucursalDetail> {
