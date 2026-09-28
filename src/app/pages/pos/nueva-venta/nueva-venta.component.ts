@@ -29,7 +29,7 @@ import { PacienteListItem } from '../../pacientes/models/paciente.model';
 import { AseguradoraService } from '../../aseguradoras/services/aseguradora.service';
 import { AseguradoraListItem } from '../../aseguradoras/models/aseguradora.model';
 import { RecetaMedicaService } from '../../recetas-medicas/services/receta-medica.service';
-import { ItemSugerido } from '../../recetas-medicas/models/receta-medica.model';
+import { ItemSugerido, RecetaListItem } from '../../recetas-medicas/models/receta-medica.model';
 import { ConfirmarVentaDialogComponent, ConfirmarVentaDialogData } from '../dialogs/confirmar-venta-dialog/confirmar-venta-dialog.component';
 import { ComprobanteDialogComponent, ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
 import { AperturarCajaDialogComponent } from '../dialogs/aperturar-caja-dialog/aperturar-caja-dialog.component';
@@ -67,6 +67,11 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   'Venta.Caja.NoPropia': 'pos.messages.cajaNoPropia',
   'Venta.Caja.SinSesionAbierta': 'pos.messages.cajaSinSesionAbierta',
   'Venta.Pagos.VueltoExcedeEfectivo': 'pos.messages.vueltoExcedeEfectivo',
+  'Venta.Receta.Requerida': 'pos.messages.recetaRequerida',
+  'Venta.Receta.NoEncontrada': 'pos.messages.recetaNoEncontrada',
+  'Venta.Receta.OtroPaciente': 'pos.messages.recetaOtroPaciente',
+  'Venta.Receta.Agotada': 'pos.messages.recetaAgotada',
+  'Venta.Lote.Vencido': 'pos.messages.loteVencido',
 };
 
 @Component({
@@ -152,6 +157,9 @@ export class NuevaVentaComponent implements OnInit {
   readonly clienteForm = this.fb.group({ clienteNombre: [''] });
   readonly clienteOptions = signal<PacienteListItem[]>([]);
   readonly selectedCliente = signal<PacienteListItem | null>(null);
+  // Registered prescription of the selected customer, attached to every sale line (the backend enforces it per product)
+  readonly recetaOptions = signal<RecetaListItem[]>([]);
+  readonly selectedRecetaId = signal<string>('');
 
   // Insurance coverage is built but hidden from the UI until the pharmacy starts working with aseguradoras.
   readonly mostrarAseguradora = false;
@@ -231,6 +239,7 @@ export class NuevaVentaComponent implements OnInit {
         switchMap(term => {
           if (!term || typeof term !== 'string') return of({ items: [] as PacienteListItem[] });
           this.selectedCliente.set(null);
+          this.limpiarRecetasCliente();
           const esDocumento = /^\d+$/.test(term.trim());
           return esDocumento
             ? this.pacienteService.search({ docIdentidadGub: term.trim(), pageNumber: 1, pageSize: 20 })
@@ -356,6 +365,7 @@ export class NuevaVentaComponent implements OnInit {
             };
             this.selectedCliente.set(cliente);
             this.clienteForm.controls.clienteNombre.setValue(cliente as unknown as string, { emitEvent: false });
+            this.cargarRecetasCliente(venta.clienteId, venta.detalles.find(d => d.recetaId)?.recetaId ?? '');
           }
 
           this.restorePagosDraft();
@@ -384,6 +394,7 @@ export class NuevaVentaComponent implements OnInit {
       cart: this.cart(),
       pagos: this.pagos(),
       cliente: this.selectedCliente(),
+      recetaId: this.selectedRecetaId(),
       aseguradora: this.selectedAseguradora(),
       montoCubierto: this.seguroForm.value.montoCubierto,
       seguroExpanded: this.seguroExpanded(),
@@ -408,6 +419,7 @@ export class NuevaVentaComponent implements OnInit {
       if (draft.cliente) {
         this.selectedCliente.set(draft.cliente);
         this.clienteForm.controls.clienteNombre.setValue(draft.cliente, { emitEvent: false });
+        this.cargarRecetasCliente(draft.cliente.id, typeof draft.recetaId === 'string' ? draft.recetaId : '');
       }
       if (draft.aseguradora) {
         this.selectedAseguradora.set(draft.aseguradora);
@@ -711,11 +723,26 @@ export class NuevaVentaComponent implements OnInit {
   selectCliente(paciente: PacienteListItem): void {
     this.selectedCliente.set(paciente);
     this.clienteOptions.set([]);
+    this.cargarRecetasCliente(paciente.id);
   }
 
   limpiarCliente(): void {
     this.clienteForm.controls.clienteNombre.setValue('', { emitEvent: false });
     this.selectedCliente.set(null);
+    this.limpiarRecetasCliente();
+  }
+
+  private cargarRecetasCliente(clienteId: string, recetaId = ''): void {
+    this.selectedRecetaId.set(recetaId);
+    this.recetaMedicaService.search({ clienteId, pageNumber: 1, pageSize: 50 }).subscribe({
+      next: result => this.recetaOptions.set(result.items),
+      error: () => this.recetaOptions.set([]),
+    });
+  }
+
+  private limpiarRecetasCliente(): void {
+    this.recetaOptions.set([]);
+    this.selectedRecetaId.set('');
   }
 
   clienteIniciales(): string {
@@ -812,6 +839,7 @@ export class NuevaVentaComponent implements OnInit {
       loteId: l.loteId,
       cantidad: l.presentacionVentaId ? l.cantidadEnPresentacion! : l.cantidad,
       presentacionVentaId: l.presentacionVentaId,
+      recetaId: this.selectedRecetaId() || undefined,
     }));
   }
 

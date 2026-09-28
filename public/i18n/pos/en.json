@@ -122,6 +122,9 @@
     "clienteEventual": "Walk-in Customer (General Public)",
     "clienteSearchPlaceholder": "Search patient by name or ID...",
     "clienteAutocompleteNoResults": "No results",
+    "recetaLabel": "Medical prescription",
+    "sinReceta": "No prescription",
+    "recetaHint": "Required to sell prescription, retained-prescription or narcotic products.",
     "aseguradoraTitle": "Insurance Coverage (optional)",
     "aseguradoraLabel": "Insurer",
     "aseguradoraSearchPlaceholder": "Search insurer...",
@@ -277,6 +280,11 @@
     "aseguradoraNoEncontrada": "The selected insurer does not exist or was deleted.",
     "cajaNoPropia": "The selected register belongs to another cashier or branch. Reload the page to use your own open register.",
     "cajaSinSesionAbierta": "You need your own open register in this branch to collect the sale.",
-    "vueltoExcedeEfectivo": "The change cannot exceed the cash received. Adjust the payment amounts."
+    "vueltoExcedeEfectivo": "The change cannot exceed the cash received. Adjust the payment amounts.",
+    "recetaRequerida": "One of the products requires a medical prescription. Select the customer and one of their registered prescriptions.",
+    "recetaNoEncontrada": "The selected medical prescription does not exist or was deleted.",
+    "recetaOtroPaciente": "The medical prescription does not belong to the sale customer.",
+    "recetaAgotada": "The medical prescription has already been dispensed the maximum number of times allowed.",
+    "loteVencido": "One of the batches is expired and cannot be sold. Remove it from the cart."
   }
 }

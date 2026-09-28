@@ -385,6 +385,24 @@
                 <div class="pos3-hint-sm">
                   {{ t('checkout.clienteEventual') }}
                 </div>
+              } @else {
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{ t('checkout.recetaLabel') }}</mat-label>
+                  <mat-select
+                    [value]="selectedRecetaId()"
+                    (selectionChange)="selectedRecetaId.set($event.value)">
+                    <mat-option value="">{{
+                      t('checkout.sinReceta')
+                    }}</mat-option>
+                    @for (r of recetaOptions(); track r.id) {
+                      <mat-option [value]="r.id"
+                        >{{ r.fechaExpedicion | date: 'dd/MM/yyyy' }} ·
+                        {{ r.medicoNombre }}</mat-option
+                      >
+                    }
+                  </mat-select>
+                  <mat-hint>{{ t('checkout.recetaHint') }}</mat-hint>
+                </mat-form-field>
               }
 
               @if (mostrarAseguradora) {

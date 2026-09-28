@@ -41,6 +41,7 @@ export interface VentaDetalle {
   presentacionVentaId?: string | null;
   presentacionDescripcion?: string | null;
   cantidadEnPresentacion?: number | null;
+  recetaId?: string | null;
 }
 
 export interface ComprobanteDto {

@@ -122,6 +122,9 @@
     "clienteEventual": "Cliente Eventual (Público General)",
     "clienteSearchPlaceholder": "Buscar paciente por nombre o documento...",
     "clienteAutocompleteNoResults": "Sin resultados",
+    "recetaLabel": "Receta médica",
+    "sinReceta": "Sin receta",
+    "recetaHint": "Obligatoria para vender productos con receta, receta retenida o estupefacientes.",
     "aseguradoraTitle": "Cobertura de Seguro (opcional)",
     "aseguradoraLabel": "Aseguradora",
     "aseguradoraSearchPlaceholder": "Buscar aseguradora...",
@@ -277,6 +280,11 @@
     "aseguradoraNoEncontrada": "La aseguradora seleccionada no existe o fue eliminada.",
     "cajaNoPropia": "La caja seleccionada pertenece a otro cajero o sucursal. Recarga la página para usar tu propia caja abierta.",
     "cajaSinSesionAbierta": "Necesitas tener tu propia caja abierta en esta sucursal para cobrar la venta.",
-    "vueltoExcedeEfectivo": "El vuelto no puede ser mayor que el efectivo recibido. Ajusta los montos de pago."
+    "vueltoExcedeEfectivo": "El vuelto no puede ser mayor que el efectivo recibido. Ajusta los montos de pago.",
+    "recetaRequerida": "Uno de los productos requiere receta médica. Selecciona el cliente y una de sus recetas registradas.",
+    "recetaNoEncontrada": "La receta médica seleccionada no existe o fue eliminada.",
+    "recetaOtroPaciente": "La receta médica no pertenece al cliente de la venta.",
+    "recetaAgotada": "La receta médica ya fue dispensada el máximo de veces permitido.",
+    "loteVencido": "Uno de los lotes está vencido y no se puede vender. Retíralo del carrito."
   }
 }
