@@ -47,19 +47,11 @@
     "usuarioMin": "Username must be at least 4 characters",
     "passwordMin": "Password must be at least 8 characters"
   },
-  "deleteDialog": {
-    "title": "Cancel Company",
-    "message": "Are you sure you want to cancel the company \"{{name}}\"? This will change its status to Cancelled.",
-    "confirm": "Cancel Company",
-    "cancel": "Keep"
-  },
   "notifications": {
     "updated": "Company updated successfully",
-    "cancelled": "Company cancelled successfully",
     "loadError": "Error loading companies",
     "loadSingleError": "Error loading company",
     "updateError": "Error updating company",
-    "cancelError": "Error cancelling company",
     "registerSuccess": "Company registered successfully. Welcome!",
     "registerError": "Error registering company"
   },
@@ -79,10 +71,6 @@
     "title-edit": "Edit Company",
     "save-success": "Company updated successfully",
     "save-error": "Error updating company",
-    "delete-success": "Company deleted successfully",
-    "delete-error": "Error deleting company",
-    "delete-confirm-title": "Confirm deletion",
-    "delete-confirm-message": "Are you sure you want to delete this company?",
     "load-error": "Error loading company"
   },
   "fields": {
@@ -93,6 +81,8 @@
     "estaVigente": "Active",
     "fechaInicioTrial": "Trial Start",
     "fechaVencimiento": "Expiry",
+    "fechaVencimientoDesde": "Expiry from",
+    "fechaVencimientoHasta": "Expiry to",
     "sucursalesCount": "Branches"
   },
   "table": {

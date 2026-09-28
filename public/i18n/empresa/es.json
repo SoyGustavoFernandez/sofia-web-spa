@@ -47,19 +47,11 @@
     "usuarioMin": "El usuario debe tener al menos 4 caracteres",
     "passwordMin": "La contraseña debe tener al menos 8 caracteres"
   },
-  "deleteDialog": {
-    "title": "Cancelar Empresa",
-    "message": "¿Está seguro de que desea cancelar la empresa \"{{name}}\"? Esta acción cambiará su estado a Cancelado.",
-    "confirm": "Cancelar Empresa",
-    "cancel": "Mantener"
-  },
   "notifications": {
     "updated": "Empresa actualizada correctamente",
-    "cancelled": "Empresa cancelada correctamente",
     "loadError": "Error al cargar las empresas",
     "loadSingleError": "Error al cargar la empresa",
     "updateError": "Error al actualizar la empresa",
-    "cancelError": "Error al cancelar la empresa",
     "registerSuccess": "Empresa registrada correctamente. ¡Bienvenido!",
     "registerError": "Error al registrar la empresa"
   },
@@ -79,10 +71,6 @@
     "title-edit": "Editar Empresa",
     "save-success": "Empresa actualizada correctamente",
     "save-error": "Error al actualizar la empresa",
-    "delete-success": "Empresa eliminada correctamente",
-    "delete-error": "Error al eliminar la empresa",
-    "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar esta empresa?",
     "load-error": "Error al cargar la empresa"
   },
   "fields": {
@@ -93,6 +81,8 @@
     "estaVigente": "Vigente",
     "fechaInicioTrial": "Inicio Trial",
     "fechaVencimiento": "Vencimiento",
+    "fechaVencimientoDesde": "Vencimiento desde",
+    "fechaVencimientoHasta": "Vencimiento hasta",
     "sucursalesCount": "Sucursales"
   },
   "table": {

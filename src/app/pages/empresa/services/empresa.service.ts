@@ -36,10 +36,6 @@ export class EmpresaService {
     return this.http.put<void>(`${this.base}/${id}`, body);
   }
 
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.base}/${id}`);
-  }
-
   register(body: RegistrarEmpresaRequest): Observable<RegistrarEmpresaResponse> {
     // withCredentials lets the browser keep the refresh_token cookie set by the API
     return this.http.post<RegistrarEmpresaResponse>(`${this.base}/registrar`, body, { withCredentials: true });

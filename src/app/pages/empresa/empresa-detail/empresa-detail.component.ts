@@ -1,15 +1,13 @@
 ﻿import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
-import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { EmpresaService } from '../services/empresa.service';
 import { EmpresaDto, EstadoEmpresa } from '../models/empresa.model';
-import { EmpresaDeleteDialogComponent } from '../empresa-delete-dialog/empresa-delete-dialog.component';
 
 @Component({
   selector: 'app-empresa-detail',
@@ -27,12 +25,10 @@ import { EmpresaDeleteDialogComponent } from '../empresa-delete-dialog/empresa-d
 })
 export class EmpresaDetailComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly service = inject(EmpresaService);
   private readonly transloco = inject(TranslocoService);
   private readonly notifier = inject(ErrorNotifierService);
-  private readonly dialog = inject(MatDialog);
 
   readonly isEditMode = signal(false);
   readonly loading = signal(false);
@@ -90,17 +86,6 @@ export class EmpresaDetailComponent implements OnInit {
         this.loading.set(false);
         this.notifier.showError(this.transloco.translate('empresa.detail.load-error'));
       },
-    });
-  }
-
-  onDelete(): void {
-    if (!this.snapshot) return;
-    const ref = this.dialog.open(EmpresaDeleteDialogComponent, {
-      width: '400px',
-      data: this.snapshot,
-    });
-    ref.afterClosed().subscribe((deleted: boolean) => {
-      if (deleted) void this.router.navigate(['/empresas']);
     });
   }
 

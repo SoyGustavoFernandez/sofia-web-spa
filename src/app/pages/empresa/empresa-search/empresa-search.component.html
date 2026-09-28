@@ -6,21 +6,11 @@
       [showBackButton]="false" />
 
     <div class="sofia-filter-card">
-      <div
-        class="sofia-filter-header d-flex justify-content-between align-items-center">
-        <div>
-          <h4 class="mb-1">{{ t('search.title') }}</h4>
-          <div class="search-info-text">
-            {{ 'generic-labels.search-subtitle' | transloco }}
-          </div>
+      <div class="sofia-filter-header">
+        <h4 class="mb-1">{{ t('search.title') }}</h4>
+        <div class="search-info-text">
+          {{ 'generic-labels.search-subtitle' | transloco }}
         </div>
-        <button
-          mat-stroked-button
-          color="primary"
-          [routerLink]="['carga-masiva']">
-          <mat-icon>upload</mat-icon>
-          {{ 'carga-masiva.btn' | transloco }}
-        </button>
       </div>
 
       <form [formGroup]="searchForm" class="row g-3 mt-1">
@@ -47,7 +37,7 @@
 
         <div class="col-md-6">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ t('fields.fechaVencimiento') }} desde</mat-label>
+            <mat-label>{{ t('fields.fechaVencimientoDesde') }}</mat-label>
             <input
               matInput
               [matDatepicker]="pickerDesde"
@@ -60,7 +50,7 @@
 
         <div class="col-md-6">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ t('fields.fechaVencimiento') }} hasta</mat-label>
+            <mat-label>{{ t('fields.fechaVencimientoHasta') }}</mat-label>
             <input
               matInput
               [matDatepicker]="pickerHasta"
