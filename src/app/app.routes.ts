@@ -3,6 +3,7 @@ import { FullComponent } from '@matdash/layouts/full/full.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from '@core/auth/auth.guard';
 import { permissionGuard } from '@core/auth/permission.guard';
+import { passwordChangeGuard } from '@core/auth/password-change.guard';
 
 export const appRoutes: Route[] = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -23,11 +24,16 @@ export const appRoutes: Route[] = [
     component: FullComponent,
     canActivate: [authGuard],
     // Each child is checked against ROUTE_PERMISSIONS (core/auth/route-permissions.ts)
-    canActivateChild: [permissionGuard],
+    canActivateChild: [passwordChangeGuard, permissionGuard],
     children: [
       {
         path: 'dashboard',
         component: DashboardComponent,
+      },
+      {
+        path: 'cambiar-clave',
+        loadComponent: () =>
+          import('./pages/cambiar-clave/cambiar-clave.component').then(m => m.CambiarClaveComponent),
       },
       // Administración
       {

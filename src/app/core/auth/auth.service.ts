@@ -16,11 +16,14 @@ interface JwtPayload {
   empresaId?: string;
   sucursalId?: string;
   empleadoId?: string;
+  // "true" while the account must change its password before using the app
+  pwd_change?: string;
   exp?: number;
 }
 
 interface LoginRequest { nombreUsuario: string; password: string; }
-interface AuthResponse { accessToken: string; }
+interface AuthResponse { accessToken: string; requiereCambioClave?: boolean; }
+export interface ChangePasswordRequest { currentPassword: string; newPassword: string; }
 
 export interface UserPermission { modulo: string; accion: string; }
 // Shape of GET /auth/me; roles come from here because the JWT role claim is not frontend-friendly
@@ -59,6 +62,7 @@ export class AuthService {
   readonly empresaId = computed(() => this._payload()?.empresaId ?? null);
   readonly sucursalId = computed(() => this._payload()?.sucursalId ?? null);
   readonly empleadoId = computed(() => this._payload()?.empleadoId ?? null);
+  readonly requiresPasswordChange = computed(() => this._payload()?.pwd_change === 'true');
 
   private readonly _profile = signal<UserProfile | null>(null);
   private profileLoad$: Observable<UserProfile> | null = null;
@@ -83,6 +87,11 @@ export class AuthService {
       );
     }
     return this.refreshInProgress$;
+  }
+
+  // The server rotates the security stamp and revokes every session, so the caller must log in again
+  changePassword(req: ChangePasswordRequest): Observable<void> {
+    return this.http.post<void>(`${BASE}/change-password`, req, { withCredentials: true });
   }
 
   logout(): void {

@@ -49,6 +49,9 @@
         <p class="profile-company">{{ companyName() }}</p>
       </div>
       <mat-divider />
+      <a mat-menu-item routerLink="/cambiar-clave">
+        {{ 'header.changePassword' | transloco }}
+      </a>
       <button mat-menu-item class="profile-logout-btn" (click)="logout()">
         {{ 'header.logout' | transloco }}
       </button>

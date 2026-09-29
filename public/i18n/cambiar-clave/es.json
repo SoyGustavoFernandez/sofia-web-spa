@@ -1,0 +1,18 @@
+{
+  "title": "Cambiar contraseña",
+  "subtitle": "Al guardar se cerrarán todas tus sesiones y tendrás que iniciar sesión con tu nueva contraseña",
+  "forced": "Tu contraseña fue asignada por un administrador. Debes cambiarla antes de continuar.",
+  "fields": {
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar nueva contraseña"
+  },
+  "errors": {
+    "minLength": "Debe tener al menos {{min}} caracteres",
+    "sameAsCurrent": "La nueva contraseña debe ser distinta de la actual",
+    "mismatch": "Las contraseñas no coinciden",
+    "wrongCurrent": "La contraseña actual es incorrecta",
+    "save": "No se pudo cambiar la contraseña. Inténtalo de nuevo."
+  },
+  "success": "Contraseña actualizada. Inicia sesión con tu nueva contraseña."
+}

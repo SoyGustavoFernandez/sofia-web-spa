@@ -59,7 +59,8 @@
     "pacientesAtencion": "Patients & Care",
     "recetasMedicas": "Medical Prescriptions",
     "sunat": "SUNAT",
-    "seriesFiscales": "Fiscal Series"
+    "seriesFiscales": "Fiscal Series",
+    "cambiarClave": "Change password"
   },
   "actions": {
     "new": "New",
@@ -108,6 +109,7 @@
     "date-to": "Date to"
   },
   "header.logout": "Sign Out",
+  "header.changePassword": "Change password",
   "header.reloadPermissions": "Reload permissions",
   "header.roles": "Roles",
   "header.noNotifications": "No notifications",

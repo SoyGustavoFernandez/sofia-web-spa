@@ -61,7 +61,8 @@ export class LoginComponent {
 
     this.auth.login({ nombreUsuario: usuario!, password: password! }).subscribe({
       next: () => {
-        void this.router.navigate(['/dashboard']);
+        // An admin-assigned password must be replaced before anything else; the shell guard enforces it too
+        void this.router.navigate([this.auth.requiresPasswordChange() ? '/cambiar-clave' : '/dashboard']);
       },
       error: (err: unknown) => {
         this.submitting.set(false);

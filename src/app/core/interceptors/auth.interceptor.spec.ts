@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { authInterceptor } from './auth.interceptor';
 import { AuthService } from '../auth/auth.service';
@@ -89,6 +90,31 @@ describe('authInterceptor', () => {
     expect(error).toBeTruthy();
     expect(authServiceSpy.refreshAccessToken).not.toHaveBeenCalled();
     expect(authServiceSpy.logout).not.toHaveBeenCalled();
+  });
+
+  it('on a 403 requiring a password change, routes to the change password page and propagates the error', () => {
+    authServiceSpy.token.and.returnValue('a-token');
+    const navigateSpy = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+
+    let error: unknown;
+    http.get('/api/v1/lotes').subscribe({ error: e => (error = e) });
+
+    httpMock.expectOne('/api/v1/lotes').flush({ code: 'Auth.CambioClaveRequerido' }, { status: 403, statusText: 'Forbidden' });
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/cambiar-clave']);
+    expect(error).toBeTruthy();
+    expect(authServiceSpy.logout).not.toHaveBeenCalled();
+  });
+
+  it('does not reroute other 403 responses', () => {
+    authServiceSpy.token.and.returnValue('a-token');
+    const navigateSpy = spyOn(TestBed.inject(Router), 'navigate');
+
+    http.get('/api/v1/lotes').subscribe({ error: () => undefined });
+
+    httpMock.expectOne('/api/v1/lotes').flush({ code: 'Cuenta.AdminProtegida' }, { status: 403, statusText: 'Forbidden' });
+
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
   it('on a 401 from /auth/login, propagates the error without clearing the session', () => {

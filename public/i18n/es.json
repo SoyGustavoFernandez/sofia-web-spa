@@ -59,7 +59,8 @@
     "pacientesAtencion": "Pacientes & Atención",
     "recetasMedicas": "Recetas Médicas",
     "sunat": "SUNAT",
-    "seriesFiscales": "Series Fiscales"
+    "seriesFiscales": "Series Fiscales",
+    "cambiarClave": "Cambiar contraseña"
   },
   "actions": {
     "new": "Nuevo",
@@ -108,6 +109,7 @@
     "date-to": "Fecha hasta"
   },
   "header.logout": "Cerrar sesión",
+  "header.changePassword": "Cambiar contraseña",
   "header.reloadPermissions": "Recargar permisos",
   "header.roles": "Roles",
   "header.noNotifications": "Sin notificaciones",

@@ -1,0 +1,136 @@
+<ng-container *transloco="let t; scope: 'cambiar-clave'; read: 'cambiarClave'">
+  <div class="sofia-page">
+    <csw-page-header
+      [title]="t('title')"
+      [breadcrumbItems]="breadcrumbs"
+      [showBackButton]="!forced()"
+      backRoute="/dashboard" />
+
+    <div class="sofia-detail-card">
+      <div class="pb-3 mb-4 border-bottom">
+        <h4 class="mb-1">{{ t('title') }}</h4>
+        <div class="search-info-text">{{ t('subtitle') }}</div>
+      </div>
+
+      @if (forced()) {
+        <div
+          class="forced-change-notice d-flex align-items-center gap-2 mb-4"
+          role="alert">
+          <mat-icon>lock_reset</mat-icon>
+          <span>{{ t('forced') }}</span>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.currentPassword') }}</mat-label>
+              <input
+                matInput
+                formControlName="currentPassword"
+                [type]="hidePasswords() ? 'password' : 'text'"
+                autocomplete="current-password" />
+              @if (
+                form.controls.currentPassword.hasError('required') &&
+                form.controls.currentPassword.touched
+              ) {
+                <mat-error>{{
+                  'general.errors.required' | transloco
+                }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.newPassword') }}</mat-label>
+              <input
+                matInput
+                formControlName="newPassword"
+                [type]="hidePasswords() ? 'password' : 'text'"
+                autocomplete="new-password" />
+              @if (
+                form.controls.newPassword.hasError('required') &&
+                form.controls.newPassword.touched
+              ) {
+                <mat-error>{{
+                  'general.errors.required' | transloco
+                }}</mat-error>
+              }
+              @if (form.controls.newPassword.hasError('minlength')) {
+                <mat-error>{{
+                  t('errors.minLength', { min: minLength })
+                }}</mat-error>
+              }
+            </mat-form-field>
+            @if (
+              form.hasError('sameAsCurrent') &&
+              form.controls.newPassword.touched
+            ) {
+              <mat-error class="field-error">{{
+                t('errors.sameAsCurrent')
+              }}</mat-error>
+            }
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.confirmPassword') }}</mat-label>
+              <input
+                matInput
+                formControlName="confirmPassword"
+                [type]="hidePasswords() ? 'password' : 'text'"
+                autocomplete="new-password" />
+              <button
+                type="button"
+                mat-icon-button
+                matSuffix
+                (click)="togglePasswords()"
+                [attr.aria-label]="t('fields.newPassword')">
+                <mat-icon>{{
+                  hidePasswords() ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+              </button>
+              @if (
+                form.controls.confirmPassword.hasError('required') &&
+                form.controls.confirmPassword.touched
+              ) {
+                <mat-error>{{
+                  'general.errors.required' | transloco
+                }}</mat-error>
+              }
+            </mat-form-field>
+            @if (
+              form.hasError('mismatch') && form.controls.confirmPassword.touched
+            ) {
+              <mat-error class="field-error">{{
+                t('errors.mismatch')
+              }}</mat-error>
+            }
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center mt-3 gap-3">
+          @if (!forced()) {
+            <button mat-button type="button" (click)="cancel()">
+              {{ 'actions.cancel' | transloco }}
+            </button>
+          }
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            style="margin-left: 0.5rem"
+            [disabled]="saving()">
+            @if (saving()) {
+              <mat-spinner diameter="18" />
+            } @else {
+              {{ 'actions.save' | transloco }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-container>

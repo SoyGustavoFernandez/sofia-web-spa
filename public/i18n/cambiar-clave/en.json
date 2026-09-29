@@ -1,0 +1,18 @@
+{
+  "title": "Change password",
+  "subtitle": "Saving ends all your sessions and you will have to sign in with your new password",
+  "forced": "Your password was set by an administrator. You must change it before continuing.",
+  "fields": {
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password"
+  },
+  "errors": {
+    "minLength": "Must be at least {{min}} characters long",
+    "sameAsCurrent": "The new password must be different from the current one",
+    "mismatch": "Passwords do not match",
+    "wrongCurrent": "The current password is incorrect",
+    "save": "The password could not be changed. Please try again."
+  },
+  "success": "Password updated. Sign in with your new password."
+}

@@ -8,12 +8,22 @@ import {
 import { inject } from '@angular/core';
 import { throwError, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { CHANGE_PASSWORD_ROUTE } from '../auth/password-change.guard';
+
+const PASSWORD_CHANGE_REQUIRED = 'Auth.CambioClaveRequerido';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
+  const router = inject(Router);
   return next(attachToken(req, auth.token())).pipe(
     catchError(err => {
+      // An admin can force the change during a live session; the API then rejects everything else
+      if (err instanceof HttpErrorResponse && err.status === 403 && err.error?.code === PASSWORD_CHANGE_REQUIRED) {
+        void router.navigate([CHANGE_PASSWORD_ROUTE]);
+        return throwError(() => err);
+      }
       if (!(err instanceof HttpErrorResponse) || err.status !== 401) {
         return throwError(() => err);
       }

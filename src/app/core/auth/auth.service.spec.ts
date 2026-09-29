@@ -320,4 +320,25 @@ describe('AuthService', () => {
 
     expect(searchState.restore('pacientes')).toBeNull();
   });
+
+  it('requiresPasswordChange() follows the pwd_change claim', () => {
+    createService();
+    service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));
+    expect(service.requiresPasswordChange()).toBeFalse();
+
+    service.storeToken(buildJwt({ sub: 'u1', pwd_change: 'true', exp: Math.floor(Date.now() / 1000) + 3600 }));
+    expect(service.requiresPasswordChange()).toBeTrue();
+  });
+
+  it('changePassword() posts both passwords with the refresh cookie', () => {
+    createService();
+
+    service.changePassword({ currentPassword: 'Actual123', newPassword: 'Nueva1234' }).subscribe();
+
+    const req = httpMock.expectOne(`${AUTH_BASE}/change-password`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.body).toEqual({ currentPassword: 'Actual123', newPassword: 'Nueva1234' });
+    req.flush(null, { status: 204, statusText: 'No Content' });
+  });
 });
