@@ -235,7 +235,7 @@
     "title": "Bulk Upload",
     "btn": "Bulk Upload",
     "upload-zone": "Drag your Excel file here or click to select",
-    "upload-zone-hint": "Only .xlsx files",
+    "upload-zone-hint": "Only .xlsx files (max {{maxMb}} MB and {{maxRows}} rows)",
     "preview-title": "Preview",
     "valid-rows": "{{count}} valid rows",
     "error-rows": "{{count}} rows with errors",
@@ -266,7 +266,15 @@
       "not-found": "Value '{{value}}' for field '{{field}}' does not exist in the system",
       "invalid-option": "'{{value}}' is not a valid value for '{{field}}'",
       "positive-number": "'{{field}}' must be greater than zero",
-      "must-differ": "'{{field}}' cannot be equal to '{{other}}'"
+      "must-differ": "'{{field}}' cannot be equal to '{{other}}'",
+      "ambiguous": "Value '{{value}}' for field '{{field}}' matches more than one record in the system"
+    },
+    "errors": {
+      "invalid-file": "The file is not a valid .xlsx workbook. Download the template and try again.",
+      "too-large": "The file exceeds the maximum size of {{maxMb}} MB.",
+      "decompression": "The file exceeds the allowed content limits. Make sure it is a valid template.",
+      "too-many-rows": "The file exceeds the maximum of {{maxRows}} rows. Split it into several files.",
+      "invalid-rows": "Some rows contain invalid data. Upload the file again and review the preview."
     }
   }
 }

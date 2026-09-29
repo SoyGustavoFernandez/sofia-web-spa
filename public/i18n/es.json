@@ -235,7 +235,7 @@
     "title": "Carga Masiva",
     "btn": "Carga Masiva",
     "upload-zone": "Arrastra tu archivo Excel aquí o haz clic para seleccionar",
-    "upload-zone-hint": "Solo archivos .xlsx",
+    "upload-zone-hint": "Solo archivos .xlsx (máx. {{maxMb}} MB y {{maxRows}} filas)",
     "preview-title": "Vista previa",
     "valid-rows": "{{count}} filas válidas",
     "error-rows": "{{count}} filas con error",
@@ -266,7 +266,15 @@
       "not-found": "El valor '{{value}}' del campo '{{field}}' no existe en el sistema",
       "invalid-option": "'{{value}}' no es un valor válido para '{{field}}'",
       "positive-number": "'{{field}}' debe ser mayor que cero",
-      "must-differ": "'{{field}}' no puede ser igual a '{{other}}'"
+      "must-differ": "'{{field}}' no puede ser igual a '{{other}}'",
+      "ambiguous": "El valor '{{value}}' del campo '{{field}}' coincide con varios registros del sistema"
+    },
+    "errors": {
+      "invalid-file": "El archivo no es un Excel .xlsx válido. Descarga la plantilla y vuelve a intentarlo.",
+      "too-large": "El archivo supera el tamaño máximo de {{maxMb}} MB.",
+      "decompression": "El archivo excede los límites de contenido permitidos. Revisa que sea una plantilla válida.",
+      "too-many-rows": "El archivo supera el máximo de {{maxRows}} filas. Divídelo en varios archivos.",
+      "invalid-rows": "Algunas filas tienen datos inválidos. Vuelve a subir el archivo y revisa la vista previa."
     }
   }
 }

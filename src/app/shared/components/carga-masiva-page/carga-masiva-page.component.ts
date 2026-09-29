@@ -2,12 +2,36 @@ import { Component, input, inject, signal, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { CargaMasivaConfig, PreviewResult, PreviewRowResult, SaveResult, ValidationError } from '@shared/models/carga-masiva.model';
+
+// Mirrors backend ImportLimits (upload/body size and row cap)
+export const MAX_UPLOAD_MB = 5;
+export const MAX_IMPORT_ROWS = 5000;
+const MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024;
+
+const CARGA_MASIVA_ERROR_KEYS: Record<string, string> = {
+  'CargaMasiva.Archivo.Invalido': 'carga-masiva.errors.invalid-file',
+  'CargaMasiva.Archivo.ExcedeDescompresion': 'carga-masiva.errors.decompression',
+  'CargaMasiva.Filas.Excedidas': 'carga-masiva.errors.too-many-rows',
+  'Request.TooLarge': 'carga-masiva.errors.too-large',
+};
+
+// Maps upload/bulk-load rejections to i18n keys; validator codes look like "CargaMasivaXCommand.Rows[0].Campo"
+export function cargaMasivaErrorKey(err: unknown): string | undefined {
+  if (!(err instanceof HttpErrorResponse)) return undefined;
+  if (err.status === 413) return 'carga-masiva.errors.too-large';
+  const code: unknown = err.error?.code;
+  if (typeof code !== 'string') return undefined;
+  if (CARGA_MASIVA_ERROR_KEYS[code]) return CARGA_MASIVA_ERROR_KEYS[code];
+  if (/^CargaMasiva\w+Command\.Rows$/.test(code)) return 'carga-masiva.errors.too-many-rows';
+  if (/^CargaMasiva\w+Command\.Rows\[/.test(code)) return 'carga-masiva.errors.invalid-rows';
+  return undefined;
+}
 
 @Component({
   selector: 'app-carga-masiva-page',
@@ -28,6 +52,7 @@ export class CargaMasivaPageComponent {
   readonly loadingPreview = signal(false);
   readonly saving = signal(false);
   readonly preview = signal<PreviewResult | null>(null);
+  readonly limits = { maxMb: MAX_UPLOAD_MB, maxRows: MAX_IMPORT_ROWS };
 
   // csw-page-header renders title verbatim; selectTranslate waits for the root bundle to load.
   readonly title = toSignal(this.transloco.selectTranslate('carga-masiva.title'), {
@@ -70,6 +95,14 @@ export class CargaMasivaPageComponent {
   }
 
   private processFile(file: File): void {
+    if (!file.name.toLowerCase().endsWith('.xlsx')) {
+      this.notifier.showError(this.transloco.translate('carga-masiva.errors.invalid-file'));
+      return;
+    }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      this.notifier.showError(this.transloco.translate('carga-masiva.errors.too-large', this.limits));
+      return;
+    }
     const formData = new FormData();
     formData.append('file', file);
     this.loadingPreview.set(true);
@@ -81,7 +114,7 @@ export class CargaMasivaPageComponent {
       },
       error: (err) => {
         this.loadingPreview.set(false);
-        this.notifier.showServerError(err, this.transloco.translate('carga-masiva.preview-error'));
+        this.showUploadError(err, 'carga-masiva.preview-error');
       },
     });
   }
@@ -120,9 +153,18 @@ export class CargaMasivaPageComponent {
       },
       error: (err) => {
         this.saving.set(false);
-        this.notifier.showServerError(err, this.transloco.translate('carga-masiva.save-error'));
+        this.showUploadError(err, 'carga-masiva.save-error');
       },
     });
+  }
+
+  private showUploadError(err: unknown, fallbackKey: string): void {
+    const key = cargaMasivaErrorKey(err);
+    if (key) {
+      this.notifier.showError(this.transloco.translate(key, this.limits));
+    } else {
+      this.notifier.showServerError(err, this.transloco.translate(fallbackKey));
+    }
   }
 
   goBack(): void {
