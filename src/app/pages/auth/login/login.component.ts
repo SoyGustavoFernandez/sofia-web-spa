@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,6 +10,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { AuthService } from '@core/auth/auth.service';
 import { environment } from '@environment/environment';
+
+// Login rejections that have a specific message; anything else is shown as invalid credentials
+const LOGIN_ERROR_KEYS: Record<string, string> = {
+  'Auth.EmpresaNoVigente': 'auth.empresaNoVigente',
+};
 
 @Component({
   selector: 'app-login',
@@ -59,9 +65,9 @@ export class LoginComponent {
       },
       error: (err: unknown) => {
         this.submitting.set(false);
-        const status = (err as { status?: number })?.status;
-        const key = status === 403 ? 'auth.accountBlocked' : 'auth.invalidCredentials';
-        this.loginError.set(this.transloco.translate(key));
+        const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+        const key = typeof code === 'string' ? LOGIN_ERROR_KEYS[code] : undefined;
+        this.loginError.set(this.transloco.translate(key ?? 'auth.invalidCredentials'));
       },
     });
   }
