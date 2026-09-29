@@ -8,6 +8,7 @@
   "detail": {
     "save-success": "Branch saved successfully",
     "save-error": "Error saving branch",
+    "duplicate-licencia": "A branch with that license number already exists.",
     "delete-success": "Branch deleted successfully",
     "delete-error": "Error deleting branch",
     "delete-confirm-title": "Confirm deletion",

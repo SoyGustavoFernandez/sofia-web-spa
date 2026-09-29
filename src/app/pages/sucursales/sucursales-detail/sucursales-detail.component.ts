@@ -12,6 +12,11 @@ import { AutocompleteInputComponent } from '@shared/components/autocomplete-inpu
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SucursalService } from '../services/sucursal.service';
 import { SucursalDetail, EmpleadoItem } from '../models/sucursal.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'Sucursal.NumeroLicencia.Duplicado': 'sucursales.detail.duplicate-licencia',
+};
 
 @Component({
   selector: 'app-sucursales-detail',
@@ -144,9 +149,9 @@ export class SucursalesDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('sucursales.detail.save-success'));
           this.router.navigate(['/sucursales']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('sucursales.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'sucursales.detail.save-error')));
         },
       });
     } else {
@@ -158,9 +163,9 @@ export class SucursalesDetailComponent implements OnInit {
           this.form.disable();
           this.load();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('sucursales.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'sucursales.detail.save-error')));
         },
       });
     }

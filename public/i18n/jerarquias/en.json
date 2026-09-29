@@ -9,6 +9,7 @@
     "load-error": "Error loading the hierarchy",
     "save-success": "Hierarchy saved successfully",
     "save-error": "Error saving the hierarchy",
+    "duplicate": "This product already has a conversion between those units.",
     "delete-success": "Hierarchy deleted successfully",
     "delete-error": "Error deleting the hierarchy",
     "delete-in-use": "This hierarchy cannot be deleted because it is in use.",

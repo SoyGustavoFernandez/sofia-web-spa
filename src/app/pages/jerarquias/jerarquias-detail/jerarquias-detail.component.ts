@@ -14,6 +14,11 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/co
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { JerarquiaUoMService } from '../services/jerarquia-uom.service';
 import { JerarquiaUoM } from '../models/jerarquia-uom.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'JerarquiaUoM.Duplicada': 'jerarquias.detail.duplicate',
+};
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
 import { UnidadMedidaService } from '../../unidades-medida/services/unidad-medida.service';
@@ -238,9 +243,9 @@ export class JerarquiasDetailComponent implements OnInit {
       this.notifier.showSuccess(this.transloco.translate('jerarquias.detail.save-success'));
       this.router.navigate(['/jerarquias']);
     };
-    const fail = (): void => {
+    const fail = (err: unknown): void => {
       this.saving.set(false);
-      this.notifier.showError(this.transloco.translate('jerarquias.detail.save-error'));
+      this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'jerarquias.detail.save-error')));
     };
 
     if (this.isNew()) {

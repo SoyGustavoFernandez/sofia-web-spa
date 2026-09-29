@@ -9,6 +9,7 @@
     "load-error": "Error al cargar la jerarquía",
     "save-success": "Jerarquía guardada correctamente",
     "save-error": "Error al guardar la jerarquía",
+    "duplicate": "Este producto ya tiene una conversión entre esas unidades.",
     "delete-success": "Jerarquía eliminada correctamente",
     "delete-error": "Error al eliminar la jerarquía",
     "delete-in-use": "No se puede eliminar la jerarquía porque está en uso.",

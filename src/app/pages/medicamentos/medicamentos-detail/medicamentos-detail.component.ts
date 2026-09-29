@@ -13,6 +13,11 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/co
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { MedicamentoService } from '../services/medicamento.service';
 import { MedicamentoDetail } from '../models/medicamento.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'Medicamento.CodigoNacional.Duplicado': 'medicamentos.detail.duplicate-codigo',
+};
 import { LaboratorioService } from '../../laboratorios/services/laboratorio.service';
 import { LaboratorioListItem } from '../../laboratorios/models/laboratorio.model';
 import { UnidadMedidaService } from '../../unidades-medida/services/unidad-medida.service';
@@ -238,9 +243,9 @@ export class MedicamentosDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('medicamentos.detail.save-success'));
           this.router.navigate(['/medicamentos']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('medicamentos.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'medicamentos.detail.save-error')));
         },
       });
     } else {
@@ -256,9 +261,9 @@ export class MedicamentosDetailComponent implements OnInit {
           this.unidadTouched.set(false);
           this.load();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('medicamentos.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'medicamentos.detail.save-error')));
         },
       });
     }

@@ -68,6 +68,8 @@
     "title-edit": "Editar Laboratorio",
     "save-success": "Laboratorio guardado correctamente",
     "save-error": "Error al guardar el laboratorio",
+    "duplicate-nombre": "Ya existe un laboratorio con ese nombre de compañía.",
+    "duplicate-codigo": "Ya existe un laboratorio con ese código identificador.",
     "delete-success": "Laboratorio eliminado correctamente",
     "delete-error": "Error al eliminar el laboratorio",
     "delete-in-use": "No se puede eliminar el laboratorio porque tiene medicamentos asociados.",

@@ -11,6 +11,12 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/co
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { LaboratorioService } from '../services/laboratorio.service';
 import { LaboratorioDetail } from '../models/laboratorio.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'Laboratorio.NombreCompania.Duplicado': 'laboratorios.detail.duplicate-nombre',
+  'Laboratorio.CodigoIdentificador.Duplicado': 'laboratorios.detail.duplicate-codigo',
+};
 
 @Component({
   selector: 'app-laboratorios-detail',
@@ -114,9 +120,9 @@ export class LaboratoriosDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('laboratorios.detail.save-success'));
           this.router.navigate(['/laboratorios']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('laboratorios.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'laboratorios.detail.save-error')));
         },
       });
     } else {
@@ -128,9 +134,9 @@ export class LaboratoriosDetailComponent implements OnInit {
           this.form.disable();
           this.load();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('laboratorios.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'laboratorios.detail.save-error')));
         },
       });
     }

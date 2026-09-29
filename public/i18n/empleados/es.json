@@ -9,6 +9,7 @@
     "load-error": "Error al cargar el empleado",
     "save-success": "Empleado guardado correctamente",
     "save-error": "Error al guardar el empleado",
+    "duplicate-licencia": "Ya existe un empleado con esa licencia profesional.",
     "delete-success": "Empleado eliminado correctamente",
     "delete-error": "Error al eliminar el empleado",
     "delete-manager": "No se puede eliminar un empleado que gerencia una sucursal. Asigne otro gerente primero.",

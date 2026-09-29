@@ -78,6 +78,7 @@
     "title-edit": "Edit Patient",
     "save-success": "Patient saved successfully",
     "save-error": "Error saving patient",
+    "duplicate-documento": "A patient with that identity document already exists.",
     "delete-success": "Patient deleted successfully",
     "delete-error": "Error deleting patient",
     "delete-confirm-title": "Confirm deletion",

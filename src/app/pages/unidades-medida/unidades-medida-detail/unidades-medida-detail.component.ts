@@ -11,6 +11,11 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/co
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { UnidadMedidaService } from '../services/unidad-medida.service';
 import { UnidadMedidaDetail } from '../models/unidad-medida.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'UnidadMedida.Codigo.Duplicado': 'unidadesMedida.detail.duplicate-codigo',
+};
 
 @Component({
   selector: 'app-unidades-medida-detail',
@@ -110,9 +115,9 @@ export class UnidadesMedidaDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('unidadesMedida.detail.save-success'));
           this.router.navigate(['/unidades-medida']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('unidadesMedida.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'unidadesMedida.detail.save-error')));
         },
       });
     } else {
@@ -124,9 +129,9 @@ export class UnidadesMedidaDetailComponent implements OnInit {
           this.form.disable();
           this.load();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('unidadesMedida.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'unidadesMedida.detail.save-error')));
         },
       });
     }

@@ -14,6 +14,11 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/co
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { EmpleadoService } from '../services/empleado.service';
 import { Empleado } from '../models/empleado.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'Empleado.LicenciaProf.Duplicado': 'empleados.detail.duplicate-licencia',
+};
 import { SucursalService } from '../../sucursales/services/sucursal.service';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';
 
@@ -178,9 +183,9 @@ export class EmpleadosDetailComponent implements OnInit {
       this.notifier.showSuccess(this.transloco.translate('empleados.detail.save-success'));
       this.router.navigate(['/empleados']);
     };
-    const fail = (): void => {
+    const fail = (err: unknown): void => {
       this.saving.set(false);
-      this.notifier.showError(this.transloco.translate('empleados.detail.save-error'));
+      this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'empleados.detail.save-error')));
     };
 
     if (this.isNew()) {

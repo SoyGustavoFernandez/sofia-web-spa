@@ -10,6 +10,7 @@
     "title-edit": "Editar Ingrediente Activo",
     "save-success": "Ingrediente activo guardado correctamente",
     "save-error": "Error al guardar el ingrediente activo",
+    "duplicate-dci": "Ya existe un ingrediente activo con esa denominación DCI.",
     "delete-success": "Ingrediente activo eliminado correctamente",
     "delete-error": "Error al eliminar el ingrediente activo",
     "delete-confirm-title": "Confirmar eliminación",

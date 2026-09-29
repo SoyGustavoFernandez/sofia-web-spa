@@ -78,6 +78,7 @@
     "title-edit": "Editar Paciente",
     "save-success": "Paciente guardado correctamente",
     "save-error": "Error al guardar el paciente",
+    "duplicate-documento": "Ya existe un paciente con ese documento de identidad.",
     "delete-success": "Paciente eliminado correctamente",
     "delete-error": "Error al eliminar el paciente",
     "delete-confirm-title": "Confirmar eliminación",

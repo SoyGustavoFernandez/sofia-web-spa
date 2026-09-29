@@ -9,6 +9,7 @@
     "load-error": "Error loading the employee",
     "save-success": "Employee saved successfully",
     "save-error": "Error saving the employee",
+    "duplicate-licencia": "An employee with that professional license already exists.",
     "delete-success": "Employee deleted successfully",
     "delete-error": "Error deleting the employee",
     "delete-manager": "An employee who manages a branch cannot be deleted. Assign another manager first.",

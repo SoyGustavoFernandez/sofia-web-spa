@@ -10,6 +10,11 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/co
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { IngredienteActivoService } from '../services/ingrediente-activo.service';
 import { IngredienteActivoDetail } from '../models/ingrediente-activo.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'IngredienteActivo.DenominacionDci.Duplicado': 'ingredientesActivos.detail.duplicate-dci',
+};
 
 @Component({
   selector: 'app-ingredientes-activos-detail',
@@ -110,9 +115,9 @@ export class IngredientesActivosDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('ingredientesActivos.detail.save-success'));
           this.router.navigate(['/ingredientes-activos']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('ingredientesActivos.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'ingredientesActivos.detail.save-error')));
         },
       });
     } else {
@@ -124,9 +129,9 @@ export class IngredientesActivosDetailComponent implements OnInit {
           this.form.disable();
           this.load();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('ingredientesActivos.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'ingredientesActivos.detail.save-error')));
         },
       });
     }

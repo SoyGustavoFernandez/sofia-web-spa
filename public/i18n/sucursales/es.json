@@ -8,6 +8,7 @@
   "detail": {
     "save-success": "Sucursal guardada correctamente",
     "save-error": "Error al guardar la sucursal",
+    "duplicate-licencia": "Ya existe una sucursal con ese número de licencia.",
     "delete-success": "Sucursal eliminada correctamente",
     "delete-error": "Error al eliminar la sucursal",
     "delete-confirm-title": "Confirmar eliminación",

@@ -10,6 +10,7 @@
     "title-edit": "Editar Medicamento",
     "save-success": "Medicamento guardado correctamente",
     "save-error": "Error al guardar el medicamento",
+    "duplicate-codigo": "Ya existe un medicamento con ese código nacional.",
     "delete-success": "Medicamento eliminado correctamente",
     "delete-error": "Error al eliminar el medicamento",
     "delete-confirm-title": "Confirmar eliminación",

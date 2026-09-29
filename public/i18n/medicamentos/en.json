@@ -10,6 +10,7 @@
     "title-edit": "Edit Medication",
     "save-success": "Medication saved successfully",
     "save-error": "Error saving medication",
+    "duplicate-codigo": "A medication with that national code already exists.",
     "delete-success": "Medication deleted successfully",
     "delete-error": "Error deleting medication",
     "delete-confirm-title": "Confirm deletion",

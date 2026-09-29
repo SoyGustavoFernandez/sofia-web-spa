@@ -10,6 +10,11 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/co
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { PacienteService } from '../services/paciente.service';
 import { PacienteDetail } from '../models/paciente.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'Paciente.DocIdentidadGub.Duplicado': 'pacientes.detail.duplicate-documento',
+};
 
 @Component({
   selector: 'app-pacientes-detail',
@@ -129,9 +134,9 @@ export class PacientesDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('pacientes.detail.save-success'));
           this.router.navigate(['/pacientes']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('pacientes.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'pacientes.detail.save-error')));
         },
       });
     } else {
@@ -143,9 +148,9 @@ export class PacientesDetailComponent implements OnInit {
           this.form.disable();
           this.load();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('pacientes.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'pacientes.detail.save-error')));
         },
       });
     }

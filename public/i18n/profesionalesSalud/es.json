@@ -10,6 +10,7 @@
     "title-edit": "Editar Profesional de Salud",
     "save-success": "Profesional de salud guardado correctamente",
     "save-error": "Error al guardar el profesional de salud",
+    "duplicate-registro": "Ya existe un profesional de salud con ese número de registro.",
     "delete-success": "Profesional de salud eliminado correctamente",
     "delete-error": "Error al eliminar el profesional de salud",
     "delete-confirm-title": "Confirmar eliminación",

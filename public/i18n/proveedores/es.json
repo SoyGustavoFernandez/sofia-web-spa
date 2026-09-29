@@ -79,6 +79,8 @@
     "title-edit": "Editar Proveedor",
     "save-success": "Proveedor guardado correctamente",
     "save-error": "Error al guardar el proveedor",
+    "duplicate-tax-id": "Ya existe un proveedor con ese identificador tributario.",
+    "duplicate-razon-social": "Ya existe un proveedor con esa razón social.",
     "delete-success": "Proveedor eliminado correctamente",
     "delete-error": "Error al eliminar el proveedor",
     "delete-confirm-title": "Confirmar eliminación",

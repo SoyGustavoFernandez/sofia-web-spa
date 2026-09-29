@@ -10,6 +10,7 @@
     "title-edit": "Edit Health Professional",
     "save-success": "Health professional saved successfully",
     "save-error": "Error saving health professional",
+    "duplicate-registro": "A health professional with that registration number already exists.",
     "delete-success": "Health professional deleted successfully",
     "delete-error": "Error deleting health professional",
     "delete-confirm-title": "Confirm deletion",

@@ -68,6 +68,8 @@
     "title-edit": "Edit Laboratory",
     "save-success": "Laboratory saved successfully",
     "save-error": "Error saving laboratory",
+    "duplicate-nombre": "A laboratory with that company name already exists.",
+    "duplicate-codigo": "A laboratory with that identifier code already exists.",
     "delete-success": "Laboratory deleted successfully",
     "delete-error": "Error deleting laboratory",
     "delete-in-use": "This laboratory cannot be deleted because it has medications associated with it.",

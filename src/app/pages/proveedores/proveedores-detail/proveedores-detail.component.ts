@@ -10,6 +10,12 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/co
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { ProveedorService } from '../services/proveedor.service';
 import { ProveedorDetail } from '../models/proveedor.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'Proveedor.TaxId.Duplicado': 'proveedores.detail.duplicate-tax-id',
+  'Proveedor.RazonSocial.Duplicado': 'proveedores.detail.duplicate-razon-social',
+};
 
 @Component({
   selector: 'app-proveedores-detail',
@@ -130,9 +136,9 @@ export class ProveedoresDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('proveedores.detail.save-success'));
           this.router.navigate(['/proveedores']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('proveedores.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'proveedores.detail.save-error')));
         },
       });
     } else {
@@ -152,9 +158,9 @@ export class ProveedoresDetailComponent implements OnInit {
           this.form.disable();
           this.load();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('proveedores.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'proveedores.detail.save-error')));
         },
       });
     }

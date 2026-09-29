@@ -68,6 +68,7 @@
     "title-edit": "Edit Unit of Measure",
     "save-success": "Unit of measure saved successfully",
     "save-error": "Error saving unit of measure",
+    "duplicate-codigo": "A unit of measure with that code already exists.",
     "delete-success": "Unit of measure deleted successfully",
     "delete-error": "Error deleting unit of measure",
     "delete-in-use": "This unit of measure cannot be deleted because it is used by medications or unit hierarchies.",

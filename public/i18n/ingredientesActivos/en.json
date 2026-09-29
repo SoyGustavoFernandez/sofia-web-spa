@@ -10,6 +10,7 @@
     "title-edit": "Edit Active Ingredient",
     "save-success": "Active ingredient saved successfully",
     "save-error": "Error saving active ingredient",
+    "duplicate-dci": "An active ingredient with that INN already exists.",
     "delete-success": "Active ingredient deleted successfully",
     "delete-error": "Error deleting active ingredient",
     "delete-confirm-title": "Confirm deletion",

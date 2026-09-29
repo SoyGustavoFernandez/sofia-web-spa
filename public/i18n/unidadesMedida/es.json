@@ -68,6 +68,7 @@
     "title-edit": "Editar Unidad de Medida",
     "save-success": "Unidad de medida guardada correctamente",
     "save-error": "Error al guardar la unidad de medida",
+    "duplicate-codigo": "Ya existe una unidad de medida con ese código.",
     "delete-success": "Unidad de medida eliminada correctamente",
     "delete-error": "Error al eliminar la unidad de medida",
     "delete-in-use": "No se puede eliminar la unidad de medida porque está asociada a medicamentos o jerarquías de unidades.",

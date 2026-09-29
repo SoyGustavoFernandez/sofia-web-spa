@@ -79,6 +79,8 @@
     "title-edit": "Edit Supplier",
     "save-success": "Supplier saved successfully",
     "save-error": "Error saving supplier",
+    "duplicate-tax-id": "A supplier with that tax ID already exists.",
+    "duplicate-razon-social": "A supplier with that business name already exists.",
     "delete-success": "Supplier deleted successfully",
     "delete-error": "Error deleting supplier",
     "delete-confirm-title": "Confirm deletion",
