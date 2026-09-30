@@ -9,12 +9,19 @@ import { inject } from '@angular/core';
 import { throwError, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '@environment/environment';
 import { AuthService } from '../auth/auth.service';
 import { CHANGE_PASSWORD_ROUTE } from '../auth/password-change.guard';
 
 const PASSWORD_CHANGE_REQUIRED = 'Auth.CambioClaveRequerido';
 
+// The bearer token only goes to our API: never to static assets (/i18n) or any other host
+export function isApiRequest(url: string, apiBaseUrl: string = environment.api.baseurl): boolean {
+  return url.startsWith(`${apiBaseUrl.replace(/\/+$/, '')}/api/`);
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  if (!isApiRequest(req.url)) return next(req);
   const auth = inject(AuthService);
   const router = inject(Router);
   return next(attachToken(req, auth.token())).pipe(

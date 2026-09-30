@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap, map, catchError, finalize, shareReplay, EMPTY, of } from 'rxjs';
 import { environment } from '@environment/environment';
 import { SearchStateService } from '@core/services/shared/search-state.service';
-import { clearUserStorage } from './user-storage';
+import { clearOtherUsersStorage, clearUserStorage } from './user-storage';
 import { READ_ACTION } from './route-permissions';
 
 interface JwtPayload {
@@ -31,6 +31,8 @@ export interface UserProfile { roles: string[]; permisos: UserPermission[]; }
 
 const TOKEN_KEY = 'sofia_token';
 const BASE = `${environment.api.baseurl}/api/v1/auth`;
+// The API rejects cookie-authenticated calls without it, so a cross-site form cannot rotate or end the session
+export const CSRF_HEADERS = { 'X-SOFIA-CSRF': '1' };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -69,7 +71,11 @@ export class AuthService {
 
   login(req: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${BASE}/login`, req, { withCredentials: true }).pipe(
-      tap(res => this.storeToken(res.accessToken))
+      tap(res => {
+        this.storeToken(res.accessToken);
+        // A shared POS terminal must not keep the previous cashier's drafts around
+        clearOtherUsersStorage(this.userId());
+      })
     );
   }
 
@@ -79,7 +85,7 @@ export class AuthService {
   // Called by the guard and the interceptor to get a fresh access token.
   refreshAccessToken(): Observable<string> {
     if (!this.refreshInProgress$) {
-      this.refreshInProgress$ = this.http.post<AuthResponse>(`${BASE}/refresh`, {}, { withCredentials: true }).pipe(
+      this.refreshInProgress$ = this.http.post<AuthResponse>(`${BASE}/refresh`, {}, { withCredentials: true, headers: CSRF_HEADERS }).pipe(
         tap(res => this.storeToken(res.accessToken)),
         map(res => res.accessToken),
         finalize(() => { this.refreshInProgress$ = null; }),
@@ -96,7 +102,7 @@ export class AuthService {
 
   logout(): void {
     // The server revokes the session from the refresh cookie even with an expired access token; navigate once it answers
-    this.http.post(`${BASE}/logout`, {}, { withCredentials: true }).pipe(
+    this.http.post(`${BASE}/logout`, {}, { withCredentials: true, headers: CSRF_HEADERS }).pipe(
       catchError(() => EMPTY),
       finalize(() => void this.router.navigate(['/auth/login']))
     ).subscribe();

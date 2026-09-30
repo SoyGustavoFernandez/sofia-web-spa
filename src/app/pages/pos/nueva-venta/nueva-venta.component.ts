@@ -33,6 +33,7 @@ import { ItemSugerido, RecetaListItem } from '../../recetas-medicas/models/recet
 import { ConfirmarVentaDialogComponent, ConfirmarVentaDialogData } from '../dialogs/confirmar-venta-dialog/confirmar-venta-dialog.component';
 import { ComprobanteDialogComponent, ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
 import { AperturarCajaDialogComponent } from '../dialogs/aperturar-caja-dialog/aperturar-caja-dialog.component';
+import { PosDraft, isEmptyPosDraft, parsePosDraft, serializePosDraft } from './pos-draft';
 
 interface CartLine {
   loteId: string;
@@ -54,6 +55,7 @@ interface PagoLine {
 }
 
 type CatalogTab = 'buscar' | 'receta';
+type VentaDraft = PosDraft<CartLine, PagoLine, AseguradoraListItem>;
 
 // Backend business-rule codes that have a specific message instead of the generic sale error
 const VENTA_ERROR_KEYS: Record<string, string> = {
@@ -392,49 +394,70 @@ export class NuevaVentaComponent implements OnInit {
     if (this.cargandoContinuacion()) return;
     // On logout userId turns null and re-triggers this effect: never persist the cart without an owner
     if (!this.authService.userId()) return;
-    const draft = {
+    const draft: VentaDraft = {
       cart: this.cart(),
       pagos: this.pagos(),
-      cliente: this.selectedCliente(),
+      clienteId: this.selectedCliente()?.id ?? null,
       recetaId: this.selectedRecetaId(),
       aseguradora: this.selectedAseguradora(),
-      montoCubierto: this.seguroForm.value.montoCubierto,
+      montoCubierto: this.seguroForm.value.montoCubierto ?? null,
       seguroExpanded: this.seguroExpanded(),
     };
-    if (draft.cart.length === 0 && !draft.cliente && !draft.aseguradora) {
+    if (isEmptyPosDraft(draft)) {
       localStorage.removeItem(this.draftKey);
       return;
     }
-    localStorage.setItem(this.draftKey, JSON.stringify(draft));
+    localStorage.setItem(this.draftKey, serializePosDraft(draft));
   }
 
   private restoreDraft(): void {
-    const raw = localStorage.getItem(this.draftKey);
-    if (!raw) return;
-    try {
-      const draft = JSON.parse(raw);
-      if (Array.isArray(draft.cart) && draft.cart.length > 0) this.cart.set(draft.cart);
-      if (Array.isArray(draft.pagos) && draft.pagos.length > 0) {
-        this.pagos.set(draft.pagos);
-        if (draft.pagos.length > 1) this.modoPagoAvanzado.set(true);
-      }
-      if (draft.cliente) {
-        this.selectedCliente.set(draft.cliente);
-        this.clienteForm.controls.clienteNombre.setValue(draft.cliente, { emitEvent: false });
-        this.cargarRecetasCliente(draft.cliente.id, typeof draft.recetaId === 'string' ? draft.recetaId : '');
-      }
-      if (draft.aseguradora) {
-        this.selectedAseguradora.set(draft.aseguradora);
-        this.seguroForm.controls.aseguradoraNombre.setValue(draft.aseguradora, { emitEvent: false });
-      }
-      if (draft.montoCubierto != null) {
-        this.seguroForm.controls.montoCubierto.setValue(draft.montoCubierto, { emitEvent: false });
-        this.montoCubiertoValue.set(draft.montoCubierto);
-      }
-      if (draft.seguroExpanded) this.seguroExpanded.set(true);
-    } catch {
-      localStorage.removeItem(this.draftKey);
+    const draft = this.readDraft();
+    if (!draft) return;
+    if (draft.cart.length > 0) this.cart.set(draft.cart);
+    if (draft.pagos.length > 0) {
+      this.pagos.set(draft.pagos);
+      if (draft.pagos.length > 1) this.modoPagoAvanzado.set(true);
     }
+    if (draft.clienteId) this.restaurarCliente(draft.clienteId, draft.recetaId);
+    if (draft.aseguradora) {
+      this.selectedAseguradora.set(draft.aseguradora);
+      this.seguroForm.controls.aseguradoraNombre.setValue(draft.aseguradora as unknown as string, { emitEvent: false });
+    }
+    if (draft.montoCubierto != null) {
+      this.seguroForm.controls.montoCubierto.setValue(draft.montoCubierto, { emitEvent: false });
+      this.montoCubiertoValue.set(draft.montoCubierto);
+    }
+    if (draft.seguroExpanded) this.seguroExpanded.set(true);
+  }
+
+  // Expired, corrupt or legacy drafts are dropped from storage instead of restored
+  private readDraft(): VentaDraft | null {
+    const draft = parsePosDraft<CartLine, PagoLine, AseguradoraListItem>(localStorage.getItem(this.draftKey));
+    if (!draft) localStorage.removeItem(this.draftKey);
+    return draft;
+  }
+
+  // The draft keeps only the customer id; the id placeholder keeps it in the draft while the details load
+  private restaurarCliente(clienteId: string, recetaId: string): void {
+    this.selectedCliente.set({ id: clienteId, docIdentidadGub: '', nombreApellidos: '', fechaNacimiento: '', contactoPrimario: null });
+    this.cargarRecetasCliente(clienteId, recetaId);
+    this.pacienteService.getById(clienteId).subscribe({
+      next: paciente => {
+        if (this.selectedCliente()?.id !== clienteId) return;
+        const cliente: PacienteListItem = {
+          id: paciente.id,
+          docIdentidadGub: paciente.docIdentidadGub,
+          nombreApellidos: paciente.nombreApellidos,
+          fechaNacimiento: paciente.fechaNacimiento,
+          contactoPrimario: paciente.contactoPrimario,
+        };
+        this.selectedCliente.set(cliente);
+        this.clienteForm.controls.clienteNombre.setValue(cliente as unknown as string, { emitEvent: false });
+      },
+      error: () => {
+        if (this.selectedCliente()?.id === clienteId) this.limpiarCliente();
+      },
+    });
   }
 
   // A brand-new sale drafts under the generic key (it has no ventaId yet); once held as Pendiente,
@@ -442,22 +465,17 @@ export class NuevaVentaComponent implements OnInit {
   private persistPagosDraftForVenta(ventaId: string): void {
     const pagos = this.pagos();
     if (!pagos.some(p => p.monto > 0)) return;
-    localStorage.setItem(this.draftKeyFor(ventaId), JSON.stringify({ cart: [], pagos, cliente: null, aseguradora: null, montoCubierto: null, seguroExpanded: false }));
+    const draft: VentaDraft = { cart: [], pagos, clienteId: null, recetaId: '', aseguradora: null, montoCubierto: null, seguroExpanded: false };
+    localStorage.setItem(this.draftKeyFor(ventaId), serializePosDraft(draft));
   }
 
   // Restores only the payment rows the cashier had typed for a pending sale before navigating away,
   // since a Pendiente venta never persists VentaPago rows server-side until it's actually completed.
   private restorePagosDraft(): void {
-    const raw = localStorage.getItem(this.draftKey);
-    if (!raw) return;
-    try {
-      const draft = JSON.parse(raw);
-      if (Array.isArray(draft.pagos) && draft.pagos.length > 0) {
-        this.pagos.set(draft.pagos);
-        if (draft.pagos.length > 1) this.modoPagoAvanzado.set(true);
-      }
-    } catch {
-      localStorage.removeItem(this.draftKey);
+    const draft = this.readDraft();
+    if (draft && draft.pagos.length > 0) {
+      this.pagos.set(draft.pagos);
+      if (draft.pagos.length > 1) this.modoPagoAvanzado.set(true);
     }
   }
 

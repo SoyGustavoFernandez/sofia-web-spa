@@ -229,6 +229,35 @@ describe('AuthService', () => {
     expect(service.token()).toBe(tokenB);
   });
 
+  it('refreshAccessToken() and logout() send the anti-CSRF header the API requires', () => {
+    createService();
+
+    service.refreshAccessToken().subscribe();
+    const refresh = httpMock.expectOne(`${AUTH_BASE}/refresh`);
+    expect(refresh.request.headers.get('X-SOFIA-CSRF')).toBe('1');
+    refresh.flush({ accessToken: buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }) });
+
+    service.logout();
+    const logout = httpMock.expectOne(`${AUTH_BASE}/logout`);
+    expect(logout.request.headers.get('X-SOFIA-CSRF')).toBe('1');
+    logout.flush({});
+  });
+
+  it("login() removes other users' POS drafts but keeps the signed-in user's own", () => {
+    createService();
+    const ownDraft = userStorageKey(POS_DRAFT_PREFIX, 'u1');
+    const otherDraft = userStorageKey(POS_DRAFT_PREFIX, 'u9');
+    localStorage.setItem(ownDraft, '{}');
+    localStorage.setItem(otherDraft, '{}');
+
+    service.login({ nombreUsuario: 'demo', password: 'secret' }).subscribe();
+    httpMock.expectOne(`${AUTH_BASE}/login`).flush({ accessToken: buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }) });
+
+    expect(localStorage.getItem(ownDraft)).toBe('{}');
+    expect(localStorage.getItem(otherDraft)).toBeNull();
+    localStorage.removeItem(otherDraft);
+  });
+
   it('logout() clears local session, best-effort calls the server, and navigates to login', () => {
     createService();
     service.storeToken(buildJwt({ sub: 'u1', exp: Math.floor(Date.now() / 1000) + 3600 }));

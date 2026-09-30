@@ -11,9 +11,22 @@ export function userStorageKey(prefix: string, userId: string | null): string {
 
 // Also removes legacy unscoped keys (plain prefix), written before keys were per user.
 export function clearUserStorage(): void {
+  removeUserScopedKeys(() => true);
+}
+
+// Keeps only the given user's keys (base key and its per-venta "-<id>" suffixes); everything else scoped goes
+export function clearOtherUsersStorage(userId: string | null): void {
+  removeUserScopedKeys(key => !USER_SCOPED_PREFIXES.some(prefix => ownsKey(key, userStorageKey(prefix, userId))));
+}
+
+function ownsKey(key: string, base: string): boolean {
+  return key === base || key.startsWith(`${base}-`);
+}
+
+function removeUserScopedKeys(shouldRemove: (key: string) => boolean): void {
   try {
     Object.keys(localStorage)
-      .filter(key => USER_SCOPED_PREFIXES.some(prefix => key.startsWith(prefix)))
+      .filter(key => USER_SCOPED_PREFIXES.some(prefix => key.startsWith(prefix)) && shouldRemove(key))
       .forEach(key => localStorage.removeItem(key));
   } catch {
     /* storage unavailable */

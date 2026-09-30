@@ -3,8 +3,11 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { authInterceptor } from './auth.interceptor';
+import { environment } from '@environment/environment';
+import { authInterceptor, isApiRequest } from './auth.interceptor';
 import { AuthService } from '../auth/auth.service';
+
+const API = environment.api.baseurl;
 
 describe('authInterceptor', () => {
   let http: HttpClient;
@@ -31,9 +34,9 @@ describe('authInterceptor', () => {
   it('attaches a Bearer token to outgoing requests when one is present', () => {
     authServiceSpy.token.and.returnValue('abc123');
 
-    http.get('/api/v1/lotes').subscribe();
+    http.get(`${API}/api/v1/lotes`).subscribe();
 
-    const req = httpMock.expectOne('/api/v1/lotes');
+    const req = httpMock.expectOne(`${API}/api/v1/lotes`);
     expect(req.request.headers.get('Authorization')).toBe('Bearer abc123');
     req.flush({});
   });
@@ -41,9 +44,9 @@ describe('authInterceptor', () => {
   it('does not set an Authorization header when there is no token', () => {
     authServiceSpy.token.and.returnValue(null);
 
-    http.get('/api/v1/lotes').subscribe();
+    http.get(`${API}/api/v1/lotes`).subscribe();
 
-    const req = httpMock.expectOne('/api/v1/lotes');
+    const req = httpMock.expectOne(`${API}/api/v1/lotes`);
     expect(req.request.headers.has('Authorization')).toBeFalse();
     req.flush({});
   });
@@ -53,12 +56,12 @@ describe('authInterceptor', () => {
     authServiceSpy.refreshAccessToken.and.returnValue(of('fresh-token'));
 
     let result: unknown;
-    http.get('/api/v1/lotes').subscribe(res => (result = res));
+    http.get(`${API}/api/v1/lotes`).subscribe(res => (result = res));
 
-    httpMock.expectOne('/api/v1/lotes').flush('unauthorized', { status: 401, statusText: 'Unauthorized' });
+    httpMock.expectOne(`${API}/api/v1/lotes`).flush('unauthorized', { status: 401, statusText: 'Unauthorized' });
 
     expect(authServiceSpy.refreshAccessToken).toHaveBeenCalled();
-    const retried = httpMock.expectOne('/api/v1/lotes');
+    const retried = httpMock.expectOne(`${API}/api/v1/lotes`);
     expect(retried.request.headers.get('Authorization')).toBe('Bearer fresh-token');
     retried.flush({ ok: true });
 
@@ -71,9 +74,9 @@ describe('authInterceptor', () => {
     authServiceSpy.refreshAccessToken.and.returnValue(throwError(() => new Error('refresh failed')));
 
     let error: unknown;
-    http.get('/api/v1/lotes').subscribe({ error: e => (error = e) });
+    http.get(`${API}/api/v1/lotes`).subscribe({ error: e => (error = e) });
 
-    httpMock.expectOne('/api/v1/lotes').flush('unauthorized', { status: 401, statusText: 'Unauthorized' });
+    httpMock.expectOne(`${API}/api/v1/lotes`).flush('unauthorized', { status: 401, statusText: 'Unauthorized' });
 
     expect(authServiceSpy.logout).toHaveBeenCalled();
     expect(error).toBeTruthy();
@@ -83,9 +86,9 @@ describe('authInterceptor', () => {
     authServiceSpy.token.and.returnValue('a-token');
 
     let error: unknown;
-    http.get('/api/v1/lotes').subscribe({ error: e => (error = e) });
+    http.get(`${API}/api/v1/lotes`).subscribe({ error: e => (error = e) });
 
-    httpMock.expectOne('/api/v1/lotes').flush('server error', { status: 500, statusText: 'Internal Server Error' });
+    httpMock.expectOne(`${API}/api/v1/lotes`).flush('server error', { status: 500, statusText: 'Internal Server Error' });
 
     expect(error).toBeTruthy();
     expect(authServiceSpy.refreshAccessToken).not.toHaveBeenCalled();
@@ -97,9 +100,9 @@ describe('authInterceptor', () => {
     const navigateSpy = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
 
     let error: unknown;
-    http.get('/api/v1/lotes').subscribe({ error: e => (error = e) });
+    http.get(`${API}/api/v1/lotes`).subscribe({ error: e => (error = e) });
 
-    httpMock.expectOne('/api/v1/lotes').flush({ code: 'Auth.CambioClaveRequerido' }, { status: 403, statusText: 'Forbidden' });
+    httpMock.expectOne(`${API}/api/v1/lotes`).flush({ code: 'Auth.CambioClaveRequerido' }, { status: 403, statusText: 'Forbidden' });
 
     expect(navigateSpy).toHaveBeenCalledWith(['/cambiar-clave']);
     expect(error).toBeTruthy();
@@ -110,9 +113,9 @@ describe('authInterceptor', () => {
     authServiceSpy.token.and.returnValue('a-token');
     const navigateSpy = spyOn(TestBed.inject(Router), 'navigate');
 
-    http.get('/api/v1/lotes').subscribe({ error: () => undefined });
+    http.get(`${API}/api/v1/lotes`).subscribe({ error: () => undefined });
 
-    httpMock.expectOne('/api/v1/lotes').flush({ code: 'Cuenta.AdminProtegida' }, { status: 403, statusText: 'Forbidden' });
+    httpMock.expectOne(`${API}/api/v1/lotes`).flush({ code: 'Cuenta.AdminProtegida' }, { status: 403, statusText: 'Forbidden' });
 
     expect(navigateSpy).not.toHaveBeenCalled();
   });
@@ -121,9 +124,9 @@ describe('authInterceptor', () => {
     authServiceSpy.token.and.returnValue(null);
 
     let error: unknown;
-    http.post('/api/v1/auth/login', {}).subscribe({ error: e => (error = e) });
+    http.post(`${API}/api/v1/auth/login`, {}).subscribe({ error: e => (error = e) });
 
-    httpMock.expectOne('/api/v1/auth/login').flush('invalid credentials', { status: 401, statusText: 'Unauthorized' });
+    httpMock.expectOne(`${API}/api/v1/auth/login`).flush('invalid credentials', { status: 401, statusText: 'Unauthorized' });
 
     expect(error).toBeTruthy();
     expect(authServiceSpy.clearLocalSession).not.toHaveBeenCalled();
@@ -134,12 +137,60 @@ describe('authInterceptor', () => {
     authServiceSpy.token.and.returnValue('expired-token');
 
     let error: unknown;
-    http.post('/api/v1/auth/refresh', {}).subscribe({ error: e => (error = e) });
+    http.post(`${API}/api/v1/auth/refresh`, {}).subscribe({ error: e => (error = e) });
 
-    httpMock.expectOne('/api/v1/auth/refresh').flush('unauthorized', { status: 401, statusText: 'Unauthorized' });
+    httpMock.expectOne(`${API}/api/v1/auth/refresh`).flush('unauthorized', { status: 401, statusText: 'Unauthorized' });
 
     expect(authServiceSpy.clearLocalSession).toHaveBeenCalled();
     expect(authServiceSpy.refreshAccessToken).not.toHaveBeenCalled();
     expect(error).toBeTruthy();
+  });
+
+  it('never sends the token to static assets such as translations', () => {
+    authServiceSpy.token.and.returnValue('abc123');
+
+    http.get('/i18n/es.json').subscribe();
+
+    const req = httpMock.expectOne('/i18n/es.json');
+    expect(req.request.headers.has('Authorization')).toBeFalse();
+    req.flush({});
+  });
+
+  it('never sends the token to other hosts', () => {
+    authServiceSpy.token.and.returnValue('abc123');
+
+    http.get('https://api.iconify.design/solar.json').subscribe();
+
+    const req = httpMock.expectOne('https://api.iconify.design/solar.json');
+    expect(req.request.headers.has('Authorization')).toBeFalse();
+    req.flush({});
+  });
+
+  it('does not try to refresh the session on a 401 from a non-API request', () => {
+    authServiceSpy.token.and.returnValue('abc123');
+
+    http.get('/i18n/es.json').subscribe({ error: () => undefined });
+
+    httpMock.expectOne('/i18n/es.json').flush('unauthorized', { status: 401, statusText: 'Unauthorized' });
+
+    expect(authServiceSpy.refreshAccessToken).not.toHaveBeenCalled();
+    expect(authServiceSpy.logout).not.toHaveBeenCalled();
+  });
+});
+
+describe('isApiRequest', () => {
+  it('matches same-origin API paths when the base url is empty', () => {
+    expect(isApiRequest('/api/v1/lotes', '')).toBeTrue();
+    expect(isApiRequest('/i18n/es.json', '')).toBeFalse();
+    expect(isApiRequest('//evil.example/api/v1/lotes', '')).toBeFalse();
+    expect(isApiRequest('https://evil.example/api/v1/lotes', '')).toBeFalse();
+  });
+
+  it('matches only the configured origin when the base url is absolute', () => {
+    expect(isApiRequest('https://api.sofia.pe/api/v1/lotes', 'https://api.sofia.pe')).toBeTrue();
+    expect(isApiRequest('https://api.sofia.pe/api/v1/lotes', 'https://api.sofia.pe/')).toBeTrue();
+    expect(isApiRequest('https://api.sofia.pe.evil.example/api/v1/lotes', 'https://api.sofia.pe')).toBeFalse();
+    expect(isApiRequest('/api/v1/lotes', 'https://api.sofia.pe')).toBeFalse();
+    expect(isApiRequest('https://api.sofia.pe/i18n/es.json', 'https://api.sofia.pe')).toBeFalse();
   });
 });

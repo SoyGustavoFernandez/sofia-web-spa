@@ -57,24 +57,6 @@
   </a>
 }
 
-<!-- external Link -->
-
-@if (!item.navCap && item.external) {
-  <mat-list-item
-    onClick="window.open('//google.com')"
-    class="menu-list-item"
-    target="_blank"
->
-    <span
-      class="iconify routeIcon"
-      matListItemIcon
-      [attr.data-icon]="item.iconName"></span>
-    <span class="hide-menu menu-item-label">{{
-      item.displayName | transloco
-    }}</span>
-  </mat-list-item>
-}
-
 <!-- children -->
 @if (expanded()) {
   @for (child of item.children; track child) {
