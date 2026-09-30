@@ -9,6 +9,12 @@ import { AuthService } from '@core/auth/auth.service';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SesionCajaService } from '../../../sesiones-caja/services/sesion-caja.service';
 
+// Backend opening-rule codes that have a specific message instead of the generic opening error
+const APERTURA_ERROR_KEYS: Record<string, string> = {
+  'PosSesionCaja.YaAbierta': 'pos.checkout.cajaYaAbierta',
+  'Concurrency.Conflict': 'errors.concurrencyConflict',
+};
+
 @Component({
   selector: 'app-aperturar-caja-dialog',
   standalone: true,
@@ -46,8 +52,9 @@ export class AperturarCajaDialogComponent {
         },
         error: (err: unknown) => {
           this.saving.set(false);
-          const yaAbierta = err instanceof HttpErrorResponse && err.error?.code === 'PosSesionCaja.YaAbierta';
-          this.notifier.showError(this.transloco.translate(yaAbierta ? 'pos.checkout.cajaYaAbierta' : 'pos.checkout.aperturarCajaError'));
+          const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+          const key = typeof code === 'string' ? APERTURA_ERROR_KEYS[code] : undefined;
+          this.notifier.showError(this.transloco.translate(key ?? 'pos.checkout.aperturarCajaError'));
         },
       });
   }

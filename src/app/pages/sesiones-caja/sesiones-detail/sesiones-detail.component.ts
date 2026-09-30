@@ -17,6 +17,12 @@ const CIERRE_ERROR_KEYS: Record<string, string> = {
   'Concurrency.Conflict': 'errors.concurrencyConflict',
 };
 
+// Backend opening-rule codes that have a specific message instead of the generic opening error
+const APERTURA_ERROR_KEYS: Record<string, string> = {
+  'PosSesionCaja.YaAbierta': 'sesionesCaja.create.ya-abierta',
+  'Concurrency.Conflict': 'errors.concurrencyConflict',
+};
+
 @Component({
   selector: 'app-sesiones-detail',
   standalone: true,
@@ -107,8 +113,9 @@ export class SesionesDetailComponent implements OnInit {
       },
       error: (err: unknown) => {
         this.saving.set(false);
-        const yaAbierta = err instanceof HttpErrorResponse && err.error?.code === 'PosSesionCaja.YaAbierta';
-        this.notifier.showError(this.transloco.translate(yaAbierta ? 'sesionesCaja.create.ya-abierta' : 'sesionesCaja.create.save-error'));
+        const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+        const key = typeof code === 'string' ? APERTURA_ERROR_KEYS[code] : undefined;
+        this.notifier.showError(this.transloco.translate(key ?? 'sesionesCaja.create.save-error'));
       },
     });
   }

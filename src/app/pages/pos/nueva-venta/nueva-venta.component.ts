@@ -502,9 +502,14 @@ export class NuevaVentaComponent implements OnInit {
     this.selectedMedicamentoId.set(medicamento.id);
     const sucursalId = this.authService.sucursalId();
     this.stockService.search({ productoNombre: medicamento.nombreComercial, soloConStock: true, pageNumber: 1, pageSize: 50 }).subscribe({
-      next: result => this.loteOptions.set(result.items.filter(l => l.sucursalId === sucursalId)),
+      next: result => this.loteOptions.set(result.items.filter(l => this.esLoteVendible(l, sucursalId))),
       error: () => this.loteOptions.set([]),
     });
+  }
+
+  // Expired lots are rejected by the backend (Venta.Lote.Vencido), so they are never offered
+  private esLoteVendible(lote: StockPorSucursal, sucursalId: string | null): boolean {
+    return lote.sucursalId === sucursalId && new Date(lote.fechaCaducidad).getTime() > Date.now();
   }
 
   selectLote(lote: StockPorSucursal): void {
@@ -693,7 +698,7 @@ export class NuevaVentaComponent implements OnInit {
     const sucursalId = this.authService.sucursalId();
     this.stockService.search({ productoNombre: item.nombreOficial, soloConStock: true, pageNumber: 1, pageSize: 20 }).subscribe({
       next: result => {
-        const lote = result.items.find(l => l.sucursalId === sucursalId);
+        const lote = result.items.find(l => this.esLoteVendible(l, sucursalId));
         if (!lote) {
           this.notifier.showError(this.transloco.translate('pos.messages.noStockLocalReceta'));
           return;
