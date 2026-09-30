@@ -1,0 +1,201 @@
+import { TestBed } from '@angular/core/testing';
+import { importProvidersFrom } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ActivatedRoute, provideRouter } from '@angular/router';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { TranslocoTestingModule } from '@jsverse/transloco';
+import { environment } from '@environment/environment';
+import { activatedRouteStub } from '@shared/testing/activated-route-stub';
+import { AutocompleteInputComponent } from '@shared/components/autocomplete-input/autocomplete-input.component';
+import { CuentaDto } from '../models/cuenta.model';
+import { RolResponse } from '../../roles/models/rol.model';
+import { SucursalListItem } from '../../sucursales/models/sucursal.model';
+import { CuentasDetailComponent } from './cuentas-detail.component';
+
+const BASE = `${environment.api.baseurl}/api/v1/cuentas`;
+
+const CAJERO: RolResponse = { id: 'rol-cajero', nombreRol: 'Cajero', descripcion: null, nivelJerarquia: 3, createdAt: '2026-01-01' };
+const QF: RolResponse = { id: 'rol-qf', nombreRol: 'Químico Farmacéutico', descripcion: null, nivelJerarquia: 2, createdAt: '2026-01-01' };
+
+function cuenta(overrides: Partial<CuentaDto> = {}): CuentaDto {
+  return {
+    id: 'cta-1',
+    empleadoId: 'emp-1',
+    nombreEmpleado: 'Ana Pérez',
+    nombreUsuario: 'aperez',
+    cuentaActiva: true,
+    requiereCambioClave: false,
+    intentosFallidos: 0,
+    bloqueadoHasta: null,
+    createdAt: '2026-01-01',
+    roles: [],
+    sucursales: [],
+    ...overrides,
+  };
+}
+
+function setup() {
+  TestBed.configureTestingModule({
+    imports: [CuentasDetailComponent],
+    providers: [
+      provideHttpClient(),
+      provideHttpClientTesting(),
+      provideRouter([]),
+      provideNoopAnimations(),
+      importProvidersFrom(
+        TranslocoTestingModule.forRoot({
+          langs: { es: {}, 'cuentas/es': { roles: { empty: 'Sin roles asignados' } } },
+          translocoConfig: { availableLangs: ['es', 'en'], defaultLang: 'es' },
+          preloadLangs: true,
+        }),
+      ),
+      { provide: ActivatedRoute, useValue: activatedRouteStub({ id: 'cta-1' }) },
+    ],
+  });
+  const fixture = TestBed.createComponent(CuentasDetailComponent);
+  const httpMock = TestBed.inject(HttpTestingController);
+  return { fixture, httpMock, component: fixture.componentInstance };
+}
+
+function loadWith(data: CuentaDto) {
+  const ctx = setup();
+  ctx.fixture.detectChanges();
+  ctx.httpMock.expectOne(`${BASE}/cta-1`).flush(data);
+  ctx.fixture.detectChanges();
+  return ctx;
+}
+
+function rolInput(fixture: ReturnType<typeof setup>['fixture']): HTMLInputElement {
+  const inputs = fixture.debugElement.queryAll(By.css('input[disabled]'));
+  return inputs[inputs.length - 1].nativeElement as HTMLInputElement;
+}
+
+describe('CuentasDetailComponent — roles', () => {
+  it('renders view mode without error and shows the empty-roles text when the account has no role', () => {
+    const { fixture, component, httpMock } = loadWith(cuenta());
+
+    expect(component.currentRol()).toBeNull();
+    expect(rolInput(fixture).value).toBe('Sin roles asignados');
+    httpMock.verify();
+  });
+
+  it('shows the role name in view mode when the account has a role', () => {
+    const { fixture, component } = loadWith(cuenta({ roles: [CAJERO] }));
+
+    expect(component.currentRol()?.nombreRol).toBe('Cajero');
+    expect(rolInput(fixture).value).toBe('Cajero');
+  });
+
+  it('passes an empty initialText to the role autocomplete in edit mode when there is no role', () => {
+    const { fixture, component } = loadWith(cuenta());
+
+    component.enterEditMode();
+    fixture.detectChanges();
+
+    const autocompletes = fixture.debugElement.queryAll(By.directive(AutocompleteInputComponent));
+    const rolAutocomplete = autocompletes[0].componentInstance as AutocompleteInputComponent<RolResponse>;
+    expect(rolAutocomplete.initialText).toBe('');
+  });
+
+  it('save() without a current role only assigns the new one', () => {
+    const { component, httpMock } = loadWith(cuenta());
+    component.enterEditMode();
+    component.onRolSelected(CAJERO);
+
+    component.save();
+    httpMock.expectOne(r => r.method === 'PUT' && r.url === `${BASE}/cta-1`).flush(null);
+
+    httpMock.expectOne(r => r.method === 'POST' && r.url === `${BASE}/cta-1/roles/${CAJERO.id}`).flush(null);
+    httpMock.expectNone(r => r.method === 'DELETE');
+    httpMock.expectOne(`${BASE}/cta-1`).flush(cuenta({ roles: [CAJERO] }));
+    expect(component.currentRol()?.id).toBe(CAJERO.id);
+  });
+
+  it('save() with a different role removes the current role and then assigns the new one', () => {
+    const { component, httpMock } = loadWith(cuenta({ roles: [CAJERO] }));
+    component.enterEditMode();
+    component.onRolSelected(QF);
+
+    component.save();
+    httpMock.expectOne(r => r.method === 'PUT' && r.url === `${BASE}/cta-1`).flush(null);
+
+    httpMock.expectNone(r => r.method === 'POST');
+    httpMock.expectOne(r => r.method === 'DELETE' && r.url === `${BASE}/cta-1/roles/${CAJERO.id}`).flush(null);
+    httpMock.expectOne(r => r.method === 'POST' && r.url === `${BASE}/cta-1/roles/${QF.id}`).flush(null);
+    httpMock.expectOne(`${BASE}/cta-1`).flush(cuenta({ roles: [QF] }));
+    expect(component.currentRol()?.id).toBe(QF.id);
+  });
+
+  it('save() with the same role neither removes nor assigns', () => {
+    const { component, httpMock } = loadWith(cuenta({ roles: [CAJERO] }));
+    component.enterEditMode();
+    component.onRolSelected(CAJERO);
+
+    component.save();
+    httpMock.expectOne(r => r.method === 'PUT' && r.url === `${BASE}/cta-1`).flush(null);
+
+    httpMock.expectNone(r => r.url.includes('/roles/'));
+    httpMock.expectOne(`${BASE}/cta-1`).flush(cuenta({ roles: [CAJERO] }));
+    expect(component.isEditMode()).toBeFalse();
+  });
+});
+
+describe('CuentasDetailComponent — sucursales', () => {
+  const MIRAFLORES: SucursalListItem = {
+    id: 'suc-1',
+    nombre: 'Miraflores',
+    direccionFisica: 'Av. Larco 123',
+    numeroLicencia: 'L-1',
+    gerenteNombre: null,
+  };
+
+  it('lists the assigned sucursales', () => {
+    const { fixture } = loadWith(cuenta({ sucursales: [{ id: 'suc-1', nombre: 'Miraflores' }] }));
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Miraflores');
+  });
+
+  it('assigns the selected sucursal and reloads the account', () => {
+    const { component, httpMock } = loadWith(cuenta());
+
+    component.onSucursalSelected(MIRAFLORES);
+
+    httpMock.expectOne(r => r.method === 'POST' && r.url === `${BASE}/cta-1/sucursales/suc-1`).flush(null);
+    httpMock.expectOne(`${BASE}/cta-1`).flush(cuenta({ sucursales: [{ id: 'suc-1', nombre: 'Miraflores' }] }));
+    expect(component.entity()?.sucursales.length).toBe(1);
+  });
+
+  it('ignores a cleared sucursal selection', () => {
+    const { component, httpMock } = loadWith(cuenta());
+
+    component.onSucursalSelected(null);
+
+    httpMock.expectNone(r => r.url.includes('/sucursales/'));
+    expect(component.assigningSucursal()).toBeFalse();
+  });
+
+  it('removes a sucursal and reloads the account', () => {
+    const { component, httpMock } = loadWith(cuenta({ sucursales: [{ id: 'suc-1', nombre: 'Miraflores' }] }));
+
+    component.removeSucursal('suc-1');
+
+    httpMock.expectOne(r => r.method === 'DELETE' && r.url === `${BASE}/cta-1/sucursales/suc-1`).flush(null);
+    httpMock.expectOne(`${BASE}/cta-1`).flush(cuenta());
+    expect(component.removingSucursalId()).toBeNull();
+    expect(component.entity()?.sucursales.length).toBe(0);
+  });
+
+  it('excludes already assigned sucursales from the autocomplete results', () => {
+    const { component, httpMock } = loadWith(cuenta({ sucursales: [{ id: 'suc-1', nombre: 'Miraflores' }] }));
+    let result: SucursalListItem[] = [];
+
+    component.fetchSucursales('').subscribe(items => (result = items));
+    httpMock
+      .expectOne(r => r.url === `${environment.api.baseurl}/api/v1/sucursales`)
+      .flush({ items: [MIRAFLORES, { ...MIRAFLORES, id: 'suc-2', nombre: 'San Isidro' }] });
+
+    expect(result.map(s => s.id)).toEqual(['suc-2']);
+  });
+});

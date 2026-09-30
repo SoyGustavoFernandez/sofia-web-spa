@@ -44,6 +44,10 @@
     "remove-error": "Error removing role"
   },
   "sucursales": {
+    "title": "Assigned Branches",
+    "subtitle": "Additional branches this account can operate in, besides its employee's base branch",
+    "empty": "No additional branches assigned",
+    "remove-tooltip": "Remove branch",
     "add-placeholder": "Add branch...",
     "assign-success": "Branch assigned successfully",
     "assign-error": "Error assigning branch",
@@ -53,7 +57,9 @@
   "errors": {
     "auto-asignacion": "An account cannot change its own roles",
     "admin-reservado": "Only an administrator can assign or remove the Admin role",
-    "admin-protegida": "Only an administrator can modify or delete an administrator account"
+    "admin-protegida": "Only an administrator can modify or delete an administrator account",
+    "cuenta-not-found": "The account does not exist",
+    "sucursal-not-found": "The branch does not exist"
   },
   "table": {
     "nombreUsuario": "Username",

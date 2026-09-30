@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -22,6 +22,8 @@ const ERROR_KEYS: Record<string, string> = {
   'Rol.AutoAsignacion': 'cuentas.errors.auto-asignacion',
   'Rol.AdminReservado': 'cuentas.errors.admin-reservado',
   'Cuenta.AdminProtegida': 'cuentas.errors.admin-protegida',
+  'Auth.CuentaNotFound': 'cuentas.errors.cuenta-not-found',
+  'Sucursal.NotFound': 'cuentas.errors.sucursal-not-found',
 };
 
 @Component({
@@ -64,6 +66,10 @@ export class CuentasDetailComponent implements OnInit {
   private entityId: string | null = null;
   private empleadoId: string | null = null;
   readonly entity = signal<CuentaDto | null>(null);
+  // UI is single-role by design; new accounts have no role yet
+  readonly currentRol = computed(() => this.entity()?.roles[0] ?? null);
+
+  @ViewChild('sucursalInput') private readonly sucursalInput?: AutocompleteInputComponent<SucursalListItem>;
 
   readonly fetchEmpleados = (query: string): Observable<EmpleadoItem[]> =>
     this.service.searchEmpleados(query).pipe(map(r => r.items));
@@ -76,7 +82,9 @@ export class CuentasDetailComponent implements OnInit {
   readonly displayRol = (r: RolResponse): string => r.nombreRol;
 
   readonly fetchSucursales = (query: string): Observable<SucursalListItem[]> =>
-    this.service.searchSucursales(query).pipe(map(r => r.items));
+    this.service.searchSucursales(query).pipe(
+      map(r => r.items.filter(s => !this.entity()?.sucursales.some(a => a.id === s.id)))
+    );
 
   readonly displaySucursal = (s: SucursalListItem): string => s.nombre;
 
@@ -181,7 +189,7 @@ export class CuentasDetailComponent implements OnInit {
       }).pipe(
         switchMap(() => {
           const newRol = this.pendingRol();
-          const currentRolId = this.entity()?.roles[0]?.id;
+          const currentRolId = this.currentRol()?.id;
           if (!newRol || newRol.id === currentRolId) return [null];
           const assign$ = this.service.assignRol(this.entityId!, newRol.id);
           return currentRolId
@@ -255,12 +263,13 @@ export class CuentasDetailComponent implements OnInit {
     this.service.assignSucursal(this.entityId, sucursal.id).subscribe({
       next: () => {
         this.assigningSucursal.set(false);
+        this.sucursalInput?.clear();
         this.notifier.showSuccess(this.transloco.translate('cuentas.sucursales.assign-success'));
         this.load();
       },
       error: (err: unknown) => {
         this.assigningSucursal.set(false);
-        this.notifier.showServerError(err, this.transloco.translate('cuentas.sucursales.assign-error'));
+        this.notifier.showServerError(err, this.errorMessage(err, 'cuentas.sucursales.assign-error'));
       },
     });
   }
@@ -276,7 +285,7 @@ export class CuentasDetailComponent implements OnInit {
       },
       error: (err: unknown) => {
         this.removingSucursalId.set(null);
-        this.notifier.showServerError(err, this.transloco.translate('cuentas.sucursales.remove-error'));
+        this.notifier.showServerError(err, this.errorMessage(err, 'cuentas.sucursales.remove-error'));
       },
     });
   }

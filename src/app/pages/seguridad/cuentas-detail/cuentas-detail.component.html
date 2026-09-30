@@ -285,7 +285,10 @@
         @if (!isEditMode()) {
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ t('roles.title') }}</mat-label>
-            <input matInput [value]="entity()!.roles[0].nombreRol" disabled />
+            <input
+              matInput
+              [value]="currentRol()?.nombreRol ?? t('roles.empty')"
+              disabled />
           </mat-form-field>
         }
 
@@ -294,10 +297,54 @@
             [fetch]="fetchRoles"
             [displayWith]="displayRol"
             [placeholder]="t('roles.add-placeholder')"
-            [initialText]="entity()!.roles[0].nombreRol"
+            [initialText]="currentRol()?.nombreRol ?? ''"
             [minLength]="0"
             [clearOnInvalidSelection]="true"
             (selectedChanges)="onRolSelected($event)" />
+        }
+      </div>
+
+      <!-- Sucursales card -->
+      <div class="sofia-detail-card mt-3">
+        <div
+          class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+          style="margin-bottom: 1rem">
+          <div>
+            <h4 class="mb-1">{{ t('sucursales.title') }}</h4>
+            <div class="search-info-text">{{ t('sucursales.subtitle') }}</div>
+          </div>
+        </div>
+
+        @for (sucursal of entity()!.sucursales; track sucursal.id) {
+          <div
+            class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <span>{{ sucursal.nombre }}</span>
+            @if (isEditMode()) {
+              <button
+                mat-icon-button
+                [attr.aria-label]="t('sucursales.remove-tooltip')"
+                [matTooltip]="t('sucursales.remove-tooltip')"
+                [disabled]="removingSucursalId() === sucursal.id"
+                (click)="removeSucursal(sucursal.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </div>
+        } @empty {
+          <div class="search-info-text">{{ t('sucursales.empty') }}</div>
+        }
+
+        @if (isEditMode()) {
+          <div class="mt-3">
+            <csw-autocomplete-input
+              #sucursalInput
+              [fetch]="fetchSucursales"
+              [displayWith]="displaySucursal"
+              [placeholder]="t('sucursales.add-placeholder')"
+              [minLength]="0"
+              [clearOnInvalidSelection]="true"
+              (selectedChanges)="onSucursalSelected($event)" />
+          </div>
         }
       </div>
     }

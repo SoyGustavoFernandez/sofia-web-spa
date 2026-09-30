@@ -44,6 +44,10 @@
     "remove-error": "Error al eliminar el rol"
   },
   "sucursales": {
+    "title": "Sucursales Asignadas",
+    "subtitle": "Sucursales adicionales donde esta cuenta puede operar, además de la sucursal base de su empleado",
+    "empty": "Sin sucursales adicionales asignadas",
+    "remove-tooltip": "Quitar sucursal",
     "add-placeholder": "Agregar sucursal...",
     "assign-success": "Sucursal asignada correctamente",
     "assign-error": "Error al asignar la sucursal",
@@ -53,7 +57,9 @@
   "errors": {
     "auto-asignacion": "Una cuenta no puede modificar sus propios roles",
     "admin-reservado": "Solo un administrador puede asignar o quitar el rol Admin",
-    "admin-protegida": "Solo un administrador puede modificar o eliminar la cuenta de un administrador"
+    "admin-protegida": "Solo un administrador puede modificar o eliminar la cuenta de un administrador",
+    "cuenta-not-found": "La cuenta no existe",
+    "sucursal-not-found": "La sucursal no existe"
   },
   "table": {
     "nombreUsuario": "Usuario",
