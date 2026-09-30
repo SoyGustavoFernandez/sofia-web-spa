@@ -21,5 +21,32 @@
     "patients": "Gestión de recetas y pacientes",
     "digemid": "Reportes DIGEMID automatizados",
     "security": "Seguridad y auditoría completa"
+  },
+  "panelTitle": "Gestión completa de tu farmacia",
+  "forgotPage": {
+    "title": "Recupera tu contraseña",
+    "subtitle": "Ingresa tu usuario y te enviaremos un enlace al correo registrado de tu empleado para crear una nueva contraseña.",
+    "submit": "Enviar enlace",
+    "sent": "Si el usuario existe y tiene un correo registrado, recibirás un enlace para restablecer tu contraseña. Revisa tu bandeja de entrada: el enlace es válido por 1 hora.",
+    "error": "No se pudo procesar la solicitud. Inténtalo de nuevo."
+  },
+  "resetPage": {
+    "title": "Crea una nueva contraseña",
+    "subtitle": "Elige una contraseña que no hayas usado antes. Al guardarla se cerrarán todas tus sesiones abiertas.",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar nueva contraseña",
+    "togglePasswords": "Mostrar u ocultar contraseñas",
+    "minLength": "Debe tener al menos {{min}} caracteres",
+    "mismatch": "Las contraseñas no coinciden",
+    "submit": "Guardar contraseña",
+    "success": "Contraseña restablecida. Inicia sesión con tu nueva contraseña.",
+    "error": "No se pudo restablecer la contraseña. Inténtalo de nuevo.",
+    "invalidToken": "El enlace no es válido o ya expiró. Solicita uno nuevo.",
+    "invalidLink": "Este enlace de recuperación está incompleto o ya fue usado. Solicita uno nuevo.",
+    "requestNewLink": "Solicitar un nuevo enlace"
+  },
+  "recovery": {
+    "backToLogin": "Volver a iniciar sesión",
+    "tooManyRequests": "Demasiados intentos. Espera un minuto e inténtalo de nuevo."
   }
 }

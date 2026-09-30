@@ -370,4 +370,31 @@ describe('AuthService', () => {
     expect(req.request.body).toEqual({ currentPassword: 'Actual123', newPassword: 'Nueva1234' });
     req.flush(null, { status: 204, statusText: 'No Content' });
   });
+
+  it('forgotPassword() posts only the username, without cookies or the CSRF header', () => {
+    createService();
+    let completed = false;
+
+    service.forgotPassword('ana').subscribe({ complete: () => (completed = true) });
+
+    const req = httpMock.expectOne(`${AUTH_BASE}/forgot-password`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ nombreUsuario: 'ana' });
+    expect(req.request.withCredentials).toBeFalse();
+    expect(req.request.headers.has('X-SOFIA-CSRF')).toBeFalse();
+    req.flush({ message: 'generic' });
+    expect(completed).toBeTrue();
+  });
+
+  it('resetPassword() posts username, token and new password without cookies', () => {
+    createService();
+
+    service.resetPassword({ nombreUsuario: 'ana', token: 'tok-123', newPassword: 'Nueva1234' }).subscribe();
+
+    const req = httpMock.expectOne(`${AUTH_BASE}/reset-password`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ nombreUsuario: 'ana', token: 'tok-123', newPassword: 'Nueva1234' });
+    expect(req.request.withCredentials).toBeFalse();
+    req.flush(null, { status: 204, statusText: 'No Content' });
+  });
 });

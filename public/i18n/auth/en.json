@@ -21,5 +21,32 @@
     "patients": "Prescription and patient management",
     "digemid": "Automated DIGEMID reports",
     "security": "Full security and audit trail"
+  },
+  "panelTitle": "Complete management for your pharmacy",
+  "forgotPage": {
+    "title": "Recover your password",
+    "subtitle": "Enter your username and we will send a link to your employee's registered email to create a new password.",
+    "submit": "Send link",
+    "sent": "If the user exists and has a registered email, you will receive a link to reset your password. Check your inbox: the link is valid for 1 hour.",
+    "error": "The request could not be processed. Please try again."
+  },
+  "resetPage": {
+    "title": "Create a new password",
+    "subtitle": "Choose a password you have not used before. Saving it will close all your open sessions.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "togglePasswords": "Show or hide passwords",
+    "minLength": "Must be at least {{min}} characters",
+    "mismatch": "Passwords do not match",
+    "submit": "Save password",
+    "success": "Password reset. Sign in with your new password.",
+    "error": "The password could not be reset. Please try again.",
+    "invalidToken": "The link is invalid or has expired. Request a new one.",
+    "invalidLink": "This recovery link is incomplete or has already been used. Request a new one.",
+    "requestNewLink": "Request a new link"
+  },
+  "recovery": {
+    "backToLogin": "Back to sign in",
+    "tooManyRequests": "Too many attempts. Wait a minute and try again."
   }
 }

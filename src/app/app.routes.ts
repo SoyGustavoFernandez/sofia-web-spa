@@ -20,6 +20,16 @@ export const appRoutes: Route[] = [
       ),
   },
   {
+    path: 'auth/forgot-password',
+    loadComponent: () =>
+      import('./pages/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+  },
+  {
+    path: 'auth/reset-password',
+    loadComponent: () =>
+      import('./pages/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
+  },
+  {
     path: '',
     component: FullComponent,
     canActivate: [authGuard],

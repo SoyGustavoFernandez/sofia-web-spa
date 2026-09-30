@@ -24,6 +24,7 @@ interface JwtPayload {
 interface LoginRequest { nombreUsuario: string; password: string; }
 interface AuthResponse { accessToken: string; requiereCambioClave?: boolean; }
 export interface ChangePasswordRequest { currentPassword: string; newPassword: string; }
+export interface ResetPasswordRequest { nombreUsuario: string; token: string; newPassword: string; }
 
 export interface UserPermission { modulo: string; accion: string; }
 // Shape of GET /auth/me; roles come from here because the JWT role claim is not frontend-friendly
@@ -98,6 +99,15 @@ export class AuthService {
   // The server rotates the security stamp and revokes every session, so the caller must log in again
   changePassword(req: ChangePasswordRequest): Observable<void> {
     return this.http.post<void>(`${BASE}/change-password`, req, { withCredentials: true });
+  }
+
+  // Anonymous and cookie-free: the API answers the same whether or not the account exists
+  forgotPassword(nombreUsuario: string): Observable<void> {
+    return this.http.post(`${BASE}/forgot-password`, { nombreUsuario }).pipe(map(() => undefined));
+  }
+
+  resetPassword(req: ResetPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${BASE}/reset-password`, req);
   }
 
   logout(): void {
