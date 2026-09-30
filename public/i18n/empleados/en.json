@@ -10,6 +10,8 @@
     "save-success": "Employee saved successfully",
     "save-error": "Error saving the employee",
     "duplicate-licencia": "An employee with that professional license already exists.",
+    "duplicate-email": "An employee with that email already exists in your company.",
+    "invalid-email": "Enter a valid email address.",
     "delete-success": "Employee deleted successfully",
     "delete-error": "Error deleting the employee",
     "delete-manager": "An employee who manages a branch cannot be deleted. Assign another manager first.",
@@ -21,6 +23,8 @@
     "apellidoPaterno": "Paternal Surname",
     "apellidoMaterno": "Maternal Surname",
     "licencia": "Professional License",
+    "email": "Email",
+    "email-hint": "Optional. Used to send the password recovery link.",
     "sucursal": "Base Branch"
   },
   "table": {
@@ -29,6 +33,7 @@
     "apellidoPaterno": "Paternal Surname",
     "apellidoMaterno": "Maternal Surname",
     "licencia": "Professional License",
+    "email": "Email",
     "sucursal": "Base Branch"
   },
   "autocomplete": {

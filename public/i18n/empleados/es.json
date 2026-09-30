@@ -10,6 +10,8 @@
     "save-success": "Empleado guardado correctamente",
     "save-error": "Error al guardar el empleado",
     "duplicate-licencia": "Ya existe un empleado con esa licencia profesional.",
+    "duplicate-email": "Ya existe un empleado con ese correo electrónico en tu empresa.",
+    "invalid-email": "Ingresa un correo electrónico válido.",
     "delete-success": "Empleado eliminado correctamente",
     "delete-error": "Error al eliminar el empleado",
     "delete-manager": "No se puede eliminar un empleado que gerencia una sucursal. Asigne otro gerente primero.",
@@ -21,6 +23,8 @@
     "apellidoPaterno": "Apellido Paterno",
     "apellidoMaterno": "Apellido Materno",
     "licencia": "Licencia Profesional",
+    "email": "Correo electrónico",
+    "email-hint": "Opcional. Se usa para enviar el enlace de recuperación de contraseña.",
     "sucursal": "Sucursal Base"
   },
   "table": {
@@ -29,6 +33,7 @@
     "apellidoPaterno": "Apellido Paterno",
     "apellidoMaterno": "Apellido Materno",
     "licencia": "Licencia Profesional",
+    "email": "Correo electrónico",
     "sucursal": "Sucursal Base"
   },
   "autocomplete": {

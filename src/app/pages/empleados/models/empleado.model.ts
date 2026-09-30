@@ -13,6 +13,7 @@ export interface Empleado {
   apellido_Materno: string;
   nombre_Completo: string;
   licencia_Prof: string | null;
+  email: string | null;
   sucursalNombre: string | null;
 }
 
@@ -32,6 +33,7 @@ export interface CreateEmpleadoRequest {
   apellido_Paterno: string;
   apellido_Materno: string;
   licencia_Prof?: string;
+  email?: string;
 }
 
 export type UpdateEmpleadoRequest = CreateEmpleadoRequest;

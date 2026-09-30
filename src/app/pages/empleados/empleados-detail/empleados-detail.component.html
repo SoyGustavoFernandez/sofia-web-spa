@@ -95,6 +95,22 @@
               <input matInput formControlName="licencia" maxlength="50" />
             </mat-form-field>
           </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.email') }}</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="email"
+                maxlength="254"
+                autocomplete="off" />
+              <mat-hint>{{ t('fields.email-hint') }}</mat-hint>
+              @if (form.controls.email.hasError('email')) {
+                <mat-error>{{ t('detail.invalid-email') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
         </form>
 
         @if (isEditMode()) {

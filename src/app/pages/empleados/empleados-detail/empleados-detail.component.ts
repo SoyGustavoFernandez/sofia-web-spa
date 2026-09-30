@@ -18,6 +18,8 @@ import { saveErrorKey } from '@shared/utils/save-error-key.util';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'Empleado.LicenciaProf.Duplicado': 'empleados.detail.duplicate-licencia',
+  'Empleado.Email.Duplicado': 'empleados.detail.duplicate-email',
+  'Empleado.Email.Invalido': 'empleados.detail.invalid-email',
 };
 import { SucursalService } from '../../sucursales/services/sucursal.service';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';
@@ -71,6 +73,7 @@ export class EmpleadosDetailComponent implements OnInit {
     apellidoPaterno: ['', [Validators.required, Validators.maxLength(75)]],
     apellidoMaterno: ['', [Validators.required, Validators.maxLength(75)]],
     licencia: ['', [Validators.maxLength(50)]],
+    email: ['', [Validators.email, Validators.maxLength(254)]],
   });
 
   readonly breadcrumbs: BreadcrumbItem[] = [
@@ -129,6 +132,7 @@ export class EmpleadosDetailComponent implements OnInit {
       apellidoPaterno: s.apellido_Paterno,
       apellidoMaterno: s.apellido_Materno,
       licencia: s.licencia_Prof ?? '',
+      email: s.email ?? '',
     });
     this.selectedSucursal.set({ id: s.sucursal_Base_ID, nombre: s.sucursalNombre ?? '' });
     this.sucursalCtrl.setValue(s.sucursalNombre ?? '', { emitEvent: false });
@@ -177,6 +181,7 @@ export class EmpleadosDetailComponent implements OnInit {
       apellido_Paterno: v.apellidoPaterno!,
       apellido_Materno: v.apellidoMaterno!,
       licencia_Prof: v.licencia ? v.licencia : undefined,
+      email: v.email?.trim() ? v.email.trim() : undefined,
     };
 
     const done = (): void => {

@@ -61,7 +61,7 @@ export class EmpleadosSearchComponent implements OnInit {
     { label: 'breadcrumbs.empleados', isActive: true },
   ];
 
-  readonly displayedColumns = ['nombreCompleto', 'apellidoPaterno', 'apellidoMaterno', 'licencia', 'sucursal'];
+  readonly displayedColumns = ['nombreCompleto', 'apellidoPaterno', 'apellidoMaterno', 'licencia', 'email', 'sucursal'];
 
   constructor() {
     this.searchForm.controls.sucursalNombre.valueChanges
@@ -154,6 +154,7 @@ export class EmpleadosSearchComponent implements OnInit {
       t('table.apellidoPaterno'),
       t('table.apellidoMaterno'),
       t('table.licencia'),
+      t('table.email'),
       t('table.sucursal'),
     ];
     const { nombres, apellidoPaterno, apellidoMaterno, licencia, sucursalNombre } = this.searchForm.value;

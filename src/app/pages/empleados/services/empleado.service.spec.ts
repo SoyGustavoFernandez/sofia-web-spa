@@ -44,7 +44,7 @@ describe('EmpleadoService', () => {
     service.getById('emp-1').subscribe();
     httpMock.expectOne(`${BASE}/emp-1`).flush({} as Empleado);
 
-    const createBody = { sucursal_Base_ID: 'suc-1', nombres: 'Ana', apellido_Paterno: 'Ruiz', apellido_Materno: 'Lopez' };
+    const createBody = { sucursal_Base_ID: 'suc-1', nombres: 'Ana', apellido_Paterno: 'Ruiz', apellido_Materno: 'Lopez', email: 'ana@farmacia.pe' };
     service.create(createBody).subscribe();
     const createReq = httpMock.expectOne(BASE);
     expect(createReq.request.method).toBe('POST');

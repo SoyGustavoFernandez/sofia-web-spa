@@ -155,6 +155,15 @@
               </td>
             </ng-container>
 
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('table.email') }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.email ?? '—' }}
+              </td>
+            </ng-container>
+
             <ng-container matColumnDef="sucursal">
               <th mat-header-cell *matHeaderCellDef>
                 {{ t('table.sucursal') }}
