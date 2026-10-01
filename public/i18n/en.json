@@ -110,6 +110,7 @@
   },
   "header.logout": "Sign Out",
   "header.changePassword": "Change password",
+  "header.profileMenu": "User menu",
   "header.reloadPermissions": "Reload permissions",
   "header.roles": "Roles",
   "header.noNotifications": "No notifications",

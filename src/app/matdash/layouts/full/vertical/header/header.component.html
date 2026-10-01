@@ -27,7 +27,10 @@
 
     <!-- Language selector (flag image) -->
     <button mat-icon-button [matMenuTriggerFor]="flags">
-      <img [src]="selectedLanguage().icon" class="rounded-circle object-cover icon-20" alt="lang" />
+      <img
+        [src]="selectedLanguage().icon"
+        class="rounded-circle object-cover icon-20"
+        [alt]="'header.language' | transloco" />
     </button>
     <mat-menu #flags="matMenu" class="cardWithShadow">
       @for (lang of languages; track lang.code) {
@@ -38,9 +41,13 @@
       }
     </mat-menu>
 
-    <!-- Avatar / profile -->
-    <button mat-button [matMenuTriggerFor]="profilemenu" class="profile-btn d-none d-lg-flex">
-      <img src="/images/profile/user-1.jpg" class="rounded-circle icon-35 profile-dd" alt="profile" />
+    <!-- Avatar / profile: visible at every width, it is the only place to sign out or change the password -->
+    <button
+      mat-button
+      [matMenuTriggerFor]="profilemenu"
+      class="profile-btn"
+      [attr.aria-label]="'header.profileMenu' | transloco">
+      <img src="/images/profile/user-1.jpg" class="rounded-circle icon-35 profile-dd" alt="" />
       <i data-icon="solar:alt-arrow-down-bold" class="iconify f-s-8"></i>
     </button>
     <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
