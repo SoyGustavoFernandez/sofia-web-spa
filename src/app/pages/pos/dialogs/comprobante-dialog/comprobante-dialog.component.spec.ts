@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
 import { ComprobanteDto } from '../../models/venta.model';
+import { ReceiptPrintService } from '../../services/receipt-print.service';
 import { ComprobanteDialogComponent, ComprobanteDialogData } from './comprobante-dialog.component';
 
 const comprobante: ComprobanteDto = {
@@ -33,6 +34,7 @@ function setup(overrides: Partial<ComprobanteDto> = {}) {
     cajeroNombre: 'Cajero QA',
     fecha: new Date(2026, 8, 30),
   };
+  const receiptPrint = jasmine.createSpyObj<ReceiptPrintService>('ReceiptPrintService', ['print']);
   TestBed.configureTestingModule({
     imports: [ComprobanteDialogComponent],
     providers: [
@@ -40,11 +42,12 @@ function setup(overrides: Partial<ComprobanteDto> = {}) {
       provideTranslocoTesting(),
       { provide: MatDialogRef, useValue: { close: () => undefined } },
       { provide: MAT_DIALOG_DATA, useValue: data },
+      { provide: ReceiptPrintService, useValue: receiptPrint },
     ],
   });
   const fixture = TestBed.createComponent(ComprobanteDialogComponent);
   fixture.detectChanges();
-  return { component: fixture.componentInstance, text: (fixture.nativeElement as HTMLElement).textContent ?? '' };
+  return { component: fixture.componentInstance, receiptPrint, text: (fixture.nativeElement as HTMLElement).textContent ?? '' };
 }
 
 describe('ComprobanteDialogComponent', () => {
@@ -66,5 +69,15 @@ describe('ComprobanteDialogComponent', () => {
   it('prints no document for the anonymous customer', () => {
     const { component } = setup({ clienteTipoDocumento: '-', clienteNumeroDocumento: '00000000', clienteNombre: 'CLIENTE EVENTUAL' });
     expect(component.clienteDocumento()).toBeNull();
+  });
+
+  it('sends only the receipt element to the isolated printer', () => {
+    const { component, receiptPrint } = setup();
+    component.imprimir();
+    expect(receiptPrint.print).toHaveBeenCalledTimes(1);
+    const printed = receiptPrint.print.calls.mostRecent().args[0];
+    expect(printed.classList).toContain('pos-print-receipt');
+    expect(printed.textContent).toContain('B001-00000012');
+    expect(printed.querySelector('button')).toBeNull();
   });
 });

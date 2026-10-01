@@ -1,10 +1,11 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, ElementRef, Inject, inject, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { MaterialModule } from '@shared/material.module';
 import { ComprobanteDto, estadoComprobanteKey } from '../../models/venta.model';
 import { tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
+import { ReceiptPrintService } from '../../services/receipt-print.service';
 
 const NUMERO_CLIENTE_EVENTUAL = '00000000';
 
@@ -43,6 +44,8 @@ export interface ComprobanteDialogData {
 })
 export class ComprobanteDialogComponent {
   private readonly transloco = inject(TranslocoService);
+  private readonly receiptPrint = inject(ReceiptPrintService);
+  private readonly receipt = viewChild<ElementRef<HTMLElement>>('receipt');
 
   constructor(
     public dialogRef: MatDialogRef<ComprobanteDialogComponent>,
@@ -71,6 +74,7 @@ export class ComprobanteDialogComponent {
   }
 
   imprimir(): void {
-    window.print();
+    const receipt = this.receipt();
+    if (receipt) this.receiptPrint.print(receipt.nativeElement);
   }
 }
