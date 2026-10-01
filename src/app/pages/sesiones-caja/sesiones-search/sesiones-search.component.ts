@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { PageEvent } from '@angular/material/paginator';
 import { MaterialModule } from '@shared/material.module';
+import { toLocalDayEndIso, toLocalDayStartIso } from '@shared/utils/date-only.util';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SearchStateService } from '@core/services/shared/search-state.service';
@@ -67,8 +68,8 @@ export class SesionesSearchComponent implements OnInit {
     const v = this.form.value;
     return {
       estadoSesion: v.estadoSesion ?? undefined,
-      fechaInicio: v.fechaInicio ? (v.fechaInicio as Date).toISOString() : undefined,
-      fechaFin: v.fechaFin ? (v.fechaFin as Date).toISOString() : undefined,
+      fechaInicio: toLocalDayStartIso(v.fechaInicio),
+      fechaFin: toLocalDayEndIso(v.fechaFin),
     };
   }
 

@@ -7,7 +7,7 @@
     <button mat-icon-button (click)="toggleCollapsed.emit()" class="d-none d-sidebar-toggle-desktop">
       <i class="iconify" data-icon="solar:hamburger-menu-line-duotone"></i>
     </button>
-    <span class="date-text text-muted">{{ currentDate | date: "EEEE d 'de' MMMM y" }}</span>
+    <span class="date-text text-muted">{{ headerDate() }}</span>
   </div>
 
   <span class="flex-1-auto"></span>

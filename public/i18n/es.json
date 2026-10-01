@@ -116,6 +116,20 @@
   "header.notifications": "Notificaciones",
   "header.language": "Idioma",
   "header.version": "Versión",
+  "header.date-format": "EEEE d 'de' MMMM 'de' y",
+  "datepicker": {
+    "calendar": "Calendario",
+    "openCalendar": "Abrir calendario",
+    "closeCalendar": "Cerrar calendario",
+    "prevMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "prevYear": "Año anterior",
+    "nextYear": "Año siguiente",
+    "prevMultiYear": "24 años anteriores",
+    "nextMultiYear": "24 años siguientes",
+    "switchToMonthView": "Elegir fecha",
+    "switchToMultiYearView": "Elegir mes y año"
+  },
   "pagination": {
     "itemsPerPage": "Items por página",
     "nextPage": "Siguiente página",

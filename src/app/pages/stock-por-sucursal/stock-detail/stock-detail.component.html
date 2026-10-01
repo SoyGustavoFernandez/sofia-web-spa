@@ -163,7 +163,7 @@
               <mat-label>{{ t('fields.caducidad') }}</mat-label>
               <input
                 matInput
-                [value]="s.fechaCaducidad | date: 'dd/MM/yyyy'"
+                [value]="s.fechaCaducidad.substring(0, 10) | date: 'dd/MM/yyyy'"
                 disabled />
             </mat-form-field>
           </div>

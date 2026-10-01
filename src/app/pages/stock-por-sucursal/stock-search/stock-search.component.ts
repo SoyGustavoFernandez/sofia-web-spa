@@ -8,6 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators';
 import { MaterialModule } from '@shared/material.module';
+import { toLocalMidnightIso } from '@shared/utils/date-only.util';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SearchStateService } from '@core/services/shared/search-state.service';
@@ -126,10 +127,6 @@ export class StockSearchComponent implements OnInit {
     }
   }
 
-  private toIsoDate(date: Date | null | undefined): string | undefined {
-    return date ? new Date(date).toISOString().split('T')[0] : undefined;
-  }
-
   selectSucursal(sucursal: SucursalPermitida): void {
     this.searchForm.controls.sucursalNombre.setValue(sucursal.nombre, { emitEvent: false });
   }
@@ -144,8 +141,8 @@ export class StockSearchComponent implements OnInit {
       sucursalNombre: v.sucursalNombre || undefined,
       productoNombre: v.productoNombre || undefined,
       numeroLote: v.numeroLote || undefined,
-      caducidadDesde: this.toIsoDate(v.caducidadDesde),
-      caducidadHasta: this.toIsoDate(v.caducidadHasta),
+      caducidadDesde: toLocalMidnightIso(v.caducidadDesde),
+      caducidadHasta: toLocalMidnightIso(v.caducidadHasta),
       cantidadMin: v.cantidadMin ?? undefined,
       cantidadMax: v.cantidadMax ?? undefined,
       soloConStock: v.soloConStock ?? true,

@@ -21,7 +21,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import * as TablerIcons from 'angular-tabler-icons/icons';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideSofiaDates } from '@shared/date/provide-sofia-dates';
 import { TranslocoHttpLoader } from '@core/transloco/transloco-loader';
 import { authInterceptor } from '@core/interceptors/auth.interceptor';
 import { CSLoadingInterceptor } from '@shared/services/loading/loading.interceptor';
@@ -29,7 +29,7 @@ import { CSLoadingInterceptor } from '@shared/services/loading/loading.intercept
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
-    provideNativeDateAdapter(),
+    ...provideSofiaDates(),
     provideRouter(
       appRoutes,
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })

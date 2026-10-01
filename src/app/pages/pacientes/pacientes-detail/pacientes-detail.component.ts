@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from '@shared/material.module';
+import { fromDateOnly, toDateOnly } from '@shared/utils/date-only.util';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
@@ -63,7 +64,7 @@ export class PacientesDetailComponent implements OnInit {
     tipoDocumento: [null as string | null, [Validators.required]],
     docIdentidadGub: ['', [Validators.required, Validators.maxLength(20), documentoIdentidadValidator()]],
     nombreApellidos: ['', [Validators.required, Validators.maxLength(200)]],
-    // fechaNacimiento holds a Date object for mat-datepicker; convert to ISO string before saving
+    // fechaNacimiento holds a Date object for mat-datepicker; convert to a local yyyy-MM-dd before saving
     fechaNacimiento: [null as Date | null, [Validators.required]],
     contactoPrimario: [null as string | null, [Validators.maxLength(150)]],
   });
@@ -96,7 +97,7 @@ export class PacientesDetailComponent implements OnInit {
           tipoDocumento: data.tipoDocumento,
           docIdentidadGub: data.docIdentidadGub,
           nombreApellidos: data.nombreApellidos,
-          fechaNacimiento: data.fechaNacimiento ? new Date(data.fechaNacimiento) : null,
+          fechaNacimiento: fromDateOnly(data.fechaNacimiento),
           contactoPrimario: data.contactoPrimario,
         });
         this.loading.set(false);
@@ -122,7 +123,7 @@ export class PacientesDetailComponent implements OnInit {
         tipoDocumento: this.snapshot?.tipoDocumento ?? null,
         docIdentidadGub: this.snapshot?.docIdentidadGub ?? '',
         nombreApellidos: this.snapshot?.nombreApellidos ?? '',
-        fechaNacimiento: this.snapshot?.fechaNacimiento ? new Date(this.snapshot.fechaNacimiento) : null,
+        fechaNacimiento: fromDateOnly(this.snapshot?.fechaNacimiento),
         contactoPrimario: this.snapshot?.contactoPrimario ?? null,
       });
       this.form.disable();
@@ -136,7 +137,7 @@ export class PacientesDetailComponent implements OnInit {
     }
     this.saving.set(true);
     const { tipoDocumento, docIdentidadGub, nombreApellidos, fechaNacimiento, contactoPrimario } = this.form.value;
-    const fechaIso = fechaNacimiento ? fechaNacimiento.toISOString().split('T')[0] : '';
+    const fechaIso = toDateOnly(fechaNacimiento) ?? '';
     const body = {
       tipoDocumento: tipoDocumento!,
       docIdentidadGub: docIdentidadGub!,

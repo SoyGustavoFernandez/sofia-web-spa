@@ -8,6 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MaterialModule } from '@shared/material.module';
+import { toLocalMidnightIso } from '@shared/utils/date-only.util';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SearchStateService } from '@core/services/shared/search-state.service';
@@ -92,10 +93,6 @@ export class LotesSearchComponent implements OnInit {
     }
   }
 
-  private toIsoDate(date: Date | null | undefined): string | undefined {
-    return date ? new Date(date).toISOString().split('T')[0] : undefined;
-  }
-
   selectProducto(producto: MedicamentoListItem): void {
     this.searchForm.controls.productoNombre.setValue(producto.nombreComercial, { emitEvent: false });
   }
@@ -112,10 +109,10 @@ export class LotesSearchComponent implements OnInit {
     return {
       productoNombre: v.productoNombre ?? undefined,
       numeroLote: v.numeroLote ?? undefined,
-      caducidadDesde: this.toIsoDate(v.caducidadDesde),
-      caducidadHasta: this.toIsoDate(v.caducidadHasta),
-      fabricacionDesde: this.toIsoDate(v.fabricacionDesde),
-      fabricacionHasta: this.toIsoDate(v.fabricacionHasta),
+      caducidadDesde: toLocalMidnightIso(v.caducidadDesde),
+      caducidadHasta: toLocalMidnightIso(v.caducidadHasta),
+      fabricacionDesde: toLocalMidnightIso(v.fabricacionDesde),
+      fabricacionHasta: toLocalMidnightIso(v.fabricacionHasta),
     };
   }
 

@@ -8,7 +8,9 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { formatDate } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { CoreService } from '@matdash/services/core.service';
 import { RouterModule } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
@@ -19,6 +21,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@core/auth/auth.service';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { dateLocaleForLang } from '@shared/date/sofia-date-adapter';
 
 interface LanguageOption {
   language: string;
@@ -34,7 +37,6 @@ interface LanguageOption {
     TablerIconsModule,
     MaterialModule,
     TranslocoModule,
-    DatePipe,
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
@@ -55,6 +57,14 @@ export class HeaderComponent {
   options: AppSettings;
   appVersion = environment.appVersion;
   readonly currentDate = new Date();
+
+  // Re-emits once the active language file is loaded, so format and locale always match
+  readonly headerDate = toSignal(
+    this.transloco
+      .selectTranslate<string>('header.date-format')
+      .pipe(map(format => formatDate(this.currentDate, format, dateLocaleForLang(this.transloco.getActiveLang())))),
+    { initialValue: '' },
+  );
 
   readonly languages: LanguageOption[] = [
     { language: 'Español', code: 'es', icon: '/images/flag/icon-flag-es.svg' },

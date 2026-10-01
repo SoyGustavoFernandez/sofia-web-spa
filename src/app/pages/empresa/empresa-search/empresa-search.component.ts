@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
-import { DateAdapter } from '@angular/material/core';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
@@ -32,7 +31,6 @@ export class EmpresaSearchComponent implements OnInit {
   private readonly service = inject(EmpresaService);
   private readonly transloco = inject(TranslocoService);
   private readonly notifier = inject(ErrorNotifierService);
-  private readonly dateAdapter = inject(DateAdapter<Date>);
   private readonly searchState = inject(SearchStateService);
 
   readonly showResults = signal(false);
@@ -71,12 +69,6 @@ export class EmpresaSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const locale = this.transloco.getActiveLang() === 'es' ? 'es-PE' : 'en-US';
-    this.dateAdapter.setLocale(locale);
-    this.transloco.langChanges$.subscribe(lang => {
-      this.dateAdapter.setLocale(lang === 'es' ? 'es-PE' : 'en-US');
-    });
-
     const saved = this.searchState.restore(this.stateKey);
     if (saved) {
       this.searchForm.patchValue(saved.formValues);

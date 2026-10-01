@@ -40,7 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { MatNativeDateModule } from '@angular/material/core';
+import { SOFIA_DATE_PROVIDERS } from '@shared/date/provide-sofia-dates';
 
 @NgModule({
   declarations: [],
@@ -80,7 +80,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
-    MatNativeDateModule,
   ],
+  // Own providers win over the ones Material modules bring into each standalone component injector
+  providers: [SOFIA_DATE_PROVIDERS],
 })
 export class MaterialModule {}

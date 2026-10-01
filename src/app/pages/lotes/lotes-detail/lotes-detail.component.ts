@@ -9,6 +9,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MaterialModule } from '@shared/material.module';
+import { fromDateOnly, toLocalMidnightIso } from '@shared/utils/date-only.util';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
@@ -120,8 +121,8 @@ export class LotesDetailComponent implements OnInit {
     if (!s) return;
     this.form.patchValue({
       numeroLoteMfr: s.numeroLoteMfr,
-      fechaFabricacion: s.fechaFabricacion ? new Date(s.fechaFabricacion) : null,
-      fechaCaducidad: s.fechaCaducidad ? new Date(s.fechaCaducidad) : null,
+      fechaFabricacion: fromDateOnly(s.fechaFabricacion),
+      fechaCaducidad: fromDateOnly(s.fechaCaducidad),
     });
     this.selectedProducto.set({ id: s.productoId, nombre: s.nombreProducto });
     this.productoCtrl.setValue(s.nombreProducto, { emitEvent: false });
@@ -149,10 +150,6 @@ export class LotesDetailComponent implements OnInit {
     this.form.disable();
     this.productoCtrl.disable();
     this.productoTouched.set(false);
-  }
-
-  private toIsoDate(date: Date | null | undefined): string | undefined {
-    return date ? new Date(date).toISOString().split('T')[0] : undefined;
   }
 
   save(): void {
@@ -187,16 +184,16 @@ export class LotesDetailComponent implements OnInit {
         .create({
           productoId: this.selectedProducto()!.id,
           numeroLoteMfr: v.numeroLoteMfr!,
-          fechaFabricacion: this.toIsoDate(v.fechaFabricacion),
-          fechaCaducidad: this.toIsoDate(v.fechaCaducidad)!,
+          fechaFabricacion: toLocalMidnightIso(v.fechaFabricacion),
+          fechaCaducidad: toLocalMidnightIso(v.fechaCaducidad)!,
         })
         .subscribe({ next: done, error: fail });
     } else {
       this.service
         .update(this.entityId!, {
           numeroLoteMfr: v.numeroLoteMfr!,
-          fechaFabricacion: this.toIsoDate(v.fechaFabricacion),
-          fechaCaducidad: this.toIsoDate(v.fechaCaducidad)!,
+          fechaFabricacion: toLocalMidnightIso(v.fechaFabricacion),
+          fechaCaducidad: toLocalMidnightIso(v.fechaCaducidad)!,
         })
         .subscribe({ next: done, error: fail });
     }

@@ -167,7 +167,8 @@
               <td mat-cell *matCellDef="let row">
                 {{
                   row.fechaFabricacion
-                    ? (row.fechaFabricacion | date: 'dd/MM/yyyy')
+                    ? (row.fechaFabricacion.substring(0, 10)
+                      | date: 'dd/MM/yyyy')
                     : '—'
                 }}
               </td>
@@ -178,7 +179,7 @@
                 {{ t('table.caducidad') }}
               </th>
               <td mat-cell *matCellDef="let row">
-                {{ row.fechaCaducidad | date: 'dd/MM/yyyy' }}
+                {{ row.fechaCaducidad.substring(0, 10) | date: 'dd/MM/yyyy' }}
               </td>
             </ng-container>
 

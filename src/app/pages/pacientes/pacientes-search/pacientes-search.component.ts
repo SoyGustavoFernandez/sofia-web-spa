@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { PageEvent } from '@angular/material/paginator';
 import { MaterialModule } from '@shared/material.module';
+import { toDateOnly } from '@shared/utils/date-only.util';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SearchStateService } from '@core/services/shared/search-state.service';
@@ -74,10 +75,6 @@ export class PacientesSearchComponent implements OnInit {
     }
   }
 
-  private toIsoDate(date: Date | null | undefined): string | undefined {
-    return date ? date.toISOString().split('T')[0] : undefined;
-  }
-
   search(): void {
     this.loading.set(true);
     const { tipoDocumento, docIdentidadGub, nombreApellidos, fechaNacimientoDesde, fechaNacimientoHasta } = this.searchForm.value;
@@ -86,8 +83,8 @@ export class PacientesSearchComponent implements OnInit {
         tipoDocumento: tipoDocumento || undefined,
         docIdentidadGub: docIdentidadGub ?? undefined,
         nombreApellidos: nombreApellidos ?? undefined,
-        fechaNacimientoDesde: this.toIsoDate(fechaNacimientoDesde),
-        fechaNacimientoHasta: this.toIsoDate(fechaNacimientoHasta),
+        fechaNacimientoDesde: toDateOnly(fechaNacimientoDesde),
+        fechaNacimientoHasta: toDateOnly(fechaNacimientoHasta),
         pageNumber: this.pageIndex() + 1,
         pageSize: this.pageSize(),
       })
@@ -144,8 +141,8 @@ export class PacientesSearchComponent implements OnInit {
       tipoDocumento: tipoDocumento || undefined,
       docIdentidadGub: docIdentidadGub ?? undefined,
       nombreApellidos: nombreApellidos ?? undefined,
-      fechaNacimientoDesde: this.toIsoDate(fechaNacimientoDesde),
-      fechaNacimientoHasta: this.toIsoDate(fechaNacimientoHasta),
+      fechaNacimientoDesde: toDateOnly(fechaNacimientoDesde),
+      fechaNacimientoHasta: toDateOnly(fechaNacimientoHasta),
     };
     this.service.exportar(headers, dateFormat, filters).subscribe({
       next: blob => {

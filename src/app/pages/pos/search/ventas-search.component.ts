@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MaterialModule } from '@shared/material.module';
+import { toLocalDayEndIso, toLocalDayStartIso } from '@shared/utils/date-only.util';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SearchStateService } from '@core/services/shared/search-state.service';
@@ -120,10 +121,6 @@ export class VentasSearchComponent implements OnInit {
     }
   }
 
-  private toIsoDate(date: Date | null | undefined): string | undefined {
-    return date ? new Date(date).toISOString().split('T')[0] : undefined;
-  }
-
   displayEmpleado = (e: Empleado | string | null): string => (e && typeof e === 'object' ? e.nombre_Completo : (e ?? ''));
   displayCliente = (p: PacienteListItem | string | null): string => (p && typeof p === 'object' ? p.nombreApellidos : (p ?? ''));
 
@@ -150,8 +147,8 @@ export class VentasSearchComponent implements OnInit {
   private currentFilters(): { fechaInicio?: string; fechaFin?: string; estado?: EstadoVenta; empleadoId?: string; clienteId?: string } {
     const v = this.searchForm.value;
     return {
-      fechaInicio: this.toIsoDate(v.fechaInicio),
-      fechaFin: this.toIsoDate(v.fechaFin),
+      fechaInicio: toLocalDayStartIso(v.fechaInicio),
+      fechaFin: toLocalDayEndIso(v.fechaFin),
       estado: v.estado ?? undefined,
       empleadoId: this.selectedEmpleadoId,
       clienteId: this.selectedClienteId,
