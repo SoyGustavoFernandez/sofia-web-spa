@@ -31,14 +31,37 @@
         }
 
         <form [formGroup]="form" class="row g-3">
-          <div class="col-md-6">
+          <div class="col-md-3">
             <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.tipoDocumento') }}</mat-label>
+              <mat-select formControlName="tipoDocumento">
+                @for (tipo of tiposDocumento; track tipo) {
+                  <mat-option [value]="tipo">{{
+                    tipoDocumentoKey(tipo)! | transloco
+                  }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field
+              appearance="outline"
+              class="w-100"
+              subscriptSizing="dynamic">
               <mat-label>{{ t('fields.docIdentidadGub') }}</mat-label>
               <input
                 matInput
                 formControlName="docIdentidadGub"
                 maxlength="20" />
-              <mat-error>{{ 'general.errors.required' | transloco }}</mat-error>
+              @if (form.controls.docIdentidadGub.hasError('documentoFormato')) {
+                <mat-error>{{ t('detail.documento-formato') }}</mat-error>
+              } @else {
+                <mat-error>{{
+                  'general.errors.required' | transloco
+                }}</mat-error>
+              }
             </mat-form-field>
           </div>
 

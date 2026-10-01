@@ -241,7 +241,8 @@
       "invalid-option": "'{{value}}' is not a valid value for '{{field}}'",
       "positive-number": "'{{field}}' must be greater than zero",
       "must-differ": "'{{field}}' cannot be equal to '{{other}}'",
-      "ambiguous": "Value '{{value}}' for field '{{field}}' matches more than one record in the system"
+      "ambiguous": "Value '{{value}}' for field '{{field}}' matches more than one record in the system",
+      "invalid-document-number": "'{{field}}' does not match its document type format (DNI: 8 digits, RUC: 11 digits, CE: up to 12 and passport: up to 20 letters or numbers)"
     },
     "errors": {
       "invalid-file": "The file is not a valid .xlsx workbook. Download the template and try again.",
@@ -250,5 +251,12 @@
       "too-many-rows": "The file exceeds the maximum of {{maxRows}} rows. Split it into several files.",
       "invalid-rows": "Some rows contain invalid data. Upload the file again and review the preview."
     }
+  },
+  "tipos-documento": {
+    "1": "DNI",
+    "4": "Foreign resident card",
+    "6": "RUC",
+    "7": "Passport",
+    "-": "No document"
   }
 }

@@ -71,7 +71,8 @@
     "search-error": "Error al buscar pacientes",
     "export-filename": "pacientes.xlsx",
     "fechaNacimientoDesde": "Fecha Nacimiento Desde",
-    "fechaNacimientoHasta": "Fecha Nacimiento Hasta"
+    "fechaNacimientoHasta": "Fecha Nacimiento Hasta",
+    "tipoDocumentoTodos": "Todos"
   },
   "detail": {
     "title-new": "Nuevo Paciente",
@@ -83,15 +84,19 @@
     "delete-error": "Error al eliminar el paciente",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Está seguro de que desea eliminar este paciente?",
-    "load-error": "Error al cargar el paciente"
+    "load-error": "Error al cargar el paciente",
+    "documento-formato": "El número no corresponde al tipo de documento (DNI: 8 dígitos, RUC: 11 dígitos, CE: hasta 12 y pasaporte: hasta 20 letras o números).",
+    "tipo-documento-requerido": "Selecciona un tipo de documento válido."
   },
   "fields": {
+    "tipoDocumento": "Tipo de Documento",
     "docIdentidadGub": "Documento de Identidad",
     "nombreApellidos": "Nombre y Apellidos",
     "fechaNacimiento": "Fecha de Nacimiento",
     "contactoPrimario": "Contacto Primario"
   },
   "table": {
+    "tipoDocumento": "Tipo Doc.",
     "docIdentidadGub": "Doc. Identidad",
     "nombreApellidos": "Nombre y Apellidos",
     "fechaNacimiento": "Fecha Nacimiento",

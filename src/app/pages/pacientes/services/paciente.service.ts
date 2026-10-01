@@ -20,6 +20,9 @@ export class PacienteService {
     let httpParams = new HttpParams()
       .set('pageNumber', params.pageNumber)
       .set('pageSize', params.pageSize);
+    if (params.tipoDocumento) {
+      httpParams = httpParams.set('tipoDocumento', params.tipoDocumento);
+    }
     if (params.docIdentidadGub) {
       httpParams = httpParams.set('docIdentidadGub', params.docIdentidadGub);
     }
@@ -51,7 +54,7 @@ export class PacienteService {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
 
-  exportar(headers: string[], dateFormat: string, filters: { docIdentidadGub?: string; nombreApellidos?: string; fechaNacimientoDesde?: string; fechaNacimientoHasta?: string }): Observable<Blob> {
+  exportar(headers: string[], dateFormat: string, filters: { tipoDocumento?: string; docIdentidadGub?: string; nombreApellidos?: string; fechaNacimientoDesde?: string; fechaNacimientoHasta?: string }): Observable<Blob> {
     return this.http.post(`${this.base}/exportar`, { headers, dateFormat, ...filters }, { responseType: 'blob' });
   }
 }

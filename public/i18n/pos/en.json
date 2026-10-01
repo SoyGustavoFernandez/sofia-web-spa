@@ -224,11 +224,13 @@
   },
   "comprobante": {
     "title": "Sale Processed Successfully",
-    "subtitle": "SUNAT Electronic Receipt issued successfully.",
+    "subtitle": "Receipt registered. Pending submission to SUNAT.",
     "boletaNumero": "Receipt No:",
     "estadoSunat": "SUNAT Status:",
     "totalPagado": "Total Paid:",
-    "medioPago": "Payment Method:"
+    "medioPago": "Payment Method:",
+    "rucLabel": "RUC:",
+    "documentoLabel": "Document:"
   },
   "dialogs": {
     "aperturaTitle": "Open Shift Register",
@@ -330,6 +332,14 @@
     "recetaNoEncontrada": "The selected medical prescription does not exist or was deleted.",
     "recetaOtroPaciente": "The medical prescription does not belong to the sale customer.",
     "recetaAgotada": "The medical prescription has already been dispensed the maximum number of times allowed.",
-    "loteVencido": "One of the batches is expired and cannot be sold. Remove it from the cart."
+    "loteVencido": "One of the batches is expired and cannot be sold. Remove it from the cart.",
+    "empresaSinRuc": "Your company has no RUC registered, so it cannot issue receipts. Fill it in under Administration > Company to collect sales."
+  },
+  "estadoComprobante": {
+    "NoEnviado": "Pending submission to SUNAT",
+    "Pendiente": "Pending submission to SUNAT",
+    "Aceptado": "Accepted by SUNAT",
+    "Rechazado": "Rejected by SUNAT",
+    "Anulado": "Voided"
   }
 }

@@ -57,6 +57,19 @@ export interface ComprobanteDto {
   urlVerificacion: string | null;
   urlXml: string | null;
   urlCdr: string | null;
+  emisorRazonSocial: string | null;
+  emisorRuc: string | null;
+  sucursalDireccion: string | null;
+  clienteTipoDocumento: string;
+  clienteNumeroDocumento: string;
+  clienteNombre: string;
+}
+
+// Statuses stored in Estado_Aceptacion; Pendiente and Aceptado also appear on receipts issued before the honest status existed
+const ESTADOS_COMPROBANTE = ['NoEnviado', 'Pendiente', 'Aceptado', 'Rechazado', 'Anulado'];
+
+export function estadoComprobanteKey(estado: string): string | null {
+  return ESTADOS_COMPROBANTE.includes(estado) ? `pos.estadoComprobante.${estado}` : null;
 }
 
 export interface VentaPagoDto {
@@ -78,6 +91,7 @@ export interface VentaConDetalle {
   clienteId: string | null;
   clienteNombre: string | null;
   clienteDocumento: string | null;
+  clienteTipoDocumento: string | null;
   detalles: VentaDetalle[];
   comprobante: ComprobanteDto | null;
   pagos: VentaPagoDto[];

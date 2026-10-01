@@ -224,11 +224,13 @@
   },
   "comprobante": {
     "title": "Venta Procesada Exitosamente",
-    "subtitle": "Comprobante Electrónico SUNAT emitido correctamente.",
+    "subtitle": "Comprobante registrado. Pendiente de envío a SUNAT.",
     "boletaNumero": "Nº Comprobante:",
     "estadoSunat": "Estado SUNAT:",
     "totalPagado": "Total Pagado:",
-    "medioPago": "Medio de Pago:"
+    "medioPago": "Medio de Pago:",
+    "rucLabel": "RUC:",
+    "documentoLabel": "Documento:"
   },
   "dialogs": {
     "aperturaTitle": "Aperturar Caja de Turno",
@@ -330,6 +332,14 @@
     "recetaNoEncontrada": "La receta médica seleccionada no existe o fue eliminada.",
     "recetaOtroPaciente": "La receta médica no pertenece al cliente de la venta.",
     "recetaAgotada": "La receta médica ya fue dispensada el máximo de veces permitido.",
-    "loteVencido": "Uno de los lotes está vencido y no se puede vender. Retíralo del carrito."
+    "loteVencido": "Uno de los lotes está vencido y no se puede vender. Retíralo del carrito.",
+    "empresaSinRuc": "Tu empresa no tiene RUC registrado, por lo que no puede emitir comprobantes. Complétalo en Administración > Empresa para poder cobrar."
+  },
+  "estadoComprobante": {
+    "NoEnviado": "Pendiente de envío a SUNAT",
+    "Pendiente": "Pendiente de envío a SUNAT",
+    "Aceptado": "Aceptado por SUNAT",
+    "Rechazado": "Rechazado por SUNAT",
+    "Anulado": "Anulado"
   }
 }

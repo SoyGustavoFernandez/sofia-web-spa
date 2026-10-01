@@ -27,6 +27,7 @@ export class PacientesCargaMasivaComponent {
       { label: 'breadcrumbs.carga-masiva', isActive: true },
     ],
     columns: [
+      { key: 'tipoDocumento', label: 'fields.tipoDocumento', required: true },
       { key: 'docIdentidadGub', label: 'fields.docIdentidadGub', required: true },
       { key: 'nombreApellidos', label: 'fields.nombreApellidos', required: true },
       { key: 'fechaNacimiento', label: 'fields.fechaNacimiento', required: true },

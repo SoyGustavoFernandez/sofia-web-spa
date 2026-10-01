@@ -57,7 +57,7 @@ describe('RecetasSearchComponent', () => {
     const fixture = TestBed.createComponent(RecetasSearchComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
-    component.selectPaciente({ id: 'pac-1', nombreApellidos: 'María Quispe', docIdentidadGub: '1', fechaNacimiento: '', contactoPrimario: null });
+    component.selectPaciente({ id: 'pac-1', tipoDocumento: '1', nombreApellidos: 'María Quispe', docIdentidadGub: '1', fechaNacimiento: '', contactoPrimario: null });
     const desde = new Date(2026, 8, 1);
     const hasta = new Date(2026, 8, 30);
     component.form.patchValue({ fechaInicio: desde, fechaFin: hasta }, { emitEvent: false });

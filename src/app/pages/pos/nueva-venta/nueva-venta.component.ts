@@ -26,6 +26,7 @@ import { PresentacionVentaService } from '../../presentaciones-venta/services/pr
 import { PresentacionVenta } from '../../presentaciones-venta/models/presentacion-venta.model';
 import { PacienteService } from '../../pacientes/services/paciente.service';
 import { PacienteListItem } from '../../pacientes/models/paciente.model';
+import { tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
 import { AseguradoraService } from '../../aseguradoras/services/aseguradora.service';
 import { AseguradoraListItem } from '../../aseguradoras/models/aseguradora.model';
 import { RecetaMedicaService } from '../../recetas-medicas/services/receta-medica.service';
@@ -75,6 +76,7 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   'Venta.Receta.Agotada': 'pos.messages.recetaAgotada',
   'Venta.Lote.Vencido': 'pos.messages.loteVencido',
   'Venta.SerieBoleta.NoConfigurada': 'pos.messages.serieBoletaNoConfigurada',
+  'Venta.Empresa.SinRuc': 'pos.messages.empresaSinRuc',
   'Concurrency.Conflict': 'errors.concurrencyConflict',
 };
 
@@ -363,6 +365,7 @@ export class NuevaVentaComponent implements OnInit {
           if (venta.clienteId) {
             const cliente: PacienteListItem = {
               id: venta.clienteId,
+              tipoDocumento: venta.clienteTipoDocumento,
               docIdentidadGub: venta.clienteDocumento ?? '',
               nombreApellidos: venta.clienteNombre ?? '',
               fechaNacimiento: '',
@@ -440,13 +443,14 @@ export class NuevaVentaComponent implements OnInit {
 
   // The draft keeps only the customer id; the id placeholder keeps it in the draft while the details load
   private restaurarCliente(clienteId: string, recetaId: string): void {
-    this.selectedCliente.set({ id: clienteId, docIdentidadGub: '', nombreApellidos: '', fechaNacimiento: '', contactoPrimario: null });
+    this.selectedCliente.set({ id: clienteId, tipoDocumento: null, docIdentidadGub: '', nombreApellidos: '', fechaNacimiento: '', contactoPrimario: null });
     this.cargarRecetasCliente(clienteId, recetaId);
     this.pacienteService.getById(clienteId).subscribe({
       next: paciente => {
         if (this.selectedCliente()?.id !== clienteId) return;
         const cliente: PacienteListItem = {
           id: paciente.id,
+          tipoDocumento: paciente.tipoDocumento,
           docIdentidadGub: paciente.docIdentidadGub,
           nombreApellidos: paciente.nombreApellidos,
           fechaNacimiento: paciente.fechaNacimiento,
@@ -740,6 +744,12 @@ export class NuevaVentaComponent implements OnInit {
   }
 
   // ── Customer / Insurance ───────────────────────────────
+  // Customer identity as shown at the POS, e.g. "DNI 45781236"; legacy patients without a type show only the number
+  documentoCliente(p: PacienteListItem): string {
+    const key = tipoDocumentoKey(p.tipoDocumento);
+    return key ? `${this.transloco.translate(key)} ${p.docIdentidadGub}` : p.docIdentidadGub;
+  }
+
   displayCliente = (p: PacienteListItem | string | null): string => (p && typeof p === 'object' ? p.nombreApellidos : (p ?? ''));
 
   onClienteSelected(event: MatAutocompleteSelectedEvent): void {
@@ -990,7 +1000,6 @@ export class NuevaVentaComponent implements OnInit {
           detalles: this.cart().map(l => ({ productoNombre: l.productoNombre, numeroLote: l.numeroLote, cantidad: l.cantidad, precioUnitario: l.precioUnitario })),
           pagos: this.pagos().map(p => ({ metodo: this.metodoPagoLabel(p.metodoPago), monto: p.monto })),
           clienteNombre: this.selectedCliente()?.nombreApellidos ?? this.transloco.translate('pos.checkout.clienteEventual'),
-          empresaNombre: this.authService.currentUser()?.nombreEmpresa ?? null,
           cajeroNombre: this.authService.currentUser()?.fullName ?? null,
           fecha: new Date(),
         };

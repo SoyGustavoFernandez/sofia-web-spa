@@ -11,9 +11,16 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { PacienteService } from '../services/paciente.service';
 import { PacienteDetail } from '../models/paciente.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
+import { TIPOS_DOCUMENTO_IDENTIDAD, documentoIdentidadValidator, tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'Paciente.DocIdentidadGub.Duplicado': 'pacientes.detail.duplicate-documento',
+  'PacienteCliente.DocIdentidadGub.FormatoInvalido': 'pacientes.detail.documento-formato',
+  'CreatePacienteCommand.DocIdentidadGub': 'pacientes.detail.documento-formato',
+  'UpdatePacienteCommand.DocIdentidadGub': 'pacientes.detail.documento-formato',
+  'PacienteCliente.TipoDocumento': 'pacientes.detail.tipo-documento-requerido',
+  'CreatePacienteCommand.TipoDocumento': 'pacientes.detail.tipo-documento-requerido',
+  'UpdatePacienteCommand.TipoDocumento': 'pacientes.detail.tipo-documento-requerido',
 };
 
 @Component({
@@ -48,8 +55,13 @@ export class PacientesDetailComponent implements OnInit {
   private entityId: string | null = null;
   private snapshot: PacienteDetail | null = null;
 
+  readonly tiposDocumento = TIPOS_DOCUMENTO_IDENTIDAD;
+  readonly tipoDocumentoKey = tipoDocumentoKey;
+
+  // Legacy patients have no type: it stays empty and must be chosen before saving
   readonly form = this.fb.group({
-    docIdentidadGub: ['', [Validators.required, Validators.maxLength(20)]],
+    tipoDocumento: [null as string | null, [Validators.required]],
+    docIdentidadGub: ['', [Validators.required, Validators.maxLength(20), documentoIdentidadValidator()]],
     nombreApellidos: ['', [Validators.required, Validators.maxLength(200)]],
     // fechaNacimiento holds a Date object for mat-datepicker; convert to ISO string before saving
     fechaNacimiento: [null as Date | null, [Validators.required]],
@@ -63,6 +75,7 @@ export class PacientesDetailComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.form.controls.tipoDocumento.valueChanges.subscribe(() => this.form.controls.docIdentidadGub.updateValueAndValidity());
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.isNew.set(true);
@@ -80,6 +93,7 @@ export class PacientesDetailComponent implements OnInit {
       next: data => {
         this.snapshot = data;
         this.form.patchValue({
+          tipoDocumento: data.tipoDocumento,
           docIdentidadGub: data.docIdentidadGub,
           nombreApellidos: data.nombreApellidos,
           fechaNacimiento: data.fechaNacimiento ? new Date(data.fechaNacimiento) : null,
@@ -105,6 +119,7 @@ export class PacientesDetailComponent implements OnInit {
     } else {
       this.isEditMode.set(false);
       this.form.patchValue({
+        tipoDocumento: this.snapshot?.tipoDocumento ?? null,
         docIdentidadGub: this.snapshot?.docIdentidadGub ?? '',
         nombreApellidos: this.snapshot?.nombreApellidos ?? '',
         fechaNacimiento: this.snapshot?.fechaNacimiento ? new Date(this.snapshot.fechaNacimiento) : null,
@@ -120,9 +135,10 @@ export class PacientesDetailComponent implements OnInit {
       return;
     }
     this.saving.set(true);
-    const { docIdentidadGub, nombreApellidos, fechaNacimiento, contactoPrimario } = this.form.value;
+    const { tipoDocumento, docIdentidadGub, nombreApellidos, fechaNacimiento, contactoPrimario } = this.form.value;
     const fechaIso = fechaNacimiento ? fechaNacimiento.toISOString().split('T')[0] : '';
     const body = {
+      tipoDocumento: tipoDocumento!,
       docIdentidadGub: docIdentidadGub!,
       nombreApellidos: nombreApellidos!,
       fechaNacimiento: fechaIso,

@@ -71,7 +71,8 @@
     "search-error": "Error searching patients",
     "export-filename": "patients.xlsx",
     "fechaNacimientoDesde": "Birth Date From",
-    "fechaNacimientoHasta": "Birth Date To"
+    "fechaNacimientoHasta": "Birth Date To",
+    "tipoDocumentoTodos": "All"
   },
   "detail": {
     "title-new": "New Patient",
@@ -83,15 +84,19 @@
     "delete-error": "Error deleting patient",
     "delete-confirm-title": "Confirm deletion",
     "delete-confirm-message": "Are you sure you want to delete this patient?",
-    "load-error": "Error loading patient"
+    "load-error": "Error loading patient",
+    "documento-formato": "The number does not match the document type (DNI: 8 digits, RUC: 11 digits, CE: up to 12 and passport: up to 20 letters or numbers).",
+    "tipo-documento-requerido": "Select a valid document type."
   },
   "fields": {
+    "tipoDocumento": "Document Type",
     "docIdentidadGub": "Identity Document",
     "nombreApellidos": "Full Name",
     "fechaNacimiento": "Date of Birth",
     "contactoPrimario": "Primary Contact"
   },
   "table": {
+    "tipoDocumento": "Doc. Type",
     "docIdentidadGub": "ID Document",
     "nombreApellidos": "Full Name",
     "fechaNacimiento": "Birth Date",

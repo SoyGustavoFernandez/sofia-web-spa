@@ -1,9 +1,12 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
-import { TranslocoModule, provideTranslocoScope } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { MaterialModule } from '@shared/material.module';
-import { ComprobanteDto } from '../../models/venta.model';
+import { ComprobanteDto, estadoComprobanteKey } from '../../models/venta.model';
+import { tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
+
+const NUMERO_CLIENTE_EVENTUAL = '00000000';
 
 export interface ComprobanteDialogLinea {
   productoNombre: string;
@@ -26,7 +29,6 @@ export interface ComprobanteDialogData {
   detalles: ComprobanteDialogLinea[];
   pagos: ComprobanteDialogPago[];
   clienteNombre: string;
-  empresaNombre: string | null;
   cajeroNombre: string | null;
   fecha: Date;
 }
@@ -40,10 +42,25 @@ export interface ComprobanteDialogData {
   imports: [CommonModule, MatDialogActions, MatDialogContent, MatDialogTitle, MaterialModule, TranslocoModule],
 })
 export class ComprobanteDialogComponent {
+  private readonly transloco = inject(TranslocoService);
+
   constructor(
     public dialogRef: MatDialogRef<ComprobanteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ComprobanteDialogData,
   ) {}
+
+  estadoLabel(estado: string): string {
+    const key = estadoComprobanteKey(estado);
+    return key ? this.transloco.translate(key) : estado;
+  }
+
+  // Customer document as printed on the receipt (e.g. "DNI 45781236"); the anonymous customer has none
+  clienteDocumento(): string | null {
+    const c = this.data.comprobante;
+    if (!c || c.clienteNumeroDocumento === NUMERO_CLIENTE_EVENTUAL) return null;
+    const key = c.clienteTipoDocumento !== '-' ? tipoDocumentoKey(c.clienteTipoDocumento) : null;
+    return key ? `${this.transloco.translate(key)} ${c.clienteNumeroDocumento}` : c.clienteNumeroDocumento;
+  }
 
   nuevaVenta(): void {
     this.dialogRef.close('nueva');

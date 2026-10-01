@@ -241,7 +241,8 @@
       "invalid-option": "'{{value}}' no es un valor válido para '{{field}}'",
       "positive-number": "'{{field}}' debe ser mayor que cero",
       "must-differ": "'{{field}}' no puede ser igual a '{{other}}'",
-      "ambiguous": "El valor '{{value}}' del campo '{{field}}' coincide con varios registros del sistema"
+      "ambiguous": "El valor '{{value}}' del campo '{{field}}' coincide con varios registros del sistema",
+      "invalid-document-number": "'{{field}}' no tiene el formato de su tipo de documento (DNI: 8 dígitos, RUC: 11 dígitos, CE: hasta 12 y pasaporte: hasta 20 letras o números)"
     },
     "errors": {
       "invalid-file": "El archivo no es un Excel .xlsx válido. Descarga la plantilla y vuelve a intentarlo.",
@@ -250,5 +251,12 @@
       "too-many-rows": "El archivo supera el máximo de {{maxRows}} filas. Divídelo en varios archivos.",
       "invalid-rows": "Algunas filas tienen datos inválidos. Vuelve a subir el archivo y revisa la vista previa."
     }
+  },
+  "tipos-documento": {
+    "1": "DNI",
+    "4": "Carné de extranjería",
+    "6": "RUC",
+    "7": "Pasaporte",
+    "-": "Sin documento"
   }
 }

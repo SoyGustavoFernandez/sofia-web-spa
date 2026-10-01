@@ -9,7 +9,7 @@ import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-hea
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { AuthService } from '@core/auth/auth.service';
 import { VentaService } from '../services/venta.service';
-import { VentaConDetalle, EstadoVenta } from '../models/venta.model';
+import { VentaConDetalle, EstadoVenta, estadoComprobanteKey } from '../models/venta.model';
 import { AnularVentaDialogComponent } from '../dialogs/anular-venta-dialog/anular-venta-dialog.component';
 import { DevolverVentaDialogComponent, DevolverVentaDialogData, cantidadDevolvible } from '../dialogs/devolver-venta-dialog/devolver-venta-dialog.component';
 import { ComprobanteDialogComponent, ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
@@ -101,8 +101,15 @@ export class VentaDetailComponent implements OnInit {
     this.router.navigate(['/pos/nueva'], { queryParams: { continuar: this.venta()!.id } });
   }
 
+  estadoComprobanteLabel(estado: string): string {
+    const key = estadoComprobanteKey(estado);
+    return key ? this.transloco.translate(key) : estado;
+  }
+
+  // A voided sale's receipt is no longer valid, so it is not offered for reprint
   puedeReimprimir(): boolean {
-    return !!this.venta()?.comprobante;
+    const v = this.venta();
+    return !!v?.comprobante && v.estado !== EstadoVenta[EstadoVenta.Anulada];
   }
 
   reimprimirComprobante(): void {
@@ -124,7 +131,6 @@ export class VentaDetailComponent implements OnInit {
       })),
       pagos: v.pagos.map(p => ({ metodo: this.metodoPagoLabel(p.metodoPago), monto: p.montoPagado })),
       clienteNombre: v.clienteNombre ?? this.transloco.translate('pos.checkout.clienteEventual'),
-      empresaNombre: null,
       cajeroNombre: v.empleadoNombre,
       fecha: new Date(v.fechaHora),
     };

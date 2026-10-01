@@ -28,7 +28,7 @@ function setup(params: Record<string, string>, data: Record<string, unknown> = {
   };
 }
 
-const paciente = { id: 'pac-1', nombreApellidos: 'María Quispe', docIdentidadGub: '12345678', fechaNacimiento: '1990-01-01', contactoPrimario: null };
+const paciente = { id: 'pac-1', tipoDocumento: '1', nombreApellidos: 'María Quispe', docIdentidadGub: '12345678', fechaNacimiento: '1990-01-01', contactoPrimario: null };
 const medico = { id: 'med-1', nombrePrescriptor: 'Dra. Rosa Díaz', numeroRegistro: 'CMP-1', direccionClinica: null };
 
 describe('RecetasDetailComponent — /nueva (create mode)', () => {

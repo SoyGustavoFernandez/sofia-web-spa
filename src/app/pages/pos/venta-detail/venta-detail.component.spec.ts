@@ -23,11 +23,12 @@ function venta(overrides: Partial<VentaConDetalle> = {}): VentaConDetalle {
     clienteId: null,
     clienteNombre: null,
     clienteDocumento: null,
+    clienteTipoDocumento: null,
     detalles: [
       { id: 'a', loteId: 'l-a', productoNombre: 'A', numeroLote: 'LA', cantidad: 3, precioUnitario: 10, subtotal: 30, cantidadDevuelta: 1 },
       { id: 'b', loteId: 'l-b', productoNombre: 'B', numeroLote: 'LB', cantidad: 2, precioUnitario: 10, subtotal: 20, cantidadDevuelta: 0 },
     ],
-    comprobante: { tipo: 'Boleta', numero: 'B001-00000011', estadoAceptacion: 'Aceptado', urlVerificacion: null, urlXml: null, urlCdr: null },
+    comprobante: { tipo: 'Boleta', numero: 'B001-00000011', estadoAceptacion: 'NoEnviado', urlVerificacion: null, urlXml: null, urlCdr: null, emisorRazonSocial: 'Botica QA', emisorRuc: '20212971893', sucursalDireccion: 'Av. Arequipa 123', clienteTipoDocumento: '1', clienteNumeroDocumento: '45781236', clienteNombre: 'Juan Perez' },
     pagos: [],
     devoluciones: [],
     ...overrides,
@@ -92,5 +93,18 @@ describe('VentaDetailComponent — returns', () => {
     );
     expect(component.puedeAnular()).toBeFalse();
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('BC01-00000001');
+  });
+});
+
+describe('VentaDetailComponent — receipt', () => {
+  it('offers reprinting the receipt of a completed sale', () => {
+    expect(setup(venta()).component.puedeReimprimir()).toBeTrue();
+  });
+
+  it('does not offer reprinting the receipt of a voided sale', () => {
+    const anulada = venta({ estado: 'Anulada', comprobante: { ...venta().comprobante!, estadoAceptacion: 'Anulado' } });
+    const { component } = setup(anulada);
+    expect(component.puedeReimprimir()).toBeFalse();
+    expect(component.estadoComprobanteLabel('Anulado')).toBe('pos.estadoComprobante.Anulado');
   });
 });

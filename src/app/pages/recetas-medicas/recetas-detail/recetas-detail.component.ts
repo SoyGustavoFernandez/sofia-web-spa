@@ -133,7 +133,7 @@ export class RecetasDetailComponent implements OnInit {
     const s = this.snapshot();
     if (!s) return;
     this.pacienteCtrl.setValue(s.clienteNombre, { emitEvent: false });
-    this.selectedPaciente.set({ id: s.clienteId, nombreApellidos: s.clienteNombre, docIdentidadGub: '', fechaNacimiento: '', contactoPrimario: null });
+    this.selectedPaciente.set({ id: s.clienteId, tipoDocumento: null, nombreApellidos: s.clienteNombre, docIdentidadGub: '', fechaNacimiento: '', contactoPrimario: null });
     this.medicoCtrl.setValue(s.medicoNombre, { emitEvent: false });
     this.selectedMedico.set({ id: s.medicoId, nombrePrescriptor: s.medicoNombre, numeroRegistro: '', direccionClinica: null });
     const parts = s.fechaExpedicion.split('-').map(Number);

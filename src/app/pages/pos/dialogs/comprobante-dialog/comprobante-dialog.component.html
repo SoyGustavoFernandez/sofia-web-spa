@@ -15,7 +15,9 @@
         <div class="col-6">
           <strong>{{ t('comprobante.estadoSunat') }}</strong>
         </div>
-        <div class="col-6">{{ data.comprobante.estadoAceptacion }}</div>
+        <div class="col-6">
+          {{ estadoLabel(data.comprobante.estadoAceptacion) }}
+        </div>
       }
 
       <div class="col-6">
@@ -52,7 +54,19 @@
 
   <div class="pos-print-receipt">
     <div class="pos-print-header">
-      <div class="pos-print-empresa">{{ data.empresaNombre || 'SOFIA' }}</div>
+      @if (data.comprobante?.emisorRazonSocial) {
+        <div class="pos-print-empresa">
+          {{ data.comprobante?.emisorRazonSocial }}
+        </div>
+      }
+      @if (data.comprobante?.emisorRuc) {
+        <div>
+          {{ t('comprobante.rucLabel') }} {{ data.comprobante?.emisorRuc }}
+        </div>
+      }
+      @if (data.comprobante?.sucursalDireccion) {
+        <div>{{ data.comprobante?.sucursalDireccion }}</div>
+      }
       <div>{{ data.comprobante?.tipo }} {{ data.comprobante?.numero }}</div>
       <div>{{ data.fecha | date: 'dd/MM/yyyy HH:mm' }}</div>
     </div>
@@ -84,6 +98,12 @@
       <span>{{ t('checkout.clienteTitle') }}:</span
       ><span>{{ data.clienteNombre }}</span>
     </div>
+    @if (clienteDocumento(); as documento) {
+      <div class="pos-print-row">
+        <span>{{ t('comprobante.documentoLabel') }}</span
+        ><span>{{ documento }}</span>
+      </div>
+    }
     <div class="pos-print-row">
       <span>{{ t('checkout.subtotalLabel') }}</span
       ><span>S/ {{ data.subtotal | number: '1.2-2' }}</span>
@@ -107,7 +127,7 @@
     @if (data.comprobante) {
       <div class="pos-print-row">
         <span>{{ t('comprobante.estadoSunat') }}</span
-        ><span>{{ data.comprobante.estadoAceptacion }}</span>
+        ><span>{{ estadoLabel(data.comprobante.estadoAceptacion) }}</span>
       </div>
     }
     @if (data.cajeroNombre) {

@@ -7,6 +7,7 @@ export interface PaginatedList<T> {
 
 export interface PacienteListItem {
   id: string;
+  tipoDocumento: string | null;
   docIdentidadGub: string;
   nombreApellidos: string;
   fechaNacimiento: string;
@@ -15,6 +16,7 @@ export interface PacienteListItem {
 
 export interface PacienteDetail {
   id: string;
+  tipoDocumento: string | null;
   docIdentidadGub: string;
   nombreApellidos: string;
   fechaNacimiento: string;
@@ -22,6 +24,7 @@ export interface PacienteDetail {
 }
 
 export interface CreatePacienteRequest {
+  tipoDocumento: string;
   docIdentidadGub: string;
   nombreApellidos: string;
   fechaNacimiento: string;
@@ -29,6 +32,7 @@ export interface CreatePacienteRequest {
 }
 
 export interface UpdatePacienteRequest {
+  tipoDocumento: string;
   docIdentidadGub: string;
   nombreApellidos: string;
   fechaNacimiento: string;
@@ -36,6 +40,7 @@ export interface UpdatePacienteRequest {
 }
 
 export interface SearchPacienteParams {
+  tipoDocumento?: string;
   docIdentidadGub?: string;
   nombreApellidos?: string;
   fechaNacimientoDesde?: string;

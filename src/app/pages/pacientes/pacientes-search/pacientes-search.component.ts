@@ -10,6 +10,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { PacienteService } from '../services/paciente.service';
 import { PacienteListItem } from '../models/paciente.model';
+import { TIPOS_DOCUMENTO_IDENTIDAD, tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
 
 @Component({
   selector: 'app-pacientes-search',
@@ -40,7 +41,11 @@ export class PacientesSearchComponent implements OnInit {
   readonly pageIndex = signal(0);
   readonly pageSize = signal(10);
 
+  readonly tiposDocumento = TIPOS_DOCUMENTO_IDENTIDAD;
+  readonly tipoDocumentoKey = tipoDocumentoKey;
+
   readonly searchForm = this.fb.group({
+    tipoDocumento: [''],
     docIdentidadGub: [''],
     nombreApellidos: [''],
     fechaNacimientoDesde: [null as Date | null],
@@ -53,7 +58,7 @@ export class PacientesSearchComponent implements OnInit {
     { label: 'breadcrumbs.pacientes', isActive: true },
   ];
 
-  readonly displayedColumns = ['docIdentidadGub', 'nombreApellidos', 'fechaNacimiento', 'contactoPrimario'];
+  readonly displayedColumns = ['docIdentidadGub', 'tipoDocumento', 'nombreApellidos', 'fechaNacimiento', 'contactoPrimario'];
 
   private get stateKey(): string {
     return this.router.url.split('?')[0];
@@ -75,9 +80,10 @@ export class PacientesSearchComponent implements OnInit {
 
   search(): void {
     this.loading.set(true);
-    const { docIdentidadGub, nombreApellidos, fechaNacimientoDesde, fechaNacimientoHasta } = this.searchForm.value;
+    const { tipoDocumento, docIdentidadGub, nombreApellidos, fechaNacimientoDesde, fechaNacimientoHasta } = this.searchForm.value;
     this.service
       .search({
+        tipoDocumento: tipoDocumento || undefined,
         docIdentidadGub: docIdentidadGub ?? undefined,
         nombreApellidos: nombreApellidos ?? undefined,
         fechaNacimientoDesde: this.toIsoDate(fechaNacimientoDesde),
@@ -127,13 +133,15 @@ export class PacientesSearchComponent implements OnInit {
     const t = (key: string) => this.transloco.translate(key, {}, 'pacientes');
     const headers = [
       t('table.docIdentidadGub'),
+      t('table.tipoDocumento'),
       t('table.nombreApellidos'),
       t('table.fechaNacimiento'),
       t('table.contactoPrimario'),
     ];
-    const { docIdentidadGub, nombreApellidos, fechaNacimientoDesde, fechaNacimientoHasta } = this.searchForm.value;
+    const { tipoDocumento, docIdentidadGub, nombreApellidos, fechaNacimientoDesde, fechaNacimientoHasta } = this.searchForm.value;
     const dateFormat = this.transloco.getActiveLang() === 'es' ? 'dd/MM/yyyy' : 'MM/dd/yyyy';
     const filters = {
+      tipoDocumento: tipoDocumento || undefined,
       docIdentidadGub: docIdentidadGub ?? undefined,
       nombreApellidos: nombreApellidos ?? undefined,
       fechaNacimientoDesde: this.toIsoDate(fechaNacimientoDesde),

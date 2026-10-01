@@ -374,9 +374,10 @@
                     [displayWith]="displayCliente"
                     (optionSelected)="onClienteSelected($event)">
                     @for (p of clienteOptions(); track p.id) {
-                      <mat-option [value]="p">{{
-                        p.nombreApellidos
-                      }}</mat-option>
+                      <mat-option [value]="p"
+                        >{{ p.nombreApellidos }} ·
+                        {{ documentoCliente(p) }}</mat-option
+                      >
                     }
                   </mat-autocomplete>
                 </mat-form-field>
@@ -386,6 +387,11 @@
                   {{ t('checkout.clienteEventual') }}
                 </div>
               } @else {
+                @if (selectedCliente()!.docIdentidadGub) {
+                  <div class="pos3-hint-sm mb-2">
+                    {{ documentoCliente(selectedCliente()!) }}
+                  </div>
+                }
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>{{ t('checkout.recetaLabel') }}</mat-label>
                   <mat-select
