@@ -172,6 +172,10 @@ export class RecetasSearchComponent implements OnInit {
     this.router.navigate(['/recetas-medicas/nueva']);
   }
 
+  goToScanner(): void {
+    this.router.navigate(['/recetas-medicas/escanear']);
+  }
+
   exportar(): void {
     const t = (key: string) => this.transloco.translate(key, {}, 'recetasMedicas');
     const lang = this.transloco.getActiveLang();
@@ -183,11 +187,14 @@ export class RecetasSearchComponent implements OnInit {
       t('table.indicaciones'),
     ];
     const dateFormat = lang === 'es' ? 'dd/MM/yyyy' : 'MM/dd/yyyy';
+    const v = this.form.value;
     this.service.exportar({
       headers,
       dateFormat,
       clienteId: this.selectedPacienteId() ?? undefined,
       medicoId: this.selectedMedicoId() ?? undefined,
+      fechaInicio: v.fechaInicio ? (v.fechaInicio as Date).toISOString() : undefined,
+      fechaFin: v.fechaFin ? (v.fechaFin as Date).toISOString() : undefined,
     }).subscribe({
       next: blob => {
         const url = URL.createObjectURL(blob);

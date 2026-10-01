@@ -33,7 +33,7 @@ export class RecetasScannerComponent {
   readonly breadcrumbs: BreadcrumbItem[] = [
     { label: 'breadcrumbs.home', route: '/dashboard' },
     { label: 'breadcrumbs.pacientesAtencion' },
-    { label: 'breadcrumbs.recetasMedicas' },
+    { label: 'breadcrumbs.recetasMedicas', route: '/recetas-medicas' },
   ];
 
   get itemsReceta(): ItemSugerido[] {

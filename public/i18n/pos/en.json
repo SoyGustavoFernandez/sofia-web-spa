@@ -125,6 +125,7 @@
     "recetaLabel": "Medical prescription",
     "sinReceta": "No prescription",
     "recetaHint": "Required to sell prescription, retained-prescription or narcotic products.",
+    "registrarReceta": "Register prescription",
     "aseguradoraTitle": "Insurance Coverage (optional)",
     "aseguradoraLabel": "Insurer",
     "aseguradoraSearchPlaceholder": "Search insurer...",

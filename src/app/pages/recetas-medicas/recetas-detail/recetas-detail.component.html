@@ -89,6 +89,7 @@
                 <input
                   matInput
                   [matDatepicker]="pickerFecha"
+                  [max]="today"
                   formControlName="fechaExpedicion" />
                 <mat-datepicker-toggle matIconSuffix [for]="pickerFecha" />
                 <mat-datepicker #pickerFecha />

@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
@@ -17,6 +18,21 @@ import { PacienteService } from '../../pacientes/services/paciente.service';
 import { PacienteListItem } from '../../pacientes/models/paciente.model';
 import { ProfesionalSaludService } from '../../profesionales-salud/services/profesional-salud.service';
 import { ProfesionalSaludListItem } from '../../profesionales-salud/models/profesional-salud.model';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'Paciente.NotFound': 'recetasMedicas.errors.paciente-not-found',
+  'ProfesionalSalud.NotFound': 'recetasMedicas.errors.medico-not-found',
+  'RecetaMedica.NotFound': 'recetasMedicas.errors.not-found',
+  'RecetaMedica.FechaExpedicion': 'recetasMedicas.errors.fecha-futura',
+  'RecetaMedica.RepeticionesMax': 'recetasMedicas.errors.invalid-data',
+  'CreateRecetaCommand.FechaExpedicion': 'recetasMedicas.errors.invalid-data',
+  'CreateRecetaCommand.RepeticionesMax': 'recetasMedicas.errors.invalid-data',
+  'CreateRecetaCommand.IndicacionesUso': 'recetasMedicas.errors.invalid-data',
+  'UpdateRecetaCommand.FechaExpedicion': 'recetasMedicas.errors.invalid-data',
+  'UpdateRecetaCommand.RepeticionesMax': 'recetasMedicas.errors.invalid-data',
+  'UpdateRecetaCommand.IndicacionesUso': 'recetasMedicas.errors.invalid-data',
+};
 
 @Component({
   selector: 'app-recetas-detail',
@@ -42,6 +58,7 @@ export class RecetasDetailComponent implements OnInit {
   readonly saving = signal(false);
   readonly deleting = signal(false);
   readonly snapshot = signal<RecetaDetail | null>(null);
+  readonly today = new Date();
 
   readonly pacienteCtrl = new FormControl('');
   readonly medicoCtrl = new FormControl('');
@@ -193,9 +210,9 @@ export class RecetasDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('recetasMedicas.create.save-success'));
           this.router.navigate(['/recetas-medicas']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('recetasMedicas.create.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'recetasMedicas.create.save-error')));
         },
       });
     } else {
@@ -206,9 +223,9 @@ export class RecetasDetailComponent implements OnInit {
           this.saving.set(false);
           this.load();
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('recetasMedicas.edit.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'recetasMedicas.edit.save-error')));
         },
       });
     }
@@ -229,9 +246,10 @@ export class RecetasDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('recetasMedicas.delete.success'));
           this.router.navigate(['/recetas-medicas']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.deleting.set(false);
-          this.notifier.showError(this.transloco.translate('recetasMedicas.delete.error'));
+          const key = err instanceof HttpErrorResponse && err.status === 409 ? 'recetasMedicas.delete.in-use' : 'recetasMedicas.delete.error';
+          this.notifier.showError(this.transloco.translate(key));
         },
       });
     });

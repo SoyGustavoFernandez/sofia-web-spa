@@ -3,7 +3,8 @@
   "search": {
     "title": "Búsqueda de Recetas Médicas",
     "search-error": "Error al buscar recetas médicas",
-    "export-filename": "recetas-medicas.xlsx"
+    "export-filename": "recetas-medicas.xlsx",
+    "btn-scan": "Escanear receta"
   },
   "detail": {
     "title": "Detalle de Receta"
@@ -22,7 +23,8 @@
     "confirm-title": "Eliminar receta",
     "confirm-message": "¿Está seguro de que desea eliminar esta receta médica? Esta acción no se puede deshacer.",
     "success": "Receta eliminada correctamente",
-    "error": "Error al eliminar la receta"
+    "error": "Error al eliminar la receta",
+    "in-use": "No puedes eliminar esta receta porque ya se usó en ventas."
   },
   "fields": {
     "paciente": "Paciente",
@@ -75,5 +77,12 @@
     "confidence-low": "Baja",
     "ai-label": "Análisis con IA",
     "drop-zone-hint": "o arrastra una imagen aquí"
+  },
+  "errors": {
+    "paciente-not-found": "El paciente seleccionado no existe. Vuelve a seleccionarlo.",
+    "medico-not-found": "El médico seleccionado no existe. Vuelve a seleccionarlo.",
+    "fecha-futura": "La fecha de expedición no puede ser posterior a hoy.",
+    "invalid-data": "Revisa los datos ingresados de la receta.",
+    "not-found": "La receta ya no existe."
   }
 }

@@ -403,6 +403,18 @@
                   </mat-select>
                   <mat-hint>{{ t('checkout.recetaHint') }}</mat-hint>
                 </mat-form-field>
+                @if (puedeRegistrarReceta()) {
+                  <div class="d-flex justify-content-end mt-3">
+                    <a
+                      mat-button
+                      routerLink="/recetas-medicas/nueva"
+                      target="_blank"
+                      rel="noopener">
+                      <mat-icon>open_in_new</mat-icon>
+                      {{ t('checkout.registrarReceta') }}
+                    </a>
+                  </div>
+                }
               }
 
               @if (mostrarAseguradora) {

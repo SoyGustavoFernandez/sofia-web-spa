@@ -125,6 +125,7 @@
     "recetaLabel": "Receta médica",
     "sinReceta": "Sin receta",
     "recetaHint": "Obligatoria para vender productos con receta, receta retenida o estupefacientes.",
+    "registrarReceta": "Registrar receta",
     "aseguradoraTitle": "Cobertura de Seguro (opcional)",
     "aseguradoraLabel": "Aseguradora",
     "aseguradoraSearchPlaceholder": "Buscar aseguradora...",

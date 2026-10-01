@@ -17,6 +17,10 @@
           </div>
         </div>
         <div class="d-flex gap-2">
+          <button mat-stroked-button (click)="goToScanner()">
+            <mat-icon>document_scanner</mat-icon>
+            {{ t('search.btn-scan') }}
+          </button>
           <button mat-flat-button color="primary" (click)="goToNew()">
             <mat-icon>add</mat-icon>
             {{ 'actions.new' | transloco }}

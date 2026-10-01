@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed, effect } from '@angular/core';
+import { Component, HostListener, OnInit, inject, signal, computed, effect } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -164,6 +164,7 @@ export class NuevaVentaComponent implements OnInit {
   // Registered prescription of the selected customer, attached to every sale line (the backend enforces it per product)
   readonly recetaOptions = signal<RecetaListItem[]>([]);
   readonly selectedRecetaId = signal<string>('');
+  readonly puedeRegistrarReceta = computed(() => this.authService.hasPermission('Recetas', 'Crear'));
 
   // Insurance coverage is built but hidden from the UI until the pharmacy starts working with aseguradoras.
   readonly mostrarAseguradora = false;
@@ -763,6 +764,13 @@ export class NuevaVentaComponent implements OnInit {
       next: result => this.recetaOptions.set(result.items),
       error: () => this.recetaOptions.set([]),
     });
+  }
+
+  // Picks up prescriptions registered in another tab when the cashier returns to the POS
+  @HostListener('window:focus')
+  recargarRecetasCliente(): void {
+    const cliente = this.selectedCliente();
+    if (cliente) this.cargarRecetasCliente(cliente.id, this.selectedRecetaId());
   }
 
   private limpiarRecetasCliente(): void {
