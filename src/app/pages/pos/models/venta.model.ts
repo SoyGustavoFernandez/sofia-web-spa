@@ -178,3 +178,27 @@ export interface ProcesarDevolucionRequest {
   detalles: ProcesarDevolucionDetalleRequest[];
   metodoReembolso: MetodoPago;
 }
+
+// A lot the cashier's own branch can sell right now (in stock, not expired, not quarantined)
+export interface LoteDisponibleVenta {
+  id: string;
+  loteId: string;
+  numeroLote: string;
+  productoId: string;
+  productoNombre: string;
+  fechaCaducidad: string;
+  cantidadFisica: number;
+  precioVentaBase: number | null;
+}
+
+export interface LotesDisponiblesVentaParams {
+  productoId?: string;
+  productoNombre?: string;
+}
+
+export interface PresentacionProductoVenta {
+  id: string;
+  descripcion: string;
+  cantidadUnidadesBase: number;
+  precioVenta: number;
+}

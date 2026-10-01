@@ -46,6 +46,7 @@ export interface SearchMedicamentoParams {
   condicionVenta?: number;
   incluirStock?: boolean;
   ordenarPorMasVendidos?: boolean;
+  soloStockVendibleEnMiSucursal?: boolean;
   pageNumber: number;
   pageSize: number;
 }

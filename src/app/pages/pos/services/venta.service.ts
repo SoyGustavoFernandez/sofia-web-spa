@@ -13,6 +13,9 @@ import {
   ActualizarVentaPendienteRequest,
   VentaCreada,
   ProcesarDevolucionRequest,
+  LoteDisponibleVenta,
+  LotesDisponiblesVentaParams,
+  PresentacionProductoVenta,
 } from '../models/venta.model';
 
 @Injectable({ providedIn: 'root' })
@@ -35,6 +38,19 @@ export class VentaService {
 
   getById(id: string): Observable<VentaConDetalle> {
     return this.http.get<VentaConDetalle>(`${this.base}/${id}`);
+  }
+
+  // POS lookups authorized by Ventas:Crear, so selling never depends on inventory permissions
+  lotesDisponibles(filtro: LotesDisponiblesVentaParams): Observable<LoteDisponibleVenta[]> {
+    let params = new HttpParams();
+    if (filtro.productoId) params = params.set('productoId', filtro.productoId);
+    if (filtro.productoNombre) params = params.set('productoNombre', filtro.productoNombre);
+    return this.http.get<LoteDisponibleVenta[]>(`${this.base}/lotes-disponibles`, { params });
+  }
+
+  presentacionesProducto(productoId: string): Observable<PresentacionProductoVenta[]> {
+    const params = new HttpParams().set('productoId', productoId);
+    return this.http.get<PresentacionProductoVenta[]>(`${this.base}/presentaciones`, { params });
   }
 
   crear(body: CreateVentaRequest): Observable<VentaCreada> {

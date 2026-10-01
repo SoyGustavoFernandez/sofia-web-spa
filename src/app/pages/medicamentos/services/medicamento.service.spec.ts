@@ -47,6 +47,21 @@ describe('MedicamentoService', () => {
     req.flush({ items: [], pageNumber: 1, totalPages: 0, totalCount: 0 } as PaginatedList<MedicamentoListItem>);
   });
 
+  it('search() forwards the POS flags only when they are set', () => {
+    service.search({ pageNumber: 1, pageSize: 12, incluirStock: true, ordenarPorMasVendidos: true, soloStockVendibleEnMiSucursal: true }).subscribe();
+
+    const req = httpMock.expectOne(r => r.url === BASE);
+    expect(req.request.params.get('ordenarPorMasVendidos')).toBe('true');
+    expect(req.request.params.get('soloStockVendibleEnMiSucursal')).toBe('true');
+    req.flush({ items: [], pageNumber: 1, totalPages: 0, totalCount: 0 } as PaginatedList<MedicamentoListItem>);
+
+    service.search({ pageNumber: 1, pageSize: 12 }).subscribe();
+
+    const plain = httpMock.expectOne(r => r.url === BASE);
+    expect(plain.request.params.has('soloStockVendibleEnMiSucursal')).toBeFalse();
+    plain.flush({ items: [], pageNumber: 1, totalPages: 0, totalCount: 0 } as PaginatedList<MedicamentoListItem>);
+  });
+
   it('getById() requests the detail endpoint', () => {
     service.getById('med-1').subscribe();
 

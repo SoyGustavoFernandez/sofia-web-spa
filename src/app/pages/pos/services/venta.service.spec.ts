@@ -105,6 +105,34 @@ describe('VentaService', () => {
     expect(id).toBe('dev-1');
   });
 
+  it('lotesDisponibles() asks the POS endpoint for the sellable lots of a product id', () => {
+    service.lotesDisponibles({ productoId: 'med-1' }).subscribe();
+
+    const req = httpMock.expectOne(r => r.url === `${BASE}/lotes-disponibles`);
+    expect(req.request.method).toBe('GET');
+    expect(req.request.params.get('productoId')).toBe('med-1');
+    expect(req.request.params.has('productoNombre')).toBeFalse();
+    req.flush([]);
+  });
+
+  it('lotesDisponibles() can look the product up by name', () => {
+    service.lotesDisponibles({ productoNombre: 'Paracetamol' }).subscribe();
+
+    const req = httpMock.expectOne(r => r.url === `${BASE}/lotes-disponibles`);
+    expect(req.request.params.get('productoNombre')).toBe('Paracetamol');
+    expect(req.request.params.has('productoId')).toBeFalse();
+    req.flush([]);
+  });
+
+  it('presentacionesProducto() asks the POS endpoint for the presentations of a product', () => {
+    service.presentacionesProducto('med-1').subscribe();
+
+    const req = httpMock.expectOne(r => r.url === `${BASE}/presentaciones`);
+    expect(req.request.method).toBe('GET');
+    expect(req.request.params.get('productoId')).toBe('med-1');
+    req.flush([]);
+  });
+
   it('exportar() requests a blob export with headers, dateFormat and filters', () => {
     service.exportar(['Codigo'], 'dd/MM/yyyy', { estado: EstadoVenta.Anulada }).subscribe();
 

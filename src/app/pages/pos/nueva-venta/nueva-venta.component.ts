@@ -8,22 +8,25 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin, of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { AuthService } from '@core/auth/auth.service';
 import { POS_DRAFT_PREFIX, userStorageKey } from '@core/auth/user-storage';
 import { VentaService } from '../services/venta.service';
-import { CreateVentaRequest, CreateVentaDetalleRequest, MetodoPago, EstadoVenta } from '../models/venta.model';
+import {
+  CreateVentaRequest,
+  CreateVentaDetalleRequest,
+  MetodoPago,
+  EstadoVenta,
+  LoteDisponibleVenta,
+  PresentacionProductoVenta,
+} from '../models/venta.model';
 import { SesionCajaService } from '../../sesiones-caja/services/sesion-caja.service';
 import { EstadoSesion } from '../../sesiones-caja/models/sesion-caja.model';
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
-import { StockService } from '../../stock-por-sucursal/services/stock.service';
-import { StockPorSucursal } from '../../stock-por-sucursal/models/stock.model';
-import { PresentacionVentaService } from '../../presentaciones-venta/services/presentacion-venta.service';
-import { PresentacionVenta } from '../../presentaciones-venta/models/presentacion-venta.model';
 import { PacienteService } from '../../pacientes/services/paciente.service';
 import { PacienteListItem } from '../../pacientes/models/paciente.model';
 import { tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
@@ -77,6 +80,7 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   'Venta.Lote.Vencido': 'pos.messages.loteVencido',
   'Venta.SerieBoleta.NoConfigurada': 'pos.messages.serieBoletaNoConfigurada',
   'Venta.Empresa.SinRuc': 'pos.messages.empresaSinRuc',
+  'Auth.Sucursal': 'pos.messages.contextError',
   'Concurrency.Conflict': 'errors.concurrencyConflict',
 };
 
@@ -98,8 +102,6 @@ export class NuevaVentaComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly sesionCajaService = inject(SesionCajaService);
   private readonly medicamentoService = inject(MedicamentoService);
-  private readonly stockService = inject(StockService);
-  private readonly presentacionVentaService = inject(PresentacionVentaService);
   private readonly pacienteService = inject(PacienteService);
   private readonly aseguradoraService = inject(AseguradoraService);
   private readonly ventaService = inject(VentaService);
@@ -139,10 +141,10 @@ export class NuevaVentaComponent implements OnInit {
   readonly condicionFiltro = signal<number | null>(null);
   private readonly buscarProductos$ = new Subject<string>();
   readonly selectedMedicamentoId = signal<string | null>(null);
-  readonly loteOptions = signal<StockPorSucursal[]>([]);
-  readonly selectedLote = signal<StockPorSucursal | null>(null);
+  readonly loteOptions = signal<LoteDisponibleVenta[]>([]);
+  readonly selectedLote = signal<LoteDisponibleVenta | null>(null);
   readonly addForm = this.fb.group({ cantidad: [1], precio: [0] });
-  readonly presentacionOptions = signal<PresentacionVenta[]>([]);
+  readonly presentacionOptions = signal<PresentacionProductoVenta[]>([]);
   // '' (not null) marks "unidad base": mat-select's option-matching skips options whose value is null/undefined,
   // so a mat-option [value]="null" can never render as the selected trigger text.
   readonly selectedPresentacionId = signal<string>('');
@@ -221,15 +223,25 @@ export class NuevaVentaComponent implements OnInit {
       .pipe(
         debounceTime(300),
         switchMap(term =>
-          this.medicamentoService.search({
-            nombreComercial: term || undefined,
-            condicionVenta: this.condicionFiltro() ?? undefined,
-            incluirStock: true,
-            // Only rank by sales when the cashier hasn't narrowed the catalog down themselves.
-            ordenarPorMasVendidos: !term && this.condicionFiltro() === null,
-            pageNumber: 1,
-            pageSize: 12,
-          }),
+          this.medicamentoService
+            .search({
+              nombreComercial: term || undefined,
+              condicionVenta: this.condicionFiltro() ?? undefined,
+              incluirStock: true,
+              // The badge must match the lots offered below: own branch, sellable stock only.
+              soloStockVendibleEnMiSucursal: true,
+              // Only rank by sales when the cashier hasn't narrowed the catalog down themselves.
+              ordenarPorMasVendidos: !term && this.condicionFiltro() === null,
+              pageNumber: 1,
+              pageSize: 12,
+            })
+            .pipe(
+              // Handled inside switchMap so one failed request doesn't kill the search stream.
+              catchError((err: unknown) => {
+                this.notifier.showError(this.ventaErrorMessage(err, 'pos.messages.catalogoError'));
+                return of({ items: [] as MedicamentoListItem[] });
+              }),
+            ),
         ),
         takeUntilDestroyed(),
       )
@@ -338,14 +350,19 @@ export class NuevaVentaComponent implements OnInit {
           return;
         }
 
-        const sucursalId = this.authService.sucursalId();
+        // A failed lookup only loses the extra stock on top of what the pending sale already reserved.
         const stockLookups = venta.detalles.map(d =>
-          this.stockService.search({ productoNombre: d.productoNombre, soloConStock: false, pageNumber: 1, pageSize: 50 }),
+          this.ventaService.lotesDisponibles({ productoNombre: d.productoNombre }).pipe(
+            catchError((err: unknown) => {
+              this.notifier.showError(this.ventaErrorMessage(err, 'pos.messages.lotesError'));
+              return of<LoteDisponibleVenta[]>([]);
+            }),
+          ),
         );
 
         (stockLookups.length > 0 ? forkJoin(stockLookups) : of([])).subscribe(resultados => {
           const cart: CartLine[] = venta.detalles.map((d, i) => {
-            const lote = resultados[i]?.items.find(l => l.loteId === d.loteId && l.sucursalId === sucursalId);
+            const lote = resultados[i]?.find(l => l.loteId === d.loteId);
             const tienePresentacion = !!d.presentacionVentaId && !!d.cantidadEnPresentacion;
             return {
               loteId: d.loteId,
@@ -505,26 +522,27 @@ export class NuevaVentaComponent implements OnInit {
   selectMedicamento(medicamento: MedicamentoListItem): void {
     if (!medicamento.stockTotal) return;
     this.selectedMedicamentoId.set(medicamento.id);
-    const sucursalId = this.authService.sucursalId();
-    this.stockService.search({ productoNombre: medicamento.nombreComercial, soloConStock: true, pageNumber: 1, pageSize: 50 }).subscribe({
-      next: result => this.loteOptions.set(result.items.filter(l => this.esLoteVendible(l, sucursalId))),
-      error: () => this.loteOptions.set([]),
+    // The endpoint already returns only what this branch can sell (in stock, not expired, not quarantined)
+    this.ventaService.lotesDisponibles({ productoId: medicamento.id }).subscribe({
+      next: lotes => this.loteOptions.set(lotes),
+      error: (err: unknown) => {
+        this.loteOptions.set([]);
+        this.notifier.showError(this.ventaErrorMessage(err, 'pos.messages.lotesError'));
+      },
     });
   }
 
-  // Expired lots are rejected by the backend (Venta.Lote.Vencido), so they are never offered
-  private esLoteVendible(lote: StockPorSucursal, sucursalId: string | null): boolean {
-    return lote.sucursalId === sucursalId && new Date(lote.fechaCaducidad).getTime() > Date.now();
-  }
-
-  selectLote(lote: StockPorSucursal): void {
+  selectLote(lote: LoteDisponibleVenta): void {
     this.selectedLote.set(lote);
     this.addForm.setValue({ cantidad: 1, precio: lote.precioVentaBase ?? 0 });
     this.presentacionOptions.set([]);
     this.selectedPresentacionId.set('');
-    this.presentacionVentaService.search({ productoId: lote.productoId, pageNumber: 1, pageSize: 50 }).subscribe({
-      next: result => this.presentacionOptions.set(result.items),
-      error: () => this.presentacionOptions.set([]),
+    this.ventaService.presentacionesProducto(lote.productoId).subscribe({
+      next: presentaciones => this.presentacionOptions.set(presentaciones),
+      error: (err: unknown) => {
+        this.presentacionOptions.set([]);
+        this.notifier.showError(this.ventaErrorMessage(err, 'pos.messages.presentacionesError'));
+      },
     });
   }
 
@@ -575,10 +593,10 @@ export class NuevaVentaComponent implements OnInit {
   }
 
   private pushCartLine(
-    lote: StockPorSucursal,
+    lote: LoteDisponibleVenta,
     cantidad: number,
     precio: number,
-    presentacion?: PresentacionVenta | null,
+    presentacion?: PresentacionProductoVenta | null,
     cantidadEnPresentacion?: number,
   ): void {
     const key = (l: { loteId: string; presentacionVentaId?: string }): string => `${l.loteId}|${l.presentacionVentaId ?? ''}`;
@@ -700,10 +718,9 @@ export class NuevaVentaComponent implements OnInit {
   agregarItemDesdeReceta(item: ItemSugerido): void {
     if (!item.tieneStock || this.itemAgregado(item)) return;
 
-    const sucursalId = this.authService.sucursalId();
-    this.stockService.search({ productoNombre: item.nombreOficial, soloConStock: true, pageNumber: 1, pageSize: 20 }).subscribe({
-      next: result => {
-        const lote = result.items.find(l => this.esLoteVendible(l, sucursalId));
+    this.ventaService.lotesDisponibles({ productoNombre: item.nombreOficial }).subscribe({
+      next: lotes => {
+        const lote = lotes[0];
         if (!lote) {
           this.notifier.showError(this.transloco.translate('pos.messages.noStockLocalReceta'));
           return;
@@ -712,7 +729,7 @@ export class NuevaVentaComponent implements OnInit {
         this.pushCartLine(lote, cantidad, 0);
         this.itemsAgregadosNombres.update(set => new Set(set).add(item.nombreOficial));
       },
-      error: () => this.notifier.showError(this.transloco.translate('pos.messages.noStockLocalReceta')),
+      error: (err: unknown) => this.notifier.showError(this.ventaErrorMessage(err, 'pos.messages.lotesError')),
     });
   }
 
@@ -1024,10 +1041,10 @@ export class NuevaVentaComponent implements OnInit {
     return this.selectedAseguradora() ? (this.montoCubiertoValue() ?? undefined) : undefined;
   }
 
-  private ventaErrorMessage(err: unknown): string {
+  private ventaErrorMessage(err: unknown, fallbackKey = 'pos.messages.ventaError'): string {
     const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
     const key = typeof code === 'string' ? VENTA_ERROR_KEYS[code] : undefined;
-    return this.transloco.translate(key ?? 'pos.messages.ventaError');
+    return this.transloco.translate(key ?? fallbackKey);
   }
 
   private resetVenta(): void {
