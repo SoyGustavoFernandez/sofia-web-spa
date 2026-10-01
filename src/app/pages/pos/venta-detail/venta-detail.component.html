@@ -37,6 +37,11 @@
                 {{ t('actions.cobrar') }}
               </button>
             }
+            @if (puedeDevolver()) {
+              <button mat-flat-button color="primary" (click)="devolver()">
+                {{ t('devolucion.btnDevolver') }}
+              </button>
+            }
             @if (puedeAnular()) {
               <button
                 mat-flat-button
@@ -125,6 +130,12 @@
                 }
               </td>
             </ng-container>
+            <ng-container matColumnDef="cantidadDevuelta">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ t('devolucion.colDevuelto') }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.cantidadDevuelta }}</td>
+            </ng-container>
             <ng-container matColumnDef="precioUnitario">
               <th mat-header-cell *matHeaderCellDef>
                 {{ t('ventasDetail.colPrecioUnitario') }}
@@ -185,6 +196,54 @@
             <tr mat-row *matRowDef="let row; columns: pagosColumns"></tr>
           </table>
         </div>
+
+        @if (v.devoluciones.length) {
+          <h5 class="mb-2 mt-4">{{ t('devolucion.sectionTitle') }}</h5>
+          <div class="sofia-table-container">
+            <table mat-table [dataSource]="v.devoluciones">
+              <ng-container matColumnDef="numeroNotaCredito">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('devolucion.colNotaCredito') }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.numeroNotaCredito ?? '—' }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="fecha">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('devolucion.colFecha') }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.fecha | date: 'dd/MM/yyyy HH:mm' }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="montoReembolsado">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('devolucion.colMontoReembolsado') }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.montoReembolsado ?? 0 | number: '1.2-2' }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="metodoReembolso">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('devolucion.colMetodoReembolso') }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{
+                    row.metodoReembolso
+                      ? metodoPagoLabel(row.metodoReembolso)
+                      : '—'
+                  }}
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="devolucionesColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: devolucionesColumns"></tr>
+            </table>
+          </div>
+        }
       </div>
     }
   </div>

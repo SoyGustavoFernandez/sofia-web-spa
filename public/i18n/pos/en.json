@@ -99,6 +99,49 @@
     "anularError": "Error cancelling the sale.",
     "anularConDevoluciones": "This sale has registered returns and can no longer be cancelled. Handle any changes from Returns."
   },
+  "devolucion": {
+    "btnDevolver": "Return",
+    "dialogTitle": "Process return",
+    "dialogSubtitle": "Enter how many units the customer returns on each line and where they go. A credit note will be issued and the refund will come out of your open cash register.",
+    "btnDevolverTodo": "Return everything pending",
+    "colVendido": "Sold",
+    "colDevuelto": "Returned",
+    "colDevolvible": "Returnable",
+    "colCantidad": "To return",
+    "colDestino": "Destination",
+    "destino": {
+      "reingreso": "Back to sale",
+      "cuarentena": "DIGEMID quarantine"
+    },
+    "motivoLabel": "SUNAT reason",
+    "motivo": {
+      "06": "Full return",
+      "07": "Return per item"
+    },
+    "metodoReembolsoLabel": "Refund method",
+    "sustentoLabel": "Justification",
+    "sustentoRequired": "The justification is required.",
+    "montoEstimado": "Estimated refund",
+    "btnConfirmar": "Process return",
+    "sinCantidades": "Enter at least one quantity to return.",
+    "success": "Return processed and credit note issued.",
+    "error": "Error processing the return.",
+    "sectionTitle": "Returns / Credit notes",
+    "colNotaCredito": "Credit note",
+    "colFecha": "Date",
+    "colMontoReembolsado": "Refunded (S/)",
+    "colMetodoReembolso": "Refund method",
+    "errors": {
+      "ventaNotFound": "The sale no longer exists.",
+      "otraSucursal": "You can only return sales from your own branch.",
+      "sinSesionAbierta": "You need an open cash register to process the return.",
+      "comprobanteNoEmitido": "The sale has no issued boleta or factura to credit.",
+      "serieNcNoConfigurada": "The branch has no active credit note series. Set it up in Fiscal Series.",
+      "estadoInvalido": "Only completed sales can be returned.",
+      "cantidadExcedida": "The quantity exceeds what remains to be returned on some line. Refresh the screen and try again.",
+      "detalleNotFound": "One of the lines no longer belongs to the sale."
+    }
+  },
   "checkout": {
     "catalogTitle": "Products & Batches Catalog",
     "searchProductPlaceholder": "Search product...",

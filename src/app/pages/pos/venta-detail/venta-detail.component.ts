@@ -11,6 +11,7 @@ import { AuthService } from '@core/auth/auth.service';
 import { VentaService } from '../services/venta.service';
 import { VentaConDetalle, EstadoVenta } from '../models/venta.model';
 import { AnularVentaDialogComponent } from '../dialogs/anular-venta-dialog/anular-venta-dialog.component';
+import { DevolverVentaDialogComponent, DevolverVentaDialogData, cantidadDevolvible } from '../dialogs/devolver-venta-dialog/devolver-venta-dialog.component';
 import { ComprobanteDialogComponent, ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
 
 // Backend void-rule codes that have a specific message instead of the generic void error
@@ -45,8 +46,9 @@ export class VentaDetailComponent implements OnInit {
     { label: 'breadcrumbs.ventas', route: '/pos' },
   ];
 
-  readonly detallesColumns = ['productoNombre', 'numeroLote', 'cantidad', 'precioUnitario', 'subtotal'];
+  readonly detallesColumns = ['productoNombre', 'numeroLote', 'cantidad', 'cantidadDevuelta', 'precioUnitario', 'subtotal'];
   readonly pagosColumns = ['metodoPago', 'montoPagado', 'referenciaOperacion', 'fechaPago'];
+  readonly devolucionesColumns = ['numeroNotaCredito', 'fecha', 'montoReembolsado', 'metodoReembolso'];
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -86,7 +88,9 @@ export class VentaDetailComponent implements OnInit {
   puedeAnular(): boolean {
     const estado = this.venta()?.estado;
     const anulable = estado === EstadoVenta[EstadoVenta.Completada] || estado === EstadoVenta[EstadoVenta.Pendiente];
-    return anulable && this.auth.hasPermission('Ventas', 'Anular');
+    // A sale with returns can no longer be voided (Venta.Anular.ConDevoluciones)
+    const sinDevoluciones = (this.venta()?.devoluciones.length ?? 0) === 0;
+    return anulable && sinDevoluciones && this.auth.hasPermission('Ventas', 'Anular');
   }
 
   puedeCobrar(): boolean {
@@ -130,6 +134,25 @@ export class VentaDetailComponent implements OnInit {
         this.router.navigate(['/pos/nueva']);
       } else if (action === 'volver') {
         this.router.navigate(['/pos']);
+      }
+    });
+  }
+
+  // Only an issued, completed sale with units left to take back can be returned, by a user allowed to process returns
+  puedeDevolver(): boolean {
+    const v = this.venta();
+    if (!v || v.estado !== EstadoVenta[EstadoVenta.Completada] || !v.comprobante) {
+      return false;
+    }
+    return v.detalles.some(d => cantidadDevolvible(d) > 0) && this.auth.hasPermission('Devoluciones', 'ProcesarDevolucion');
+  }
+
+  devolver(): void {
+    const data: DevolverVentaDialogData = { venta: this.venta()! };
+    const ref = this.dialog.open(DevolverVentaDialogComponent, { width: '900px', maxWidth: '95vw', data });
+    ref.afterClosed().subscribe((devuelta: boolean | undefined) => {
+      if (devuelta) {
+        this.load(this.venta()!.id);
       }
     });
   }

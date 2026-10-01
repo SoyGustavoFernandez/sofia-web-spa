@@ -12,12 +12,14 @@ import {
   CompletarVentaRequest,
   ActualizarVentaPendienteRequest,
   VentaCreada,
+  ProcesarDevolucionRequest,
 } from '../models/venta.model';
 
 @Injectable({ providedIn: 'root' })
 export class VentaService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.api.baseurl}/api/v1/ventas`;
+  private readonly devolucionesBase = `${environment.api.baseurl}/api/v1/devoluciones`;
 
   search(filter: VentaFilter): Observable<PaginatedList<Venta>> {
     let params = new HttpParams()
@@ -50,6 +52,11 @@ export class VentaService {
   anular(id: string, motivo: string): Observable<void> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put<void>(`${this.base}/${id}/anular`, JSON.stringify(motivo), { headers });
+  }
+
+  // Returns the id of the created return; the sale id travels as comprobanteOrigenId
+  procesarDevolucion(body: ProcesarDevolucionRequest): Observable<string> {
+    return this.http.post<string>(this.devolucionesBase, body);
   }
 
   exportar(headers: string[], dateFormat: string, filters: VentaExportFilters): Observable<Blob> {

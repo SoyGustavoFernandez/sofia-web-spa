@@ -12,6 +12,11 @@ export enum MetodoPago {
   Transferencia = 3,
 }
 
+export enum DestinoDevolucion {
+  Reingreso_Venta = 0,
+  Cuarentena_DIGEMID = 1,
+}
+
 export interface PaginatedList<T> {
   items: T[];
   pageNumber: number;
@@ -42,6 +47,7 @@ export interface VentaDetalle {
   presentacionDescripcion?: string | null;
   cantidadEnPresentacion?: number | null;
   recetaId?: string | null;
+  cantidadDevuelta: number;
 }
 
 export interface ComprobanteDto {
@@ -75,6 +81,7 @@ export interface VentaConDetalle {
   detalles: VentaDetalle[];
   comprobante: ComprobanteDto | null;
   pagos: VentaPagoDto[];
+  devoluciones: VentaDevolucionDto[];
 }
 
 export interface VentaFilter {
@@ -134,4 +141,26 @@ export interface ActualizarVentaPendienteRequest {
 export interface VentaCreada {
   ventaId: string;
   comprobante: ComprobanteDto | null;
+}
+
+export interface VentaDevolucionDto {
+  id: string;
+  fecha: string;
+  numeroNotaCredito: string | null;
+  montoReembolsado: number | null;
+  metodoReembolso: string | null;
+}
+
+export interface ProcesarDevolucionDetalleRequest {
+  detalleVentaId: string;
+  cantidadDevuelta: number;
+  destinoFisicoLogico: DestinoDevolucion;
+}
+
+export interface ProcesarDevolucionRequest {
+  comprobanteOrigenId: string;
+  motivoSunatCatalogo: string;
+  sustentoDescriptivo: string;
+  detalles: ProcesarDevolucionDetalleRequest[];
+  metodoReembolso: MetodoPago;
 }

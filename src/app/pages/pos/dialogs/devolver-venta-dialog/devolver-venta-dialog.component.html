@@ -1,0 +1,172 @@
+<ng-container *transloco="let t; scope: 'pos'; read: 'pos'">
+  <h2 mat-dialog-title>
+    {{ t('devolucion.dialogTitle') }} — {{ data.venta.codigoVenta }}
+  </h2>
+
+  <mat-dialog-content>
+    <p class="pre-line">{{ t('devolucion.dialogSubtitle') }}</p>
+
+    <div class="d-flex justify-content-end mb-2">
+      <button
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="devolverTodo()">
+        {{ t('devolucion.btnDevolverTodo') }}
+      </button>
+    </div>
+
+    <div class="sofia-table-container mb-3">
+      <table mat-table [dataSource]="lineas">
+        <ng-container matColumnDef="producto">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ t('ventasDetail.colProducto') }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.detalle.productoNombre }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="numeroLote">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ t('ventasDetail.colLote') }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.detalle.numeroLote }}</td>
+        </ng-container>
+        <ng-container matColumnDef="vendido">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ t('devolucion.colVendido') }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.detalle.cantidad }}</td>
+        </ng-container>
+        <ng-container matColumnDef="devuelto">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ t('devolucion.colDevuelto') }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.detalle.cantidadDevuelta }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="devolvible">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ t('devolucion.colDevolvible') }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.devolvible }}</td>
+        </ng-container>
+        <ng-container matColumnDef="cantidad">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ t('devolucion.colCantidad') }}
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let row; let i = index"
+            [formGroup]="lineasForm.at(i)">
+            <mat-form-field
+              appearance="outline"
+              subscriptSizing="dynamic"
+              style="width: 96px">
+              <input
+                matInput
+                type="number"
+                min="0"
+                [max]="row.devolvible"
+                formControlName="cantidad"
+                (change)="capCantidad(i)"
+                [attr.aria-label]="t('devolucion.colCantidad')" />
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="destino">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ t('devolucion.colDestino') }}
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let row; let i = index"
+            [formGroup]="lineasForm.at(i)">
+            <mat-form-field
+              appearance="outline"
+              subscriptSizing="dynamic"
+              style="width: 190px">
+              <mat-select
+                formControlName="destino"
+                [attr.aria-label]="t('devolucion.colDestino')">
+                <mat-option [value]="DestinoDevolucion.Reingreso_Venta">{{
+                  t('devolucion.destino.reingreso')
+                }}</mat-option>
+                <mat-option [value]="DestinoDevolucion.Cuarentena_DIGEMID">{{
+                  t('devolucion.destino.cuarentena')
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns"></tr>
+      </table>
+    </div>
+
+    <form [formGroup]="form">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('devolucion.motivoLabel') }}</mat-label>
+            <mat-select formControlName="motivo">
+              @for (m of motivos; track m) {
+                <mat-option [value]="m"
+                  >{{ m }} — {{ t('devolucion.motivo.' + m) }}</mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ t('devolucion.metodoReembolsoLabel') }}</mat-label>
+            <mat-select formControlName="metodoReembolso">
+              @for (m of metodosReembolso; track m) {
+                <mat-option [value]="m">{{ metodoPagoLabel(m) }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ t('devolucion.sustentoLabel') }}</mat-label>
+        <textarea
+          matInput
+          formControlName="sustento"
+          rows="2"
+          maxlength="255"></textarea>
+        @if (form.controls.sustento.hasError('required')) {
+          <mat-error>{{ t('devolucion.sustentoRequired') }}</mat-error>
+        }
+      </mat-form-field>
+    </form>
+
+    <div class="d-flex justify-content-end">
+      <div>
+        <div class="search-info-text">{{ t('devolucion.montoEstimado') }}</div>
+        <div>
+          <strong>S/ {{ montoEstimado() | number: '1.2-2' }}</strong>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="saving()">
+      {{ 'actions.cancel' | transloco }}
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onConfirm()"
+      [disabled]="saving()">
+      @if (saving()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        {{ t('devolucion.btnConfirmar') }}
+      }
+    </button>
+  </mat-dialog-actions>
+</ng-container>

@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { environment } from '@environment/environment';
 import { VentaService } from './venta.service';
-import { EstadoVenta, MetodoPago, PaginatedList, Venta, VentaConDetalle } from '../models/venta.model';
+import { DestinoDevolucion, EstadoVenta, MetodoPago, PaginatedList, Venta, VentaConDetalle } from '../models/venta.model';
 
 const BASE = `${environment.api.baseurl}/api/v1/ventas`;
 
@@ -82,6 +82,27 @@ describe('VentaService', () => {
     expect(req.request.headers.get('Content-Type')).toBe('application/json');
     expect(req.request.body).toBe(JSON.stringify('Cliente se arrepintió'));
     req.flush(null);
+  });
+
+  it('procesarDevolucion() POSTs the return with numeric enums to the devoluciones endpoint', () => {
+    const body = {
+      comprobanteOrigenId: 'venta-1',
+      motivoSunatCatalogo: '07',
+      sustentoDescriptivo: 'Producto equivocado',
+      metodoReembolso: MetodoPago.Efectivo,
+      detalles: [{ detalleVentaId: 'det-1', cantidadDevuelta: 1, destinoFisicoLogico: DestinoDevolucion.Cuarentena_DIGEMID }],
+    };
+
+    let id: string | undefined;
+    service.procesarDevolucion(body).subscribe(r => (id = r));
+
+    const req = httpMock.expectOne(`${environment.api.baseurl}/api/v1/devoluciones`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(body);
+    expect(req.request.body.metodoReembolso).toBe(0);
+    expect(req.request.body.detalles[0].destinoFisicoLogico).toBe(1);
+    req.flush('dev-1');
+    expect(id).toBe('dev-1');
   });
 
   it('exportar() requests a blob export with headers, dateFormat and filters', () => {

@@ -99,6 +99,49 @@
     "anularError": "Error al anular la venta.",
     "anularConDevoluciones": "Esta venta tiene devoluciones registradas y ya no puede anularse. Gestiona los cambios desde Devoluciones."
   },
+  "devolucion": {
+    "btnDevolver": "Devolver",
+    "dialogTitle": "Procesar devolución",
+    "dialogSubtitle": "Indica cuántas unidades devuelve el cliente en cada línea y su destino. Se emitirá una nota de crédito y el reembolso saldrá de tu caja abierta.",
+    "btnDevolverTodo": "Devolver todo lo pendiente",
+    "colVendido": "Vendido",
+    "colDevuelto": "Devuelto",
+    "colDevolvible": "Devolvible",
+    "colCantidad": "A devolver",
+    "colDestino": "Destino",
+    "destino": {
+      "reingreso": "Reingreso a venta",
+      "cuarentena": "Cuarentena DIGEMID"
+    },
+    "motivoLabel": "Motivo SUNAT",
+    "motivo": {
+      "06": "Devolución total",
+      "07": "Devolución por ítem"
+    },
+    "metodoReembolsoLabel": "Método de reembolso",
+    "sustentoLabel": "Sustento",
+    "sustentoRequired": "El sustento es obligatorio.",
+    "montoEstimado": "Reembolso estimado",
+    "btnConfirmar": "Procesar devolución",
+    "sinCantidades": "Ingresa al menos una cantidad a devolver.",
+    "success": "Devolución procesada y nota de crédito emitida.",
+    "error": "Error al procesar la devolución.",
+    "sectionTitle": "Devoluciones / Notas de crédito",
+    "colNotaCredito": "Nota de crédito",
+    "colFecha": "Fecha",
+    "colMontoReembolsado": "Reembolsado (S/)",
+    "colMetodoReembolso": "Método de reembolso",
+    "errors": {
+      "ventaNotFound": "La venta ya no existe.",
+      "otraSucursal": "Solo puedes devolver ventas de tu propia sucursal.",
+      "sinSesionAbierta": "Necesitas una caja abierta para procesar la devolución.",
+      "comprobanteNoEmitido": "La venta no tiene boleta ni factura emitida que acreditar.",
+      "serieNcNoConfigurada": "La sucursal no tiene una serie de nota de crédito activa. Configúrala en Series Fiscales.",
+      "estadoInvalido": "Solo se pueden devolver ventas completadas.",
+      "cantidadExcedida": "La cantidad supera lo que queda por devolver en alguna línea. Actualiza la pantalla e inténtalo de nuevo.",
+      "detalleNotFound": "Una de las líneas ya no pertenece a la venta."
+    }
+  },
   "checkout": {
     "catalogTitle": "Catálogo de Productos y Lotes",
     "searchProductPlaceholder": "Buscar producto...",
