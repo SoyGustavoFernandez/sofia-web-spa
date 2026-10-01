@@ -33,9 +33,13 @@ export interface UpdateEmpresaRequest {
 
 export interface RegistrarEmpresaRequest {
   nombreEmpresa: string;
+  ruc: string;
+  adminNombres: string;
+  adminApellidoPaterno: string;
+  adminApellidoMaterno: string | null;
+  adminEmail: string;
   usuario: string;
   password: string;
-  ruc?: string | null;
 }
 
 export interface RegistrarEmpresaResponse {

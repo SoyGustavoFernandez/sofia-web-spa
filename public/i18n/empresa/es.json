@@ -11,7 +11,30 @@
     "ruc": "RUC",
     "submit": "Registrar Empresa",
     "hasAccount": "¿Ya tienes cuenta?",
-    "login": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "adminNombres": "Nombres del administrador",
+    "adminApellidoPaterno": "Apellido paterno",
+    "adminApellidoMaterno": "Apellido materno (opcional)",
+    "adminEmail": "Correo electrónico",
+    "adminEmailHint": "Lo usarás para recuperar tu contraseña",
+    "sections": {
+      "empresa": "Datos de la empresa",
+      "admin": "Datos del administrador",
+      "cuenta": "Cuenta de acceso"
+    },
+    "togglePassword": "Mostrar u ocultar contraseña",
+    "processing": "Procesando...",
+    "brand": {
+      "headline": "Gestión farmacéutica completa",
+      "sub": "Una plataforma inteligente para administrar tu farmacia con precisión y eficiencia.",
+      "features": {
+        "trial": "1 mes de prueba gratuita, sin tarjeta",
+        "multiBranch": "Multi-sucursal desde el primer día",
+        "realTime": "Control de inventario y ventas en tiempo real",
+        "support": "Soporte dedicado durante la incorporación"
+      },
+      "rights": "Todos los derechos reservados"
+    }
   },
   "estado": {
     "0": "Trial Activo",
@@ -45,7 +68,11 @@
     "maxLength200": "Máximo 200 caracteres",
     "rucFormat": "El RUC debe tener exactamente 11 dígitos numéricos",
     "usuarioMin": "El usuario debe tener al menos 4 caracteres",
-    "passwordMin": "La contraseña debe tener al menos 8 caracteres"
+    "passwordMin": "La contraseña debe tener al menos 8 caracteres",
+    "maxLength75": "Máximo 75 caracteres",
+    "maxLength50": "Máximo 50 caracteres",
+    "maxLength254": "Máximo 254 caracteres",
+    "emailFormat": "Ingresa un correo electrónico válido"
   },
   "notifications": {
     "updated": "Empresa actualizada correctamente",
@@ -53,7 +80,9 @@
     "loadSingleError": "Error al cargar la empresa",
     "updateError": "Error al actualizar la empresa",
     "registerSuccess": "Empresa registrada correctamente. ¡Bienvenido!",
-    "registerError": "Error al registrar la empresa"
+    "registerError": "Error al registrar la empresa",
+    "rucDuplicado": "Ya existe una empresa registrada con este RUC",
+    "usuarioDuplicado": "El usuario ya está en uso. Elige otro."
   },
   "help": {
     "nombre": "Nombre comercial o legal de la empresa.",

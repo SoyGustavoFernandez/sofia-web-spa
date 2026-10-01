@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +11,16 @@ import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsver
 import { EmpresaService } from '../services/empresa.service';
 import { AuthService } from '@core/auth/auth.service';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
+
+// Mirrors the backend limits of the employee record created for the admin
+const NAME_MAX_LENGTH = 75;
+const EMAIL_MAX_LENGTH = 254;
+
+// Backend codes that have a specific message instead of the generic error
+const ERROR_KEYS: Record<string, string> = {
+  'Empresa.RUC.Duplicado': 'empresa.notifications.rucDuplicado',
+  'Auth.DuplicateUsername': 'empresa.notifications.usuarioDuplicado',
+};
 
 @Component({
   selector: 'app-empresa-register',
@@ -40,11 +51,15 @@ export class EmpresaRegisterComponent {
   readonly hidePassword = signal(true);
   readonly currentYear = new Date().getFullYear();
 
-  readonly form = this.fb.group({
+  readonly form = this.fb.nonNullable.group({
     nombreEmpresa: ['', [Validators.required, Validators.maxLength(200)]],
+    ruc: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
+    adminNombres: ['', [Validators.required, Validators.maxLength(NAME_MAX_LENGTH)]],
+    adminApellidoPaterno: ['', [Validators.required, Validators.maxLength(NAME_MAX_LENGTH)]],
+    adminApellidoMaterno: ['', [Validators.maxLength(NAME_MAX_LENGTH)]],
+    adminEmail: ['', [Validators.required, Validators.email, Validators.maxLength(EMAIL_MAX_LENGTH)]],
     usuario: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
-    ruc: [null as string | null, [Validators.pattern(/^\d{11}$/)]],
   });
 
   submit(): void {
@@ -53,22 +68,28 @@ export class EmpresaRegisterComponent {
       return;
     }
     this.submitting.set(true);
-    const { nombreEmpresa, usuario, password, ruc } = this.form.value;
+    const v = this.form.getRawValue();
 
     this.service.register({
-      nombreEmpresa: nombreEmpresa!,
-      usuario: usuario!,
-      password: password!,
-      ruc: ruc || null,
+      nombreEmpresa: v.nombreEmpresa.trim(),
+      ruc: v.ruc.trim(),
+      adminNombres: v.adminNombres.trim(),
+      adminApellidoPaterno: v.adminApellidoPaterno.trim(),
+      adminApellidoMaterno: v.adminApellidoMaterno.trim() || null,
+      adminEmail: v.adminEmail.trim(),
+      usuario: v.usuario,
+      password: v.password,
     }).subscribe({
       next: res => {
         this.auth.storeToken(res.token);
         this.notifier.showSuccess(this.transloco.translate('empresa.notifications.registerSuccess'));
         void this.router.navigate(['/dashboard']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.submitting.set(false);
-        this.notifier.showError(this.transloco.translate('empresa.notifications.registerError'));
+        const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
+        const key = typeof code === 'string' ? ERROR_KEYS[code] : undefined;
+        this.notifier.showError(this.transloco.translate(key ?? 'empresa.notifications.registerError'));
       },
     });
   }

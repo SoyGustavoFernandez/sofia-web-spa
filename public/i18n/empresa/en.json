@@ -11,7 +11,30 @@
     "ruc": "Tax ID",
     "submit": "Register Company",
     "hasAccount": "Already have an account?",
-    "login": "Sign in"
+    "login": "Sign in",
+    "adminNombres": "Administrator first names",
+    "adminApellidoPaterno": "Paternal surname",
+    "adminApellidoMaterno": "Maternal surname (optional)",
+    "adminEmail": "Email",
+    "adminEmailHint": "You will use it to recover your password",
+    "sections": {
+      "empresa": "Company details",
+      "admin": "Administrator details",
+      "cuenta": "Sign-in account"
+    },
+    "togglePassword": "Show or hide password",
+    "processing": "Processing...",
+    "brand": {
+      "headline": "Complete pharmacy management",
+      "sub": "An intelligent platform to run your pharmacy with precision and efficiency.",
+      "features": {
+        "trial": "1-month free trial, no card required",
+        "multiBranch": "Multi-branch from day one",
+        "realTime": "Real-time inventory and sales control",
+        "support": "Dedicated support during onboarding"
+      },
+      "rights": "All rights reserved"
+    }
   },
   "estado": {
     "0": "Active Trial",
@@ -45,7 +68,11 @@
     "maxLength200": "Maximum 200 characters",
     "rucFormat": "Tax ID must be exactly 11 numeric digits",
     "usuarioMin": "Username must be at least 4 characters",
-    "passwordMin": "Password must be at least 8 characters"
+    "passwordMin": "Password must be at least 8 characters",
+    "maxLength75": "Maximum 75 characters",
+    "maxLength50": "Maximum 50 characters",
+    "maxLength254": "Maximum 254 characters",
+    "emailFormat": "Enter a valid email address"
   },
   "notifications": {
     "updated": "Company updated successfully",
@@ -53,7 +80,9 @@
     "loadSingleError": "Error loading company",
     "updateError": "Error updating company",
     "registerSuccess": "Company registered successfully. Welcome!",
-    "registerError": "Error registering company"
+    "registerError": "Error registering company",
+    "rucDuplicado": "A company with this tax ID is already registered",
+    "usuarioDuplicado": "This username is already taken. Choose another one."
   },
   "help": {
     "nombre": "Commercial or legal name of the company.",

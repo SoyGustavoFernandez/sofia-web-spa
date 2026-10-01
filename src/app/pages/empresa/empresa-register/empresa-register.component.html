@@ -7,33 +7,30 @@
           <span class="logo-icon">⚕</span>
           <span class="logo-text">SOFIA</span>
         </div>
-        <h2 class="brand-headline">Gestión farmacéutica completa</h2>
-        <p class="brand-sub">
-          Una plataforma inteligente para administrar tu farmacia con precisión
-          y eficiencia.
-        </p>
+        <h2 class="brand-headline">{{ t('register.brand.headline') }}</h2>
+        <p class="brand-sub">{{ t('register.brand.sub') }}</p>
 
         <ul class="feature-list">
           <li>
             <span class="feature-icon">✓</span>
-            <span>1 mes de prueba gratuita, sin tarjeta</span>
+            <span>{{ t('register.brand.features.trial') }}</span>
           </li>
           <li>
             <span class="feature-icon">✓</span>
-            <span>Multi-sucursal desde el primer día</span>
+            <span>{{ t('register.brand.features.multiBranch') }}</span>
           </li>
           <li>
             <span class="feature-icon">✓</span>
-            <span>Control de inventario y ventas en tiempo real</span>
+            <span>{{ t('register.brand.features.realTime') }}</span>
           </li>
           <li>
             <span class="feature-icon">✓</span>
-            <span>Soporte dedicado durante la incorporación</span>
+            <span>{{ t('register.brand.features.support') }}</span>
           </li>
         </ul>
       </div>
       <div class="brand-footer">
-        © {{ currentYear }} SOFIA · Todos los derechos reservados
+        © {{ currentYear }} SOFIA · {{ t('register.brand.rights') }}
       </div>
     </div>
 
@@ -46,6 +43,8 @@
         </div>
 
         <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
+          <p class="form-section-title">{{ t('register.sections.empresa') }}</p>
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>{{ t('register.nombreEmpresa') }}</mat-label>
             <mat-icon matPrefix>business</mat-icon>
@@ -53,29 +52,105 @@
               matInput
               formControlName="nombreEmpresa"
               autocomplete="organization" />
-            @if (
-              form.get('nombreEmpresa')?.hasError('required') &&
-              form.get('nombreEmpresa')?.touched
-            ) {
+            @if (form.controls.nombreEmpresa.hasError('required')) {
               <mat-error>{{ t('form.required') }}</mat-error>
             }
-            @if (form.get('nombreEmpresa')?.hasError('maxlength')) {
+            @if (form.controls.nombreEmpresa.hasError('maxlength')) {
               <mat-error>{{ t('form.maxLength200') }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>{{ t('register.usuario') }}</mat-label>
-            <mat-icon matPrefix>person</mat-icon>
-            <input matInput formControlName="usuario" autocomplete="username" />
-            @if (
-              form.get('usuario')?.hasError('required') &&
-              form.get('usuario')?.touched
-            ) {
+            <mat-label>{{ t('register.ruc') }}</mat-label>
+            <mat-icon matPrefix>badge</mat-icon>
+            <input
+              matInput
+              formControlName="ruc"
+              maxlength="11"
+              inputmode="numeric" />
+            @if (form.controls.ruc.hasError('required')) {
               <mat-error>{{ t('form.required') }}</mat-error>
             }
-            @if (form.get('usuario')?.hasError('minlength')) {
+            @if (form.controls.ruc.hasError('pattern')) {
+              <mat-error>{{ t('form.rucFormat') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <p class="form-section-title">{{ t('register.sections.admin') }}</p>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('register.adminNombres') }}</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input
+              matInput
+              formControlName="adminNombres"
+              autocomplete="given-name" />
+            @if (form.controls.adminNombres.hasError('required')) {
+              <mat-error>{{ t('form.required') }}</mat-error>
+            }
+            @if (form.controls.adminNombres.hasError('maxlength')) {
+              <mat-error>{{ t('form.maxLength75') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="field-row">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ t('register.adminApellidoPaterno') }}</mat-label>
+              <input
+                matInput
+                formControlName="adminApellidoPaterno"
+                autocomplete="family-name" />
+              @if (form.controls.adminApellidoPaterno.hasError('required')) {
+                <mat-error>{{ t('form.required') }}</mat-error>
+              }
+              @if (form.controls.adminApellidoPaterno.hasError('maxlength')) {
+                <mat-error>{{ t('form.maxLength75') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ t('register.adminApellidoMaterno') }}</mat-label>
+              <input matInput formControlName="adminApellidoMaterno" />
+              @if (form.controls.adminApellidoMaterno.hasError('maxlength')) {
+                <mat-error>{{ t('form.maxLength75') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('register.adminEmail') }}</mat-label>
+            <mat-icon matPrefix>mail</mat-icon>
+            <input
+              matInput
+              type="email"
+              formControlName="adminEmail"
+              autocomplete="email" />
+            <mat-hint>{{ t('register.adminEmailHint') }}</mat-hint>
+            @if (form.controls.adminEmail.hasError('required')) {
+              <mat-error>{{ t('form.required') }}</mat-error>
+            }
+            @if (form.controls.adminEmail.hasError('email')) {
+              <mat-error>{{ t('form.emailFormat') }}</mat-error>
+            }
+            @if (form.controls.adminEmail.hasError('maxlength')) {
+              <mat-error>{{ t('form.maxLength254') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <p class="form-section-title">{{ t('register.sections.cuenta') }}</p>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('register.usuario') }}</mat-label>
+            <mat-icon matPrefix>account_circle</mat-icon>
+            <input matInput formControlName="usuario" autocomplete="username" />
+            @if (form.controls.usuario.hasError('required')) {
+              <mat-error>{{ t('form.required') }}</mat-error>
+            }
+            @if (form.controls.usuario.hasError('minlength')) {
               <mat-error>{{ t('form.usuarioMin') }}</mat-error>
+            }
+            @if (form.controls.usuario.hasError('maxlength')) {
+              <mat-error>{{ t('form.maxLength50') }}</mat-error>
             }
           </mat-form-field>
 
@@ -92,34 +167,16 @@
               matSuffix
               type="button"
               (click)="togglePasswordVisibility()"
-              [attr.aria-label]="'Toggle password'">
+              [attr.aria-label]="t('register.togglePassword')">
               <mat-icon>{{
                 hidePassword() ? 'visibility_off' : 'visibility'
               }}</mat-icon>
             </button>
-            @if (
-              form.get('password')?.hasError('required') &&
-              form.get('password')?.touched
-            ) {
+            @if (form.controls.password.hasError('required')) {
               <mat-error>{{ t('form.required') }}</mat-error>
             }
-            @if (form.get('password')?.hasError('minlength')) {
+            @if (form.controls.password.hasError('minlength')) {
               <mat-error>{{ t('form.passwordMin') }}</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>{{ t('register.ruc') }}</mat-label>
-            <mat-icon matPrefix>badge</mat-icon>
-            <input
-              matInput
-              formControlName="ruc"
-              maxlength="11"
-              inputmode="numeric" />
-            @if (
-              form.get('ruc')?.hasError('pattern') && form.get('ruc')?.touched
-            ) {
-              <mat-error>{{ t('form.rucFormat') }}</mat-error>
             }
           </mat-form-field>
 
@@ -131,7 +188,7 @@
             [disabled]="submitting()">
             @if (submitting()) {
               <mat-spinner diameter="20" color="accent" />
-              <span>Procesando...</span>
+              <span>{{ t('register.processing') }}</span>
             } @else {
               <span>{{ t('register.submit') }}</span>
             }
