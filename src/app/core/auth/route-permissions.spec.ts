@@ -1,5 +1,5 @@
 import { appRoutes } from '../../app.routes';
-import { ROUTE_PERMISSIONS, routeModule } from './route-permissions';
+import { ROUTE_PERMISSIONS, grantsPermission, routeModule } from './route-permissions';
 
 // Screens every signed-in user may open: the dashboard and changing their own password
 const OPEN_ROUTES = ['dashboard', 'cambiar-clave'];
@@ -20,5 +20,18 @@ describe('route-permissions', () => {
     expect(routeModule('/lotes/abc-123')).toBe('Inventarios');
     expect(routeModule('/pos/nueva?continuar=9')).toBe('Ventas');
     expect(routeModule('/dashboard')).toBeUndefined();
+  });
+
+  it('grantsPermission() needs the exact action, defaults to Leer and ignores case and padding', () => {
+    const permisos = [{ modulo: 'ventas ', accion: 'leer' }, { modulo: 'POS', accion: 'AperturarCaja' }];
+
+    expect(grantsPermission(['Cajero'], permisos, 'Ventas')).toBeTrue();
+    expect(grantsPermission(['Cajero'], permisos, 'POS', 'AperturarCaja')).toBeTrue();
+    expect(grantsPermission(['Cajero'], permisos, 'POS')).toBeFalse();
+    expect(grantsPermission([], [], 'Ventas')).toBeFalse();
+  });
+
+  it('grantsPermission() lets the Admin role through without any permission, like the API does', () => {
+    expect(grantsPermission(['Cajero', 'admin'], [], 'Seguridad', 'GestionarPermisos')).toBeTrue();
   });
 });

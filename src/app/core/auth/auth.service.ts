@@ -5,7 +5,7 @@ import { Observable, tap, map, catchError, finalize, shareReplay, EMPTY, of } fr
 import { environment } from '@environment/environment';
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { clearOtherUsersStorage, clearUserStorage } from './user-storage';
-import { READ_ACTION } from './route-permissions';
+import { READ_ACTION, grantsPermission } from './route-permissions';
 
 interface JwtPayload {
   sub: string;
@@ -138,12 +138,10 @@ export class AuthService {
     return this.profileLoad$;
   }
 
-  // Mirrors the API's PermissionAuthorizationHandler: Admin bypasses and names compare case-insensitively
+  // Denies everything until the profile is loaded; the rule itself is shared with the role menu preview
   hasPermission(modulo: string, accion: string = READ_ACTION): boolean {
     const profile = this._profile();
-    if (!profile) return false;
-    if (profile.roles.some(r => sameName(r, 'Admin'))) return true;
-    return profile.permisos.some(p => sameName(p.modulo, modulo) && sameName(p.accion, accion));
+    return !!profile && grantsPermission(profile.roles, profile.permisos, modulo, accion);
   }
 
   storeToken(token: string): void {
@@ -169,9 +167,4 @@ export class AuthService {
   private loadToken(): string | null {
     try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
   }
-}
-
-// Same rule as the API: trimmed, ordinal and case-insensitive
-function sameName(a: string, b: string): boolean {
-  return a.trim().toLowerCase() === b.trim().toLowerCase();
 }

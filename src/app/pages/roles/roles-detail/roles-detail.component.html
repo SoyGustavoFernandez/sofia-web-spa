@@ -67,7 +67,7 @@
       @if (!isNew()) {
         <div class="sofia-detail-card">
           <div
-            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            class="d-flex justify-content-between align-items-center flex-wrap gap-2 pb-3 border-bottom"
             style="margin-bottom: 1rem">
             <div>
               <h4 class="mb-1">{{ t('configuracion.title') }}</h4>
@@ -89,7 +89,7 @@
                   height: 14px;
                   line-height: 14px;
                 ">
-                schedule
+                info
               </mat-icon>
               {{ t('permisos.cache-warning') }}
             </span>
@@ -104,6 +104,9 @@
                     <mat-spinner diameter="32" />
                   </div>
                 } @else {
+                  <div class="search-info-text mb-3">
+                    {{ t('configuracion.menu-preview-hint') }}
+                  </div>
                   <div class="row g-3">
                     @for (group of menuPreview(); track group.label) {
                       <div class="col-lg-4 col-md-6 col-12">
@@ -123,7 +126,7 @@
                               letter-spacing: 0.06em;
                               color: var(--mat-sys-on-surface-variant);
                             ">
-                            {{ group.label }}
+                            {{ group.label | transloco }}
                           </div>
                           <div
                             style="
@@ -167,7 +170,7 @@
                                       ? 'var(--mat-sys-on-surface)'
                                       : 'var(--mat-sys-outline)'
                                   ">
-                                  {{ item.label }}
+                                  {{ item.label | transloco }}
                                 </span>
                               </div>
                             }
@@ -189,7 +192,10 @@
                   </div>
                 } @else {
                   <mat-accordion multi>
-                    @for (group of permisosCatalog(); track group.modulo) {
+                    @for (
+                      group of permisosCatalogOrdenado();
+                      track group.modulo
+                    ) {
                       <mat-expansion-panel
                         style="
                           --mat-expansion-container-background-color: white;
@@ -209,7 +215,7 @@
                                 toggleModulo(group.modulo, group.acciones)
                               "
                               (click)="$event.stopPropagation()">
-                              <strong>{{ group.modulo }}</strong>
+                              <strong>{{ moduloLabel(group.modulo) }}</strong>
                             </mat-checkbox>
                           </mat-panel-title>
                           <mat-panel-description>
@@ -229,7 +235,7 @@
                                 "
                                 [disabled]="!isEditMode()"
                                 (change)="togglePermiso(group.modulo, accion)">
-                                {{ accion }}
+                                {{ accionLabel(accion) }}
                               </mat-checkbox>
                             </div>
                           }

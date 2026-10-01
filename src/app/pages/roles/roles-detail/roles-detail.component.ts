@@ -1,17 +1,21 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
+import { Translation, TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { MatDialog } from '@angular/material/dialog';
 import { forkJoin, switchMap, of, map } from 'rxjs';
 import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
+import { grantsPermission, routeModule } from '@core/auth/route-permissions';
+import { navItems } from '@matdash/layouts/full/vertical/sidebar/sidebar-data';
 import { RolService } from '../services/rol.service';
-import { RolResponse, PermisoCatalogGroup, PermisoRolDto, SucursalRolItem, MENU_CATALOG } from '../models/rol.model';
+import { RolResponse, PermisoCatalogGroup, PermisoRolDto, SucursalRolItem } from '../models/rol.model';
+import { buildMenuPreview } from '../models/menu-preview';
 
 @Component({
   selector: 'app-roles-detail',
@@ -53,15 +57,26 @@ export class RolesDetailComponent implements OnInit {
   readonly permisosActivos = signal<PermisoRolDto[]>([]);
   readonly sucursales = signal<SucursalRolItem[]>([]);
 
+  private readonly nombreRol = signal('');
+  // Scope translations as a signal so permission labels and their order follow the active language
+  private readonly i18n = toSignal(this.transloco.selectTranslation('roles'), { initialValue: {} as Translation });
+
+  // Same items and rule as the real sidebar: a screen shows only with Leer on its module (or the Admin role)
   readonly menuPreview = computed(() => {
-    const activos = this.permisosActivos();
-    const hasAccess = (modules: string[]) =>
-      modules.length === 0 || modules.some(m => activos.some(p => p.moduloSistema === m));
-    return MENU_CATALOG.map(group => ({
-      label: group.label,
-      items: group.items.map(item => ({ ...item, visible: hasAccess(item.modules) })),
-    }));
+    const roles = [this.nombreRol()];
+    const permisos = this.permisosActivos().map(p => ({ modulo: p.moduloSistema, accion: p.accion }));
+    return buildMenuPreview(navItems, route => {
+      const modulo = routeModule(route);
+      return !modulo || grantsPermission(roles, permisos, modulo);
+    });
   });
+
+  // Modules and actions in the order of the labels the user reads; the names stay raw for the toggles
+  readonly permisosCatalogOrdenado = computed(() =>
+    this.permisosCatalog()
+      .map(g => ({ modulo: g.modulo, acciones: [...g.acciones].sort((a, b) => this.accionLabel(a).localeCompare(this.accionLabel(b))) }))
+      .sort((a, b) => this.moduloLabel(a.modulo).localeCompare(this.moduloLabel(b.modulo))),
+  );
 
   // nombreRol is editable only when creating; for existing records it is always disabled
   readonly form = this.fb.group({
@@ -95,6 +110,7 @@ export class RolesDetailComponent implements OnInit {
     this.service.getById(this.entityId!).subscribe({
       next: data => {
         this.snapshot = data;
+        this.nombreRol.set(data.nombreRol);
         this.form.patchValue({
           nombreRol: data.nombreRol,
           descripcion: data.descripcion,
@@ -146,6 +162,20 @@ export class RolesDetailComponent implements OnInit {
         this.notifier.showServerError(err, this.transloco.translate('roles.permisos.load-error'));
       },
     });
+  }
+
+  moduloLabel(modulo: string): string {
+    return this.permisoLabel('modulo', modulo);
+  }
+
+  accionLabel(accion: string): string {
+    return this.permisoLabel('accion', accion);
+  }
+
+  // Display only: a permission the API adds later shows its raw name instead of a missing translation key
+  private permisoLabel(tipo: 'modulo' | 'accion', nombre: string): string {
+    const label: unknown = this.i18n()[`permisos.${tipo}.${nombre}`];
+    return typeof label === 'string' && label ? label : nombre;
   }
 
   isPermisoActivo(modulo: string, accion: string): boolean {
