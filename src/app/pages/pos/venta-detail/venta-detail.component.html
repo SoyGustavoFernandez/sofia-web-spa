@@ -82,6 +82,21 @@
             <div class="search-info-text">{{ t('ventasTable.colTotal') }}</div>
             <div>S/ {{ v.total | number: '1.2-2' }}</div>
           </div>
+          @if (v.recetaVerificadaPor) {
+            <div class="col-12">
+              <div class="search-info-text">
+                {{ t('ventasDetail.recetaVerificadaLabel') }}
+              </div>
+              <div>
+                {{
+                  t('ventasDetail.recetaVerificadaPor', {
+                    nombre: v.recetaVerificadaPor,
+                    fecha: (v.recetaVerificadaEn | date: 'dd/MM/yyyy HH:mm'),
+                  })
+                }}
+              </div>
+            </div>
+          }
         </div>
 
         @if (v.comprobante; as c) {

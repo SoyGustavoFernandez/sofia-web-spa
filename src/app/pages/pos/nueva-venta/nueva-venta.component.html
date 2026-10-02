@@ -421,8 +421,16 @@
                     @for (r of recetaOptions(); track r.id) {
                       <mat-option [value]="r.id"
                         >{{ r.fechaExpedicion | date: 'dd/MM/yyyy' }} ·
-                        {{ r.medicoNombre }}</mat-option
-                      >
+                        {{ r.medicoNombre }}
+                        @if (r.numeroReceta) {
+                          ·
+                          {{
+                            t('checkout.recetaNumero', {
+                              numero: r.numeroReceta,
+                            })
+                          }}
+                        }
+                      </mat-option>
                     }
                   </mat-select>
                   <mat-hint>{{ t('checkout.recetaHint') }}</mat-hint>
@@ -567,10 +575,22 @@
                   }
                 </div>
 
-                @if (faltaReceta()) {
+                @if (requiereVerificacionReceta()) {
+                  <div class="pos3-rx-check">
+                    <mat-checkbox
+                      color="primary"
+                      [checked]="recetaVerificada()"
+                      (change)="recetaVerificada.set($event.checked)">
+                      {{ t('checkout.recetaVerificadaLabel') }}
+                    </mat-checkbox>
+                    <div class="pos3-hint-sm">
+                      {{ t('checkout.recetaVerificadaHint') }}
+                    </div>
+                  </div>
+                } @else if (recetaAvisoKey(); as avisoKey) {
                   <div class="pos3-cart-hint">
                     <mat-icon>description</mat-icon>
-                    <span>{{ t('checkout.recetaPendienteHint') }}</span>
+                    <span>{{ t(avisoKey) }}</span>
                   </div>
                 }
 

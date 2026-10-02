@@ -31,6 +31,8 @@ function venta(overrides: Partial<VentaConDetalle> = {}): VentaConDetalle {
     comprobante: { tipo: 'Boleta', numero: 'B001-00000011', estadoAceptacion: 'NoEnviado', urlVerificacion: null, urlXml: null, urlCdr: null, emisorRazonSocial: 'Botica QA', emisorRuc: '20212971893', sucursalDireccion: 'Av. Arequipa 123', clienteTipoDocumento: '1', clienteNumeroDocumento: '45781236', clienteNombre: 'Juan Perez' },
     pagos: [],
     devoluciones: [],
+    recetaVerificadaPor: null,
+    recetaVerificadaEn: null,
     ...overrides,
   };
 }
@@ -93,6 +95,22 @@ describe('VentaDetailComponent — returns', () => {
     );
     expect(component.puedeAnular()).toBeFalse();
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('BC01-00000001');
+  });
+});
+
+describe('VentaDetailComponent — prescription verification', () => {
+  it('shows who verified the prescription and when', () => {
+    const { fixture } = setup(venta({ recetaVerificadaPor: 'Carla Cajera', recetaVerificadaEn: '2026-10-02T15:30:00Z' }));
+    const texto = (fixture.nativeElement as HTMLElement).textContent;
+
+    expect(texto).toContain('pos.ventasDetail.recetaVerificadaLabel');
+    expect(texto).toContain('pos.ventasDetail.recetaVerificadaPor');
+  });
+
+  it('shows nothing about the prescription on a sale that needed no verification', () => {
+    const { fixture } = setup(venta());
+
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('recetaVerificada');
   });
 });
 

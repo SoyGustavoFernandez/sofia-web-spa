@@ -74,11 +74,61 @@ describe('RecetasDetailComponent — /nueva (create mode)', () => {
       medicoId: 'med-1',
       fechaExpedicion: '2026-09-05',
       repeticionesMax: 2,
+      numeroReceta: undefined,
       indicacionesUso: 'Cada 8 horas',
     });
     req.flush('rec-1');
     httpMock.verify();
   });
+
+  it('posts the trimmed prescription number', () => {
+    const { fixture, httpMock } = setup({}, { isNew: true });
+    fixture.detectChanges();
+    const component = fixture.componentInstance;
+    component.selectPaciente(paciente);
+    component.selectMedico(medico);
+    component.form.patchValue({ fechaExpedicion: new Date(2026, 8, 5), repeticionesMax: 0, numeroReceta: '  RE-778899 ' });
+
+    component.guardar();
+
+    const req = httpMock.expectOne(r => r.method === 'POST' && r.url === BASE);
+    expect(req.request.body.numeroReceta).toBe('RE-778899');
+    req.flush('rec-1');
+    httpMock.verify();
+  });
+
+  it('does not save a prescription number longer than the backend allows', () => {
+    const { fixture, httpMock } = setup({}, { isNew: true });
+    fixture.detectChanges();
+    const component = fixture.componentInstance;
+    component.selectPaciente(paciente);
+    component.selectMedico(medico);
+    component.form.patchValue({ fechaExpedicion: new Date(2026, 8, 5), repeticionesMax: 0, numeroReceta: '7'.repeat(31) });
+
+    component.guardar();
+
+    expect(component.form.controls.numeroReceta.hasError('maxlength')).toBeTrue();
+    httpMock.expectNone(BASE);
+    httpMock.verify();
+  });
+
+  for (const code of ['RecetaMedica.NumeroReceta', 'CreateRecetaCommand.NumeroReceta']) {
+    it(`maps the backend code ${code} to the invalid-data message`, () => {
+      const { fixture, httpMock } = setup({}, { isNew: true });
+      fixture.detectChanges();
+      const component = fixture.componentInstance;
+      const showError = spyOn(TestBed.inject(ErrorNotifierService), 'showError');
+      component.selectPaciente(paciente);
+      component.selectMedico(medico);
+      component.form.patchValue({ fechaExpedicion: new Date(2026, 8, 5), repeticionesMax: 0, numeroReceta: 'RE-1' });
+
+      component.guardar();
+
+      httpMock.expectOne(BASE).flush({ code }, { status: 400, statusText: 'Bad Request' });
+      expect(showError).toHaveBeenCalledWith('recetasMedicas.errors.invalid-data');
+      httpMock.verify();
+    });
+  }
 
   it('maps a backend Paciente.NotFound code to its translated message', () => {
     const { fixture, httpMock } = setup({}, { isNew: true });
@@ -113,12 +163,49 @@ describe('RecetasDetailComponent — /:id (view mode)', () => {
       fechaExpedicion: '2026-09-05',
       repeticionesMax: 1,
       indicacionesUso: null,
+      numeroReceta: null,
     });
 
     const component = fixture.componentInstance;
     expect(component.isNew()).toBeFalse();
     expect(component.isEditing()).toBeFalse();
     expect(component.snapshot()?.id).toBe('rec-1');
+    httpMock.verify();
+  });
+
+  it('shows the prescription number and keeps it when the prescription is edited', () => {
+    const { fixture, httpMock } = setup({ id: 'rec-1' });
+    fixture.detectChanges();
+    httpMock.expectOne(`${BASE}/rec-1`).flush({
+      id: 'rec-1',
+      clienteId: 'pac-1',
+      clienteNombre: 'María Quispe',
+      medicoId: 'med-1',
+      medicoNombre: 'Dra. Rosa Díaz',
+      fechaExpedicion: '2026-09-05',
+      repeticionesMax: 1,
+      indicacionesUso: null,
+      numeroReceta: 'RE-778899',
+    });
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const valores = Array.from(host.querySelectorAll<HTMLInputElement>('input')).map(i => i.value);
+
+    expect(valores).toContain('RE-778899');
+    expect(host.textContent).toContain('recetasMedicas.fields.numeroReceta');
+
+    const component = fixture.componentInstance;
+    component.startEdit();
+    fixture.detectChanges();
+
+    expect(host.textContent).toContain('recetasMedicas.hints.numeroReceta');
+
+    component.guardar();
+
+    const req = httpMock.expectOne(r => r.method === 'PUT' && r.url === `${BASE}/rec-1`);
+    expect(req.request.body.numeroReceta).toBe('RE-778899');
+    req.flush('rec-1');
+    httpMock.expectOne(`${BASE}/rec-1`).flush({});
     httpMock.verify();
   });
 });
@@ -133,6 +220,7 @@ describe('RecetasDetailComponent — delete permission', () => {
     fechaExpedicion: '2026-09-05',
     repeticionesMax: 1,
     indicacionesUso: null,
+    numeroReceta: null,
   };
 
   function editExisting(permisos: UserPermission[]) {

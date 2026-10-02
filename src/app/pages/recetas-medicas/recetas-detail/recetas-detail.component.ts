@@ -21,18 +21,24 @@ import { ProfesionalSaludService } from '../../profesionales-salud/services/prof
 import { ProfesionalSaludListItem } from '../../profesionales-salud/models/profesional-salud.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
 
+// Mirrors RecetaMedica.NumeroRecetaMaxLength in the backend
+const NUMERO_RECETA_MAX_LENGTH = 30;
+
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'Paciente.NotFound': 'recetasMedicas.errors.paciente-not-found',
   'ProfesionalSalud.NotFound': 'recetasMedicas.errors.medico-not-found',
   'RecetaMedica.NotFound': 'recetasMedicas.errors.not-found',
   'RecetaMedica.FechaExpedicion': 'recetasMedicas.errors.fecha-futura',
   'RecetaMedica.RepeticionesMax': 'recetasMedicas.errors.invalid-data',
+  'RecetaMedica.NumeroReceta': 'recetasMedicas.errors.invalid-data',
   'CreateRecetaCommand.FechaExpedicion': 'recetasMedicas.errors.invalid-data',
   'CreateRecetaCommand.RepeticionesMax': 'recetasMedicas.errors.invalid-data',
   'CreateRecetaCommand.IndicacionesUso': 'recetasMedicas.errors.invalid-data',
+  'CreateRecetaCommand.NumeroReceta': 'recetasMedicas.errors.invalid-data',
   'UpdateRecetaCommand.FechaExpedicion': 'recetasMedicas.errors.invalid-data',
   'UpdateRecetaCommand.RepeticionesMax': 'recetasMedicas.errors.invalid-data',
   'UpdateRecetaCommand.IndicacionesUso': 'recetasMedicas.errors.invalid-data',
+  'UpdateRecetaCommand.NumeroReceta': 'recetasMedicas.errors.invalid-data',
 };
 
 @Component({
@@ -64,6 +70,7 @@ export class RecetasDetailComponent implements OnInit {
   readonly deleting = signal(false);
   readonly snapshot = signal<RecetaDetail | null>(null);
   readonly today = new Date();
+  readonly numeroRecetaMaxLength = NUMERO_RECETA_MAX_LENGTH;
 
   readonly pacienteCtrl = new FormControl('');
   readonly medicoCtrl = new FormControl('');
@@ -75,6 +82,7 @@ export class RecetasDetailComponent implements OnInit {
   readonly form = this.fb.group({
     fechaExpedicion: [null as Date | null, Validators.required],
     repeticionesMax: [0, [Validators.required, Validators.min(0)]],
+    numeroReceta: ['', Validators.maxLength(NUMERO_RECETA_MAX_LENGTH)],
     indicacionesUso: [''],
   });
 
@@ -145,6 +153,7 @@ export class RecetasDetailComponent implements OnInit {
     this.form.patchValue({
       fechaExpedicion: new Date(parts[0], parts[1] - 1, parts[2]),
       repeticionesMax: s.repeticionesMax,
+      numeroReceta: s.numeroReceta ?? '',
       indicacionesUso: s.indicacionesUso ?? '',
     });
     this.isEditing.set(true);
@@ -204,6 +213,7 @@ export class RecetasDetailComponent implements OnInit {
       medicoId: this.selectedMedico()!.id,
       fechaExpedicion: this.toDateOnlyString(v.fechaExpedicion as Date),
       repeticionesMax: v.repeticionesMax ?? 0,
+      numeroReceta: v.numeroReceta?.trim() || undefined,
       indicacionesUso: v.indicacionesUso || undefined,
     };
 

@@ -12,6 +12,14 @@ export enum MetodoPago {
   Transferencia = 3,
 }
 
+// Mirrors the backend CondicionVenta enum, which travels as a number
+export enum CondicionVenta {
+  VentaLibreOTC = 0,
+  RecetaSimple = 1,
+  RecetaRetenida = 2,
+  Estupefaciente = 3,
+}
+
 export enum DestinoDevolucion {
   Reingreso_Venta = 0,
   Cuarentena_DIGEMID = 1,
@@ -48,6 +56,7 @@ export interface VentaDetalle {
   cantidadEnPresentacion?: number | null;
   recetaId?: string | null;
   cantidadDevuelta: number;
+  condicionVenta?: CondicionVenta | null;
 }
 
 export interface ComprobanteDto {
@@ -96,6 +105,8 @@ export interface VentaConDetalle {
   comprobante: ComprobanteDto | null;
   pagos: VentaPagoDto[];
   devoluciones: VentaDevolucionDto[];
+  recetaVerificadaPor: string | null;
+  recetaVerificadaEn: string | null;
 }
 
 export interface VentaFilter {
@@ -137,6 +148,7 @@ export interface CreateVentaRequest {
   estado?: EstadoVenta;
   aseguradoraId?: string;
   montoCubiertoSeguro?: number;
+  recetaVerificada?: boolean;
 }
 
 export interface CompletarVentaRequest {
@@ -145,6 +157,7 @@ export interface CompletarVentaRequest {
   clienteId?: string;
   aseguradoraId?: string;
   montoCubiertoSeguro?: number;
+  recetaVerificada?: boolean;
 }
 
 export interface ActualizarVentaPendienteRequest {
@@ -189,6 +202,12 @@ export interface LoteDisponibleVenta {
   fechaCaducidad: string;
   cantidadFisica: number;
   precioVentaBase: number | null;
+  condicionVenta: CondicionVenta;
+}
+
+// Company-level sale rules the POS mirrors; the backend is the one enforcing them
+export interface ConfiguracionVenta {
+  exigirRegistroReceta: boolean;
 }
 
 export interface LotesDisponiblesVentaParams {

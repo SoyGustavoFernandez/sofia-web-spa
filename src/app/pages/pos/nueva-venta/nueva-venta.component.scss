@@ -686,6 +686,15 @@
   }
 }
 
+.pos3-rx-check {
+  margin-top: 10px;
+
+  .pos3-hint-sm {
+    margin-top: 0;
+    padding-left: 40px;
+  }
+}
+
 .pos3-hint-sm {
   font-size: 11.5px;
   color: var(--mat-sys-on-surface-variant);

@@ -3,14 +3,16 @@ import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { of, throwError } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { EMPTY, of, throwError } from 'rxjs';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
 import { AuthService } from '@core/auth/auth.service';
 import { POS_DRAFT_PREFIX, clearUserStorage, userStorageKey } from '@core/auth/user-storage';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
-import { LoteDisponibleVenta, MetodoPago, PresentacionProductoVenta, VentaConDetalle } from '../models/venta.model';
+import { ItemSugerido, RecetaListItem } from '../../recetas-medicas/models/receta-medica.model';
+import { CondicionVenta, LoteDisponibleVenta, MetodoPago, PresentacionProductoVenta, VentaConDetalle } from '../models/venta.model';
 import { VentaService } from '../services/venta.service';
 import { NuevaVentaComponent } from './nueva-venta.component';
 import { parsePosDraft, serializePosDraft } from './pos-draft';
@@ -26,6 +28,19 @@ const LOTE: LoteDisponibleVenta = {
   fechaCaducidad: '2099-01-01T00:00:00Z',
   cantidadFisica: 8,
   precioVentaBase: 2.5,
+  condicionVenta: CondicionVenta.VentaLibreOTC,
+};
+
+const LOTE_RX: LoteDisponibleVenta = {
+  id: 'inv-2',
+  loteId: 'lote-rx',
+  numeroLote: 'L-RX',
+  productoId: 'med-2',
+  productoNombre: 'Amoxicilina',
+  fechaCaducidad: '2099-01-01T00:00:00Z',
+  cantidadFisica: 8,
+  precioVentaBase: 12,
+  condicionVenta: CondicionVenta.RecetaSimple,
 };
 
 const PRESENTACION: PresentacionProductoVenta = { id: 'pres-1', descripcion: 'Caja x10', cantidadUnidadesBase: 10, precioVenta: 20 };
@@ -37,12 +52,24 @@ function apiError(status: number, code?: string): HttpErrorResponse {
   return new HttpErrorResponse({ status, error: code ? { code } : null });
 }
 
-function cartLine(cantidad: number, precioUnitario: number, loteId = 'lote-1') {
-  return { loteId, productoNombre: 'Paracetamol', numeroLote: 'L-001', cantidadDisponible: 50, cantidad, precioUnitario };
+function cartLine(cantidad: number, precioUnitario: number, loteId = 'lote-1', condicionVenta?: CondicionVenta) {
+  return { loteId, productoNombre: 'Paracetamol', numeroLote: 'L-001', cantidadDisponible: 50, cantidad, precioUnitario, condicionVenta };
 }
 
 function setup(continuar?: string, permisos: string[] = []) {
-  const ventaService = jasmine.createSpyObj<VentaService>('VentaService', ['lotesDisponibles', 'presentacionesProducto', 'crear', 'getById']);
+  const ventaService = jasmine.createSpyObj<VentaService>('VentaService', [
+    'lotesDisponibles',
+    'presentacionesProducto',
+    'crear',
+    'completar',
+    'actualizarDetalles',
+    'getById',
+    'configuracion',
+  ]);
+  ventaService.configuracion.and.returnValue(of({ exigirRegistroReceta: false }));
+  // The confirmation dialog is accepted; the receipt dialog that follows a charged sale never closes
+  const dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
+  dialog.open.and.returnValues({ afterClosed: () => of(true) } as never, { afterClosed: () => EMPTY } as never);
   const medicamentoService = jasmine.createSpyObj<MedicamentoService>('MedicamentoService', ['search', 'getCondicionesVenta']);
   const notifier = jasmine.createSpyObj<ErrorNotifierService>('ErrorNotifierService', ['showError', 'showSuccess']);
   medicamentoService.getCondicionesVenta.and.returnValue(of([]));
@@ -62,6 +89,7 @@ function setup(continuar?: string, permisos: string[] = []) {
           sucursalId: () => null,
           empleadoId: () => null,
           userId: () => 'cajero-spec',
+          currentUser: () => null,
           hasPermission: (modulo: string, accion: string) => permisos.includes(`${modulo}:${accion}`),
         },
       },
@@ -71,8 +99,9 @@ function setup(continuar?: string, permisos: string[] = []) {
       { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap(continuar ? { continuar } : {}) } } },
     ],
   });
+  TestBed.overrideComponent(NuevaVentaComponent, { add: { providers: [{ provide: MatDialog, useValue: dialog }] } });
   const fixture = TestBed.createComponent(NuevaVentaComponent);
-  return { fixture, component: fixture.componentInstance, ventaService, medicamentoService, notifier };
+  return { fixture, component: fixture.componentInstance, ventaService, medicamentoService, notifier, dialog };
 }
 
 afterEach(() => clearUserStorage());
@@ -222,21 +251,23 @@ describe('NuevaVentaComponent — product cards', () => {
     expect(conReceta.querySelector('.pos3-product-price')?.textContent?.trim()).toBe('pos.checkout.sinPrecioCatalogo');
   }));
 
-  it('warns in the cart while a prescription product has no prescription selected', () => {
+  it('warns in the cart of a strict company while a prescription product has no prescription selected', () => {
     const { component, ventaService } = setup();
-    ventaService.lotesDisponibles.and.returnValue(of([LOTE]));
+    ventaService.lotesDisponibles.and.returnValue(of([LOTE_RX]));
     ventaService.presentacionesProducto.and.returnValue(of([]));
 
-    component.selectMedicamento({ ...CON_RECETA, precioVentaBase: 2.5 });
-    component.selectLote(LOTE);
+    component.selectMedicamento({ ...CON_RECETA, precioVentaBase: 12 });
+    component.selectLote(LOTE_RX);
     component.agregarAlCarrito();
 
-    expect(component.cart().length).toBe(1);
-    expect(component.faltaReceta()).toBeTrue();
+    expect(component.cart()[0].condicionVenta).toBe(CondicionVenta.RecetaSimple);
+    expect(component.exigirRegistroReceta()).toBeTrue();
+    expect(component.recetaAvisoKey()).toBe('checkout.recetaPendienteHint');
+    expect(component.requiereVerificacionReceta()).toBeFalse();
 
     component.selectedRecetaId.set('receta-1');
 
-    expect(component.faltaReceta()).toBeFalse();
+    expect(component.recetaAvisoKey()).toBeNull();
   });
 
   it('does not warn for over-the-counter products', () => {
@@ -249,8 +280,277 @@ describe('NuevaVentaComponent — product cards', () => {
     component.agregarAlCarrito();
 
     expect(component.cart().length).toBe(1);
-    expect(component.faltaReceta()).toBeFalse();
+    expect(component.recetaAvisoKey()).toBeNull();
+    expect(component.requiereVerificacionReceta()).toBeFalse();
   });
+});
+
+describe('NuevaVentaComponent — prescription verification', () => {
+  const RECETA = { id: 'receta-1', medicoNombre: 'Dra. Rosa Díaz', fechaExpedicion: '2026-09-05', numeroReceta: null } as RecetaListItem;
+  const ITEM = { nombreOficial: 'Amoxicilina', tieneStock: true, cantidadSugerida: 2 } as ItemSugerido;
+
+  function render(ctx: ReturnType<typeof setup>): HTMLElement {
+    ctx.component.sesionId.set('sesion-1');
+    ctx.fixture.detectChanges();
+    tick(300);
+    ctx.fixture.detectChanges();
+    return ctx.fixture.nativeElement as HTMLElement;
+  }
+
+  // Cart ready to be charged in cash: one line of the given sale condition and its exact amount
+  function conLinea(ctx: ReturnType<typeof setup>, condicion?: CondicionVenta): void {
+    ctx.component.sesionId.set('sesion-1');
+    ctx.component.cart.set([cartLine(1, 12, 'lote-rx', condicion)]);
+    ctx.component.updatePago(0, { monto: 12 });
+  }
+
+  it('loads the company rule once on init', () => {
+    const { component, ventaService } = setup();
+
+    component.ngOnInit();
+
+    expect(ventaService.configuracion).toHaveBeenCalledTimes(1);
+    expect(component.exigirRegistroReceta()).toBeFalse();
+  });
+
+  it('assumes a strict company when the rule cannot be loaded', () => {
+    const { component, ventaService } = setup();
+    component.exigirRegistroReceta.set(false);
+    ventaService.configuracion.and.returnValue(throwError(() => apiError(500)));
+
+    component.ngOnInit();
+
+    expect(component.exigirRegistroReceta()).toBeTrue();
+  });
+
+  it('shows the checkbox and blocks checkout until it is ticked in a flexible company', fakeAsync(() => {
+    const ctx = setup();
+    const host = render(ctx);
+    conLinea(ctx, CondicionVenta.RecetaSimple);
+    ctx.fixture.detectChanges();
+
+    const checkbox = host.querySelector('.pos3-rx-check mat-checkbox');
+    expect(checkbox?.textContent).toContain('pos.checkout.recetaVerificadaLabel');
+    expect(host.querySelector('.pos3-rx-check')?.textContent).toContain('pos.checkout.recetaVerificadaHint');
+    expect(host.querySelector('.pos3-cart-hint')).toBeNull();
+    expect(host.querySelector<HTMLButtonElement>('.pos3-btn-confirm')?.disabled).toBeTrue();
+    expect(ctx.component.puedeGuardarPendiente()).toBeTrue();
+
+    checkbox?.querySelector<HTMLInputElement>('input')?.click();
+    ctx.fixture.detectChanges();
+
+    expect(ctx.component.recetaVerificada()).toBeTrue();
+    expect(host.querySelector<HTMLButtonElement>('.pos3-btn-confirm')?.disabled).toBeFalse();
+  }));
+
+  it('offers no checkbox for over-the-counter lines or when a prescription is selected', fakeAsync(() => {
+    const ctx = setup();
+    const host = render(ctx);
+    conLinea(ctx, CondicionVenta.VentaLibreOTC);
+    ctx.fixture.detectChanges();
+
+    expect(host.querySelector('.pos3-rx-check')).toBeNull();
+    expect(ctx.component.puedeProcesar()).toBeTrue();
+
+    conLinea(ctx, CondicionVenta.RecetaSimple);
+    ctx.component.selectedRecetaId.set('receta-1');
+    ctx.fixture.detectChanges();
+
+    expect(host.querySelector('.pos3-rx-check')).toBeNull();
+    expect(host.querySelector('.pos3-cart-hint')).toBeNull();
+    expect(ctx.component.puedeProcesar()).toBeTrue();
+  }));
+
+  for (const condicion of [CondicionVenta.RecetaRetenida, CondicionVenta.Estupefaciente]) {
+    it(`shows a hint instead of the checkbox for a controlled line (${CondicionVenta[condicion]})`, fakeAsync(() => {
+      const ctx = setup();
+      const host = render(ctx);
+      ctx.component.cart.set([cartLine(1, 12, 'lote-rx', CondicionVenta.RecetaSimple), cartLine(1, 30, 'lote-ctrl', condicion)]);
+      ctx.fixture.detectChanges();
+
+      expect(host.querySelector('.pos3-rx-check')).toBeNull();
+      expect(host.querySelector('.pos3-cart-hint')?.textContent).toContain('pos.checkout.recetaControladaHint');
+    }));
+  }
+
+  it('warns that a controlled line needs the prescription number when the selected prescription has none', () => {
+    const { component } = setup();
+    component.exigirRegistroReceta.set(false);
+    component.cart.set([cartLine(1, 30, 'lote-ctrl', CondicionVenta.RecetaRetenida)]);
+    component.recetaOptions.set([RECETA]);
+    component.selectedRecetaId.set('receta-1');
+
+    expect(component.recetaAvisoKey()).toBe('checkout.recetaSinNumeroHint');
+
+    component.recetaOptions.set([{ ...RECETA, numeroReceta: 'RE-778899' }]);
+
+    expect(component.recetaAvisoKey()).toBeNull();
+  });
+
+  it('shows the hint instead of the checkbox in a strict company', fakeAsync(() => {
+    const ctx = setup();
+    ctx.ventaService.configuracion.and.returnValue(of({ exigirRegistroReceta: true }));
+    const host = render(ctx);
+    conLinea(ctx, CondicionVenta.RecetaSimple);
+    ctx.fixture.detectChanges();
+
+    expect(host.querySelector('.pos3-rx-check')).toBeNull();
+    expect(host.querySelector('.pos3-cart-hint')?.textContent).toContain('pos.checkout.recetaPendienteHint');
+  }));
+
+  it('sends recetaVerificada when a new sale is charged', () => {
+    const ctx = setup();
+    ctx.component.exigirRegistroReceta.set(false);
+    conLinea(ctx, CondicionVenta.RecetaSimple);
+    ctx.component.recetaVerificada.set(true);
+    ctx.ventaService.crear.and.returnValue(of({ ventaId: 'venta-1', comprobante: null }));
+
+    ctx.component.procesarVenta();
+
+    expect(ctx.ventaService.crear).toHaveBeenCalledOnceWith(
+      jasmine.objectContaining({ recetaVerificada: true, pagos: [{ metodoPago: MetodoPago.Efectivo, montoPagado: 12, referenciaOperacion: undefined }] }),
+    );
+  });
+
+  it('does not claim a verification when the sale does not need one', () => {
+    const ctx = setup();
+    ctx.component.exigirRegistroReceta.set(false);
+    conLinea(ctx, CondicionVenta.VentaLibreOTC);
+    ctx.component.recetaVerificada.set(true);
+    ctx.ventaService.crear.and.returnValue(of({ ventaId: 'venta-1', comprobante: null }));
+
+    ctx.component.procesarVenta();
+
+    expect(ctx.ventaService.crear).toHaveBeenCalledOnceWith(jasmine.objectContaining({ recetaVerificada: false }));
+  });
+
+  it('does not send recetaVerificada when the sale is parked', () => {
+    const ctx = setup();
+    ctx.component.exigirRegistroReceta.set(false);
+    conLinea(ctx, CondicionVenta.RecetaSimple);
+    ctx.component.recetaVerificada.set(true);
+    ctx.ventaService.crear.and.returnValue(of({ ventaId: 'venta-9', comprobante: null }));
+
+    ctx.component.guardarPendiente();
+
+    const request = ctx.ventaService.crear.calls.mostRecent().args[0];
+    expect(request.pagos).toEqual([]);
+    expect('recetaVerificada' in request).toBeFalse();
+    expect(ctx.component.recetaVerificada()).toBeFalse();
+  });
+
+  it('knows the sale condition of a resumed parked sale and sends recetaVerificada only when it is collected', () => {
+    const ctx = setup('venta-9');
+    const detalle = { id: 'det-1', loteId: 'lote-rx', productoNombre: 'Amoxicilina', numeroLote: 'L-RX', cantidad: 1, precioUnitario: 12, subtotal: 12, cantidadDevuelta: 0, condicionVenta: CondicionVenta.RecetaSimple };
+    ctx.ventaService.getById.and.returnValue(of({ id: 'venta-9', estado: 'Pendiente', detalles: [detalle], clienteId: null } as unknown as VentaConDetalle));
+    ctx.ventaService.lotesDisponibles.and.returnValue(of([LOTE_RX]));
+    ctx.ventaService.completar.and.returnValue(of({ ventaId: 'venta-9', comprobante: null }));
+    ctx.ventaService.actualizarDetalles.and.returnValue(of(undefined));
+
+    ctx.component.ngOnInit();
+    ctx.component.sesionId.set('sesion-1');
+    ctx.component.updatePago(0, { monto: 12 });
+
+    expect(ctx.component.cart()[0].condicionVenta).toBe(CondicionVenta.RecetaSimple);
+    expect(ctx.component.requiereVerificacionReceta()).toBeTrue();
+    expect(ctx.component.puedeProcesar()).toBeFalse();
+
+    ctx.component.guardarPendiente();
+
+    expect('recetaVerificada' in ctx.ventaService.actualizarDetalles.calls.mostRecent().args[1]).toBeFalse();
+
+    ctx.component.ngOnInit();
+    ctx.component.sesionId.set('sesion-1');
+    ctx.component.updatePago(0, { monto: 12 });
+    ctx.component.recetaVerificada.set(true);
+    ctx.component.procesarVenta();
+
+    expect(ctx.ventaService.completar).toHaveBeenCalledOnceWith('venta-9', jasmine.objectContaining({ recetaVerificada: true }));
+  });
+
+  it('adds a scanned line with the lot price and its sale condition', () => {
+    const { component, ventaService, notifier } = setup();
+    component.exigirRegistroReceta.set(false);
+    ventaService.lotesDisponibles.and.returnValue(of([LOTE_RX]));
+
+    component.agregarItemDesdeReceta(ITEM);
+
+    expect(ventaService.lotesDisponibles).toHaveBeenCalledOnceWith({ productoNombre: 'Amoxicilina' });
+    expect(component.cart()).toEqual([jasmine.objectContaining({ loteId: 'lote-rx', cantidad: 2, precioUnitario: 12, condicionVenta: CondicionVenta.RecetaSimple })]);
+    expect(component.subtotalBruto()).toBe(24);
+    expect(component.requiereVerificacionReceta()).toBeTrue();
+    expect(notifier.showError).not.toHaveBeenCalled();
+  });
+
+  it('does not add a scanned line whose lot has no price', () => {
+    const { component, ventaService, notifier } = setup();
+    ventaService.lotesDisponibles.and.returnValue(of([{ ...LOTE_RX, precioVentaBase: null }]));
+
+    component.agregarItemDesdeReceta(ITEM);
+
+    expect(component.cart()).toEqual([]);
+    expect(component.itemAgregado(ITEM)).toBeFalse();
+    expect(notifier.showError).toHaveBeenCalledOnceWith('pos.messages.sinPrecio');
+  });
+
+  it('offers no checkbox for lines of an old draft that carry no sale condition', () => {
+    const ctx = setup();
+    ctx.component.exigirRegistroReceta.set(false);
+    conLinea(ctx);
+
+    expect(ctx.component.requiereVerificacionReceta()).toBeFalse();
+    expect(ctx.component.recetaAvisoKey()).toBeNull();
+    expect(ctx.component.puedeProcesar()).toBeTrue();
+  });
+
+  it('offers the checkbox when the backend asks for the confirmation the POS did not offer', () => {
+    const ctx = setup();
+    conLinea(ctx);
+    ctx.ventaService.crear.and.returnValue(throwError(() => apiError(400, 'Venta.Receta.VerificacionRequerida')));
+
+    ctx.component.procesarVenta();
+
+    expect(ctx.notifier.showError).toHaveBeenCalledOnceWith('pos.messages.recetaVerificacionRequerida');
+    expect(ctx.component.requiereVerificacionReceta()).toBeTrue();
+    expect(ctx.component.puedeProcesar()).toBeFalse();
+  });
+
+  for (const [code, key] of [
+    ['Venta.Receta.NumeroRequerido', 'pos.messages.recetaNumeroRequerido'],
+    ['Venta.Receta.VerificacionRequerida', 'pos.messages.recetaVerificacionRequerida'],
+  ]) {
+    it(`maps the backend code ${code} to its own message`, () => {
+      const { component, ventaService, notifier } = setup();
+      component.sesionId.set('sesion-1');
+      component.cart.set([cartLine(1, 2.5)]);
+      ventaService.crear.and.returnValue(throwError(() => apiError(400, code)));
+
+      component.guardarPendiente();
+
+      expect(notifier.showError).toHaveBeenCalledOnceWith(key);
+    });
+  }
+
+  it('drops the confirmation as soon as it stops being required', fakeAsync(() => {
+    const ctx = setup();
+    render(ctx);
+    conLinea(ctx, CondicionVenta.RecetaSimple);
+    ctx.component.recetaVerificada.set(true);
+    ctx.fixture.detectChanges();
+
+    expect(ctx.component.recetaVerificada()).toBeTrue();
+
+    ctx.component.selectedRecetaId.set('receta-1');
+    ctx.fixture.detectChanges();
+
+    expect(ctx.component.recetaVerificada()).toBeFalse();
+
+    ctx.component.selectedRecetaId.set('');
+    ctx.fixture.detectChanges();
+
+    expect(ctx.component.requiereVerificacionReceta()).toBeTrue();
+    expect(ctx.component.puedeProcesar()).toBeFalse();
+  }));
 });
 
 describe('NuevaVentaComponent — payments', () => {

@@ -14,6 +14,7 @@ export interface RecetaListItem {
   fechaExpedicion: string; // "yyyy-MM-dd"
   repeticionesMax: number;
   indicacionesUso: string | null;
+  numeroReceta: string | null;
 }
 
 export interface RecetaDetail {
@@ -25,6 +26,7 @@ export interface RecetaDetail {
   fechaExpedicion: string; // "yyyy-MM-dd"
   repeticionesMax: number;
   indicacionesUso: string | null;
+  numeroReceta: string | null;
 }
 
 export interface CreateRecetaRequest {
@@ -33,6 +35,7 @@ export interface CreateRecetaRequest {
   fechaExpedicion: string; // "yyyy-MM-dd"
   repeticionesMax: number;
   indicacionesUso?: string;
+  numeroReceta?: string;
 }
 
 export interface UpdateRecetaRequest {
@@ -41,6 +44,7 @@ export interface UpdateRecetaRequest {
   fechaExpedicion: string; // "yyyy-MM-dd"
   repeticionesMax: number;
   indicacionesUso?: string;
+  numeroReceta?: string;
 }
 
 export interface SearchRecetaParams {

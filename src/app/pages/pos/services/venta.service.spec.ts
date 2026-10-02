@@ -37,6 +37,17 @@ describe('VentaService', () => {
     req.flush({} as VentaConDetalle);
   });
 
+  it('configuracion() reads the company sale rules through the POS endpoint', () => {
+    let exigir: boolean | undefined;
+
+    service.configuracion().subscribe(config => (exigir = config.exigirRegistroReceta));
+
+    const req = httpMock.expectOne(`${BASE}/configuracion`);
+    expect(req.request.method).toBe('GET');
+    req.flush({ exigirRegistroReceta: true });
+    expect(exigir).toBeTrue();
+  });
+
   it('crear() POSTs the new sale payload', () => {
     const body = {
       sesionId: 'sesion-1',

@@ -41,6 +41,8 @@ function venta(detalles: VentaDetalle[]): VentaConDetalle {
     comprobante: { tipo: 'Boleta', numero: 'B001-00000011', estadoAceptacion: 'NoEnviado', urlVerificacion: null, urlXml: null, urlCdr: null, emisorRazonSocial: 'Botica QA', emisorRuc: '20212971893', sucursalDireccion: 'Av. Arequipa 123', clienteTipoDocumento: '1', clienteNumeroDocumento: '45781236', clienteNombre: 'Juan Perez' },
     pagos: [],
     devoluciones: [],
+    recetaVerificadaPor: null,
+    recetaVerificadaEn: null,
   };
 }
 

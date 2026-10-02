@@ -114,6 +114,28 @@
               </mat-form-field>
             </div>
 
+            <!-- Prescription number -->
+            <div class="col-md-4">
+              <mat-form-field
+                appearance="outline"
+                subscriptSizing="dynamic"
+                class="w-100">
+                <mat-label>{{ t('fields.numeroReceta') }}</mat-label>
+                <input
+                  matInput
+                  [attr.maxlength]="numeroRecetaMaxLength"
+                  formControlName="numeroReceta" />
+                <mat-hint>{{ t('hints.numeroReceta') }}</mat-hint>
+                @if (form.controls.numeroReceta.hasError('maxlength')) {
+                  <mat-error>{{
+                    t('validation.numero-receta-max', {
+                      max: numeroRecetaMaxLength,
+                    })
+                  }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
             <!-- Indicaciones -->
             <div class="col-12">
               <mat-form-field appearance="outline" class="w-100">
@@ -209,6 +231,13 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ t('fields.repeticionesMax') }}</mat-label>
               <input matInput [value]="s.repeticionesMax" disabled />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ t('fields.numeroReceta') }}</mat-label>
+              <input matInput [value]="s.numeroReceta ?? ''" disabled />
             </mat-form-field>
           </div>
 

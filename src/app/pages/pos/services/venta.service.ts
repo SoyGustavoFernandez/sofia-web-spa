@@ -16,6 +16,7 @@ import {
   LoteDisponibleVenta,
   LotesDisponiblesVentaParams,
   PresentacionProductoVenta,
+  ConfiguracionVenta,
 } from '../models/venta.model';
 
 @Injectable({ providedIn: 'root' })
@@ -51,6 +52,10 @@ export class VentaService {
   presentacionesProducto(productoId: string): Observable<PresentacionProductoVenta[]> {
     const params = new HttpParams().set('productoId', productoId);
     return this.http.get<PresentacionProductoVenta[]>(`${this.base}/presentaciones`, { params });
+  }
+
+  configuracion(): Observable<ConfiguracionVenta> {
+    return this.http.get<ConfiguracionVenta>(`${this.base}/configuracion`);
   }
 
   crear(body: CreateVentaRequest): Observable<VentaCreada> {

@@ -20,6 +20,7 @@ import {
   CreateVentaDetalleRequest,
   MetodoPago,
   EstadoVenta,
+  CondicionVenta,
   LoteDisponibleVenta,
   PresentacionProductoVenta,
 } from '../models/venta.model';
@@ -50,7 +51,8 @@ interface CartLine {
   presentacionDescripcion?: string;
   cantidadEnPresentacion?: number;
   presentacionCantidadUnidadesBase?: number;
-  requiereReceta?: boolean;
+  // Missing on drafts saved before the POS knew it: the line is then "unknown" and only the backend decides
+  condicionVenta?: CondicionVenta;
 }
 
 interface PagoLine {
@@ -62,8 +64,7 @@ interface PagoLine {
 type CatalogTab = 'buscar' | 'receta';
 type VentaDraft = PosDraft<CartLine, PagoLine, AseguradoraListItem>;
 
-// Mirrors the backend CondicionVenta enum: every other condition needs a registered prescription
-const CONDICION_VENTA_LIBRE = 0;
+const VERIFICACION_RECETA_REQUERIDA = 'Venta.Receta.VerificacionRequerida';
 
 const roundMoney = (value: number): number => Math.round(value * 100) / 100;
 
@@ -86,6 +87,8 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   'Venta.Receta.NoEncontrada': 'pos.messages.recetaNoEncontrada',
   'Venta.Receta.OtroPaciente': 'pos.messages.recetaOtroPaciente',
   'Venta.Receta.Agotada': 'pos.messages.recetaAgotada',
+  'Venta.Receta.NumeroRequerido': 'pos.messages.recetaNumeroRequerido',
+  [VERIFICACION_RECETA_REQUERIDA]: 'pos.messages.recetaVerificacionRequerida',
   'Venta.Lote.Vencido': 'pos.messages.loteVencido',
   'Venta.SerieBoleta.NoConfigurada': 'pos.messages.serieBoletaNoConfigurada',
   'Venta.Empresa.SinRuc': 'pos.messages.empresaSinRuc',
@@ -152,7 +155,6 @@ export class NuevaVentaComponent implements OnInit {
   readonly condicionFiltro = signal<number | null>(null);
   private readonly buscarProductos$ = new Subject<string>();
   readonly selectedMedicamentoId = signal<string | null>(null);
-  private selectedMedicamentoRequiereReceta = false;
   readonly loteOptions = signal<LoteDisponibleVenta[]>([]);
   readonly selectedLote = signal<LoteDisponibleVenta | null>(null);
   readonly addForm = this.fb.group({ cantidad: [1], precio: [0] });
@@ -181,8 +183,34 @@ export class NuevaVentaComponent implements OnInit {
   readonly recetaOptions = signal<RecetaListItem[]>([]);
   readonly selectedRecetaId = signal<string>('');
   readonly puedeRegistrarReceta = computed(() => this.authService.hasPermission('Recetas', 'Crear'));
+
+  // Company rule mirrored from the backend; strict until it loads, and strict when it cannot be read
+  readonly exigirRegistroReceta = signal(true);
+  // Never persisted in drafts: whoever charges the sale has to tick it again
+  readonly recetaVerificada = signal(false);
+  // The backend asked for the confirmation on lines the POS could not classify (old drafts)
+  private readonly verificacionPedidaPorServidor = signal(false);
+  private readonly lineasConReceta = computed(() =>
+    this.cart().filter(l => l.condicionVenta !== undefined && l.condicionVenta !== CondicionVenta.VentaLibreOTC),
+  );
+  private readonly tieneLineaControlada = computed(() => this.lineasConReceta().some(l => l.condicionVenta !== CondicionVenta.RecetaSimple));
+  // Flexible companies sell simple-prescription products without a registered prescription once the cashier vouches for the paper one
+  readonly requiereVerificacionReceta = computed(
+    () =>
+      !this.exigirRegistroReceta() &&
+      !this.selectedRecetaId() &&
+      !this.tieneLineaControlada() &&
+      (this.lineasConReceta().length > 0 || (this.verificacionPedidaPorServidor() && this.cart().length > 0)),
+  );
   // Early warning only: the backend still enforces the prescription per product at checkout
-  readonly faltaReceta = computed(() => !this.selectedRecetaId() && this.cart().some(l => l.requiereReceta));
+  readonly recetaAvisoKey = computed<string | null>(() => {
+    const receta = this.recetaOptions().find(r => r.id === this.selectedRecetaId());
+    if (this.tieneLineaControlada()) {
+      if (!this.selectedRecetaId()) return 'checkout.recetaControladaHint';
+      return receta && !receta.numeroReceta ? 'checkout.recetaSinNumeroHint' : null;
+    }
+    return this.exigirRegistroReceta() && !this.selectedRecetaId() && this.lineasConReceta().length > 0 ? 'checkout.recetaPendienteHint' : null;
+  });
 
   // Insurance coverage is built but hidden from the UI until the pharmacy starts working with aseguradoras.
   readonly mostrarAseguradora = false;
@@ -220,8 +248,15 @@ export class NuevaVentaComponent implements OnInit {
     const pendiente = this.montoPendiente();
     // Change leaves the drawer, so it must be covered by the cash handed over (mirrors Venta.Pagos.VueltoExcedeEfectivo)
     const cubierto = pendiente === 0 || (pendiente < 0 && this.cambioAEntregar() <= this.efectivoRecibido());
+    const recetaConfirmada = !this.requiereVerificacionReceta() || this.recetaVerificada();
     return (
-      this.cart().length > 0 && !!this.sesionId() && cubierto && this.referenciasCompletas() && this.montoCubiertoValido() && !this.procesando()
+      this.cart().length > 0 &&
+      !!this.sesionId() &&
+      cubierto &&
+      this.referenciasCompletas() &&
+      this.montoCubiertoValido() &&
+      recetaConfirmada &&
+      !this.procesando()
     );
   });
 
@@ -313,6 +348,11 @@ export class NuevaVentaComponent implements OnInit {
     });
 
     effect(() => this.saveDraft());
+
+    // The confirmation is dropped as soon as the cart stops needing it, so it never carries over to another sale
+    effect(() => {
+      if (!this.requiereVerificacionReceta()) this.recetaVerificada.set(false);
+    });
   }
 
   ngOnInit(): void {
@@ -324,6 +364,10 @@ export class NuevaVentaComponent implements OnInit {
     }
 
     this.checkSesionCaja();
+    this.ventaService.configuracion().subscribe({
+      next: config => this.exigirRegistroReceta.set(config.exigirRegistroReceta),
+      error: () => this.exigirRegistroReceta.set(true),
+    });
     this.medicamentoService.getCondicionesVenta().subscribe(labels => this.condicionLabels.set(labels));
     this.buscarProductos$.next('');
   }
@@ -394,6 +438,7 @@ export class NuevaVentaComponent implements OnInit {
               presentacionDescripcion: d.presentacionDescripcion ?? undefined,
               cantidadEnPresentacion: d.cantidadEnPresentacion ?? undefined,
               presentacionCantidadUnidadesBase: tienePresentacion ? d.cantidad / d.cantidadEnPresentacion! : undefined,
+              condicionVenta: d.condicionVenta ?? undefined,
             };
           });
           this.cart.set(cart);
@@ -542,13 +587,12 @@ export class NuevaVentaComponent implements OnInit {
   }
 
   requiereReceta(medicamento: MedicamentoListItem): boolean {
-    return medicamento.condicionVenta !== CONDICION_VENTA_LIBRE;
+    return medicamento.condicionVenta !== CondicionVenta.VentaLibreOTC;
   }
 
   selectMedicamento(medicamento: MedicamentoListItem): void {
     if (!medicamento.stockTotal) return;
     this.selectedMedicamentoId.set(medicamento.id);
-    this.selectedMedicamentoRequiereReceta = this.requiereReceta(medicamento);
     // The endpoint already returns only what this branch can sell (in stock, not expired, not quarantined)
     this.ventaService.lotesDisponibles({ productoId: medicamento.id }).subscribe({
       next: lotes => this.loteOptions.set(lotes),
@@ -611,7 +655,7 @@ export class NuevaVentaComponent implements OnInit {
       return;
     }
 
-    this.pushCartLine(lote, cantidadBase, precioUnitarioBase, presentacion, cantidadIngresada, this.selectedMedicamentoRequiereReceta);
+    this.pushCartLine(lote, cantidadBase, precioUnitarioBase, presentacion, cantidadIngresada);
     this.selectedLote.set(null);
     this.selectedMedicamentoId.set(null);
     this.loteOptions.set([]);
@@ -625,7 +669,6 @@ export class NuevaVentaComponent implements OnInit {
     precio: number,
     presentacion?: PresentacionProductoVenta | null,
     cantidadEnPresentacion?: number,
-    requiereReceta?: boolean,
   ): void {
     const key = (l: { loteId: string; presentacionVentaId?: string }): string => `${l.loteId}|${l.presentacionVentaId ?? ''}`;
     const nuevaKey = key({ loteId: lote.loteId, presentacionVentaId: presentacion?.id });
@@ -663,7 +706,7 @@ export class NuevaVentaComponent implements OnInit {
         presentacionDescripcion: presentacion?.descripcion,
         cantidadEnPresentacion: presentacion ? cantidadEnPresentacion : undefined,
         presentacionCantidadUnidadesBase: presentacion?.cantidadUnidadesBase,
-        requiereReceta,
+        condicionVenta: lote.condicionVenta,
       },
     ]);
   }
@@ -754,8 +797,13 @@ export class NuevaVentaComponent implements OnInit {
           this.notifier.showError(this.transloco.translate('pos.messages.noStockLocalReceta'));
           return;
         }
+        // The backend charges the catalog price, so the cart must show it too
+        if (!lote.precioVentaBase) {
+          this.notifier.showError(this.transloco.translate('pos.messages.sinPrecio'));
+          return;
+        }
         const cantidad = Math.min(item.cantidadSugerida ?? 1, lote.cantidadFisica);
-        this.pushCartLine(lote, cantidad, 0);
+        this.pushCartLine(lote, cantidad, lote.precioVentaBase);
         this.itemsAgregadosNombres.update(set => new Set(set).add(item.nombreOficial));
       },
       error: (err: unknown) => this.notifier.showError(this.ventaErrorMessage(err, 'pos.messages.lotesError')),
@@ -1028,6 +1076,9 @@ export class NuevaVentaComponent implements OnInit {
       referenciaOperacion: p.referencia.trim() || undefined,
     }));
 
+    // Only charging carries the confirmation; parking a sale never does
+    const recetaVerificada = this.requiereVerificacionReceta() && this.recetaVerificada();
+
     const continuandoId = this.continuandoVentaId();
     const venta$ = continuandoId
       ? this.ventaService.completar(continuandoId, {
@@ -1036,6 +1087,7 @@ export class NuevaVentaComponent implements OnInit {
           clienteId: this.selectedCliente()?.id,
           aseguradoraId: this.selectedAseguradora()?.id,
           montoCubiertoSeguro: this.montoCubiertoRequest(),
+          recetaVerificada,
         })
       : this.ventaService.crear({
           clienteId: this.selectedCliente()?.id,
@@ -1044,6 +1096,7 @@ export class NuevaVentaComponent implements OnInit {
           pagos: pagosRequest,
           aseguradoraId: this.selectedAseguradora()?.id,
           montoCubiertoSeguro: this.montoCubiertoRequest(),
+          recetaVerificada,
         });
 
     venta$.subscribe({
@@ -1074,9 +1127,18 @@ export class NuevaVentaComponent implements OnInit {
       },
       error: (err: unknown) => {
         this.procesando.set(false);
+        this.mostrarVerificacionSiElServidorLaPide(err);
         this.notifier.showError(this.ventaErrorMessage(err));
       },
     });
+  }
+
+  // The backend is the source of truth: if it asks for the confirmation the POS did not offer (stale rule or old draft), offer it now
+  private mostrarVerificacionSiElServidorLaPide(err: unknown): void {
+    if (err instanceof HttpErrorResponse && err.error?.code === VERIFICACION_RECETA_REQUERIDA) {
+      this.exigirRegistroReceta.set(false);
+      this.verificacionPedidaPorServidor.set(true);
+    }
   }
 
   private montoCubiertoRequest(): number | undefined {
@@ -1104,5 +1166,7 @@ export class NuevaVentaComponent implements OnInit {
     this.limpiarReceta();
     this.activeTab.set('buscar');
     this.continuandoVentaId.set(null);
+    this.recetaVerificada.set(false);
+    this.verificacionPedidaPorServidor.set(false);
   }
 }

@@ -31,6 +31,7 @@
     "medico": "Médico",
     "fechaExpedicion": "Fecha de Expedición",
     "repeticionesMax": "Repeticiones Máximas",
+    "numeroReceta": "Número de receta",
     "indicacionesUso": "Indicaciones de Uso"
   },
   "table": {
@@ -48,7 +49,8 @@
   "validation": {
     "paciente-required": "Debes seleccionar un paciente",
     "medico-required": "Debes seleccionar un médico",
-    "fecha-required": "La fecha de expedición es requerida"
+    "fecha-required": "La fecha de expedición es requerida",
+    "numero-receta-max": "El número de receta admite hasta {{max}} caracteres"
   },
   "scanner": {
     "title": "Lector de Recetas IA",
@@ -84,5 +86,8 @@
     "fecha-futura": "La fecha de expedición no puede ser posterior a hoy.",
     "invalid-data": "Revisa los datos ingresados de la receta.",
     "not-found": "La receta ya no existe."
+  },
+  "hints": {
+    "numeroReceta": "Necesario para vender receta retenida o estupefacientes."
   }
 }
