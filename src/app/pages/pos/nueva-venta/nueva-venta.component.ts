@@ -50,6 +50,7 @@ interface CartLine {
   presentacionDescripcion?: string;
   cantidadEnPresentacion?: number;
   presentacionCantidadUnidadesBase?: number;
+  requiereReceta?: boolean;
 }
 
 interface PagoLine {
@@ -60,6 +61,11 @@ interface PagoLine {
 
 type CatalogTab = 'buscar' | 'receta';
 type VentaDraft = PosDraft<CartLine, PagoLine, AseguradoraListItem>;
+
+// Mirrors the backend CondicionVenta enum: every other condition needs a registered prescription
+const CONDICION_VENTA_LIBRE = 0;
+
+const roundMoney = (value: number): number => Math.round(value * 100) / 100;
 
 // Backend business-rule codes that have a specific message instead of the generic sale error
 const VENTA_ERROR_KEYS: Record<string, string> = {
@@ -73,6 +79,9 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   'Venta.Caja.NoPropia': 'pos.messages.cajaNoPropia',
   'Venta.Caja.SinSesionAbierta': 'pos.messages.cajaSinSesionAbierta',
   'Venta.Pagos.VueltoExcedeEfectivo': 'pos.messages.vueltoExcedeEfectivo',
+  'Venta.Pagos.ReferenciaRequerida': 'pos.messages.referenciaRequerida',
+  'CreateVentaCommand.Pagos.ReferenciaRequerida': 'pos.messages.referenciaRequerida',
+  'CompletarVentaCommand.Pagos.ReferenciaRequerida': 'pos.messages.referenciaRequerida',
   'Venta.Receta.Requerida': 'pos.messages.recetaRequerida',
   'Venta.Receta.NoEncontrada': 'pos.messages.recetaNoEncontrada',
   'Venta.Receta.OtroPaciente': 'pos.messages.recetaOtroPaciente',
@@ -141,6 +150,7 @@ export class NuevaVentaComponent implements OnInit {
   readonly condicionFiltro = signal<number | null>(null);
   private readonly buscarProductos$ = new Subject<string>();
   readonly selectedMedicamentoId = signal<string | null>(null);
+  private selectedMedicamentoRequiereReceta = false;
   readonly loteOptions = signal<LoteDisponibleVenta[]>([]);
   readonly selectedLote = signal<LoteDisponibleVenta | null>(null);
   readonly addForm = this.fb.group({ cantidad: [1], precio: [0] });
@@ -169,6 +179,8 @@ export class NuevaVentaComponent implements OnInit {
   readonly recetaOptions = signal<RecetaListItem[]>([]);
   readonly selectedRecetaId = signal<string>('');
   readonly puedeRegistrarReceta = computed(() => this.authService.hasPermission('Recetas', 'Crear'));
+  // Early warning only: the backend still enforces the prescription per product at checkout
+  readonly faltaReceta = computed(() => !this.selectedRecetaId() && this.cart().some(l => l.requiereReceta));
 
   // Insurance coverage is built but hidden from the UI until the pharmacy starts working with aseguradoras.
   readonly mostrarAseguradora = false;
@@ -191,7 +203,10 @@ export class NuevaVentaComponent implements OnInit {
   });
   readonly montoAPagar = computed(() => this.subtotalBruto() - this.montoCubiertoSeguro());
   readonly totalPagado = computed(() => this.pagos().reduce((s, p) => s + (p.monto || 0), 0));
-  readonly montoPendiente = computed(() => this.montoAPagar() - this.totalPagado());
+  // Rounded to cents so split payments that add up to the total leave exactly 0 pending
+  readonly montoPendiente = computed(() => roundMoney(this.montoAPagar() - this.totalPagado()));
+  // Non-cash payments must carry their operation number (mirrors Venta.Pagos.ReferenciaRequerida)
+  readonly referenciasCompletas = computed(() => this.pagos().every(p => !this.referenciaFaltante(p)));
   readonly efectivoRecibido = computed(() =>
     this.pagos().filter(p => p.metodoPago === MetodoPago.Efectivo).reduce((s, p) => s + (p.monto || 0), 0),
   );
@@ -203,7 +218,9 @@ export class NuevaVentaComponent implements OnInit {
     const pendiente = this.montoPendiente();
     // Change leaves the drawer, so it must be covered by the cash handed over (mirrors Venta.Pagos.VueltoExcedeEfectivo)
     const cubierto = pendiente === 0 || (pendiente < 0 && this.cambioAEntregar() <= this.efectivoRecibido());
-    return this.cart().length > 0 && !!this.sesionId() && cubierto && this.montoCubiertoValido() && !this.procesando();
+    return (
+      this.cart().length > 0 && !!this.sesionId() && cubierto && this.referenciasCompletas() && this.montoCubiertoValido() && !this.procesando()
+    );
   });
 
   readonly puedeGuardarPendiente = computed(
@@ -417,7 +434,7 @@ export class NuevaVentaComponent implements OnInit {
     if (!this.authService.userId()) return;
     const draft: VentaDraft = {
       cart: this.cart(),
-      pagos: this.pagos(),
+      pagos: this.continuandoVentaId() ? this.pagosRecuperables(this.pagos()) : this.pagos(),
       clienteId: this.selectedCliente()?.id ?? null,
       recetaId: this.selectedRecetaId(),
       aseguradora: this.selectedAseguradora(),
@@ -482,22 +499,25 @@ export class NuevaVentaComponent implements OnInit {
     });
   }
 
-  // A brand-new sale drafts under the generic key (it has no ventaId yet); once held as Pendiente,
-  // relocate any in-progress payment rows to the venta's own key before resetVenta() wipes the generic one.
+  // A parked sale is not paid yet: typed cash is never kept, only non-cash rows that already carry an operation number
+  private pagosRecuperables(pagos: PagoLine[]): PagoLine[] {
+    return pagos.filter(p => p.metodoPago !== MetodoPago.Efectivo && p.monto > 0 && !this.referenciaFaltante(p));
+  }
+
+  // Once a new sale is held as Pendiente, move its recoverable payment rows to the venta's own key before resetVenta() wipes the generic one
   private persistPagosDraftForVenta(ventaId: string): void {
-    const pagos = this.pagos();
-    if (!pagos.some(p => p.monto > 0)) return;
+    const pagos = this.pagosRecuperables(this.pagos());
+    if (pagos.length === 0) return;
     const draft: VentaDraft = { cart: [], pagos, clienteId: null, recetaId: '', aseguradora: null, montoCubierto: null, seguroExpanded: false };
     localStorage.setItem(this.draftKeyFor(ventaId), serializePosDraft(draft));
   }
 
-  // Restores only the payment rows the cashier had typed for a pending sale before navigating away,
-  // since a Pendiente venta never persists VentaPago rows server-side until it's actually completed.
+  // A Pendiente venta has no VentaPago rows server-side, so only its recoverable rows come back (older drafts may still hold cash)
   private restorePagosDraft(): void {
-    const draft = this.readDraft();
-    if (draft && draft.pagos.length > 0) {
-      this.pagos.set(draft.pagos);
-      if (draft.pagos.length > 1) this.modoPagoAvanzado.set(true);
+    const pagos = this.pagosRecuperables(this.readDraft()?.pagos ?? []);
+    if (pagos.length > 0) {
+      this.pagos.set(pagos);
+      if (pagos.length > 1) this.modoPagoAvanzado.set(true);
     }
   }
 
@@ -519,9 +539,14 @@ export class NuevaVentaComponent implements OnInit {
     return stockTotal <= 10 ? t('checkout.stockBajo') : t('checkout.stockDisponible');
   }
 
+  requiereReceta(medicamento: MedicamentoListItem): boolean {
+    return medicamento.condicionVenta !== CONDICION_VENTA_LIBRE;
+  }
+
   selectMedicamento(medicamento: MedicamentoListItem): void {
     if (!medicamento.stockTotal) return;
     this.selectedMedicamentoId.set(medicamento.id);
+    this.selectedMedicamentoRequiereReceta = this.requiereReceta(medicamento);
     // The endpoint already returns only what this branch can sell (in stock, not expired, not quarantined)
     this.ventaService.lotesDisponibles({ productoId: medicamento.id }).subscribe({
       next: lotes => this.loteOptions.set(lotes),
@@ -584,7 +609,7 @@ export class NuevaVentaComponent implements OnInit {
       return;
     }
 
-    this.pushCartLine(lote, cantidadBase, precioUnitarioBase, presentacion, cantidadIngresada);
+    this.pushCartLine(lote, cantidadBase, precioUnitarioBase, presentacion, cantidadIngresada, this.selectedMedicamentoRequiereReceta);
     this.selectedLote.set(null);
     this.selectedMedicamentoId.set(null);
     this.loteOptions.set([]);
@@ -598,6 +623,7 @@ export class NuevaVentaComponent implements OnInit {
     precio: number,
     presentacion?: PresentacionProductoVenta | null,
     cantidadEnPresentacion?: number,
+    requiereReceta?: boolean,
   ): void {
     const key = (l: { loteId: string; presentacionVentaId?: string }): string => `${l.loteId}|${l.presentacionVentaId ?? ''}`;
     const nuevaKey = key({ loteId: lote.loteId, presentacionVentaId: presentacion?.id });
@@ -635,6 +661,7 @@ export class NuevaVentaComponent implements OnInit {
         presentacionDescripcion: presentacion?.descripcion,
         cantidadEnPresentacion: presentacion ? cantidadEnPresentacion : undefined,
         presentacionCantidadUnidadesBase: presentacion?.cantidadUnidadesBase,
+        requiereReceta,
       },
     ]);
   }
@@ -754,10 +781,18 @@ export class NuevaVentaComponent implements OnInit {
 
   quitarDelCarrito(index: number): void {
     this.cart.update(items => items.filter((_, i) => i !== index));
+    if (this.cart().length === 0) this.resetPagos();
   }
 
   vaciarCarrito(): void {
     this.cart.set([]);
+    this.resetPagos();
+  }
+
+  // Amounts typed for a cart that no longer exists must not leak into the next sale
+  private resetPagos(): void {
+    this.pagos.set([{ metodoPago: MetodoPago.Efectivo, monto: 0, referencia: '' }]);
+    this.modoPagoAvanzado.set(false);
   }
 
   // ── Customer / Insurance ───────────────────────────────
@@ -861,7 +896,12 @@ export class NuevaVentaComponent implements OnInit {
   agregarPago(): void {
     const usados = new Set(this.pagos().map(p => p.metodoPago));
     const metodo = this.metodoPagoOpciones.find(m => !usados.has(m)) ?? MetodoPago.Efectivo;
-    this.pagos.update(items => [...items, { metodoPago: metodo, monto: 0, referencia: '' }]);
+    const monto = Math.max(0, this.montoPendiente());
+    this.pagos.update(items => [...items, { metodoPago: metodo, monto, referencia: '' }]);
+  }
+
+  referenciaFaltante(pago: PagoLine): boolean {
+    return pago.metodoPago !== MetodoPago.Efectivo && !pago.referencia.trim();
   }
 
   quitarPago(index: number): void {
@@ -983,7 +1023,7 @@ export class NuevaVentaComponent implements OnInit {
     const pagosRequest = this.pagos().map(p => ({
       metodoPago: p.metodoPago,
       montoPagado: p.monto,
-      referenciaOperacion: p.referencia || undefined,
+      referenciaOperacion: p.referencia.trim() || undefined,
     }));
 
     const continuandoId = this.continuandoVentaId();
@@ -1049,8 +1089,7 @@ export class NuevaVentaComponent implements OnInit {
 
   private resetVenta(): void {
     this.cart.set([]);
-    this.pagos.set([{ metodoPago: MetodoPago.Efectivo, monto: 0, referencia: '' }]);
-    this.modoPagoAvanzado.set(false);
+    this.resetPagos();
     this.limpiarCliente();
     this.seguroForm.reset();
     this.selectedAseguradora.set(null);

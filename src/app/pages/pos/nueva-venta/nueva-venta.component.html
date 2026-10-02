@@ -90,6 +90,22 @@
                         <div class="pos3-product-sub">
                           {{ m.laboratorioNombre }} · {{ m.codigoNacional }}
                         </div>
+                        @if (requiereReceta(m)) {
+                          <div
+                            class="pos3-product-rx"
+                            [attr.title]="condicionLabels()[m.condicionVenta]">
+                            <mat-icon>description</mat-icon
+                            >{{ t('checkout.requiereReceta') }}
+                          </div>
+                        }
+                        <div class="pos3-product-price">
+                          @if (m.precioVentaBase) {
+                            S/ {{ m.precioVentaBase | number: '1.2-2' }}
+                            <span>{{ t('checkout.precioCadaUno') }}</span>
+                          } @else {
+                            <span>{{ t('checkout.sinPrecioCatalogo') }}</span>
+                          }
+                        </div>
                         <div class="pos3-product-footer">
                           <span
                             class="pos3-badge"
@@ -243,7 +259,7 @@
                   } @else if (recetaPreview()) {
                     <img
                       [src]="recetaPreview()"
-                      alt="Receta"
+                      [alt]="t('checkout.tabReceta')"
                       class="pos3-scan-preview" />
                   } @else {
                     <mat-icon class="pos3-scan-icon">document_scanner</mat-icon>
@@ -517,7 +533,8 @@
                         }
                         <div class="pos3-cart-item-sub">
                           {{ line.numeroLote }} · S/
-                          {{ line.precioUnitario | number: '1.2-2' }} c/u
+                          {{ line.precioUnitario | number: '1.2-2' }}
+                          {{ t('checkout.precioCadaUno') }}
                         </div>
                       </div>
                       <div class="pos3-cart-item-qty">
@@ -547,6 +564,13 @@
                     </div>
                   }
                 </div>
+
+                @if (faltaReceta()) {
+                  <div class="pos3-cart-hint">
+                    <mat-icon>description</mat-icon>
+                    <span>{{ t('checkout.recetaPendienteHint') }}</span>
+                  </div>
+                }
 
                 <div class="pos3-totals-box">
                   <div class="pos3-confirm-row">
@@ -664,6 +688,7 @@
                       <mat-form-field
                         appearance="outline"
                         subscriptSizing="dynamic"
+                        hideRequiredMarker
                         class="w-100">
                         <mat-label>{{
                           t('checkout.referenciaLabel')
@@ -671,6 +696,8 @@
                         <input
                           matInput
                           type="text"
+                          required
+                          maxlength="100"
                           [placeholder]="t('checkout.referenciaPlaceholder')"
                           [value]="pagos()[0].referencia"
                           (input)="
@@ -722,7 +749,10 @@
                       @if (pago.metodoPago !== MetodoPago.Efectivo) {
                         <input
                           class="pos3-token-ref"
+                          [class.invalid]="referenciaFaltante(pago)"
                           type="text"
+                          required
+                          maxlength="100"
                           [placeholder]="t('checkout.referenciaPlaceholder')"
                           [value]="pago.referencia"
                           (input)="
@@ -749,6 +779,12 @@
                   (click)="volverAPagoSimple()">
                   {{ t('checkout.volverPagoSimpleBtn') }}
                 </button>
+              }
+
+              @if (!referenciasCompletas()) {
+                <mat-error class="pos3-pay-error">{{
+                  t('checkout.referenciaRequerida')
+                }}</mat-error>
               }
 
               <div class="pos3-pay-actions">
