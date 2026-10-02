@@ -202,7 +202,7 @@ export class NuevaVentaComponent implements OnInit {
       !this.tieneLineaControlada() &&
       (this.lineasConReceta().length > 0 || (this.verificacionPedidaPorServidor() && this.cart().length > 0)),
   );
-  // Early warning only: the backend still enforces the prescription per product at checkout
+  // Reason shown while checkout is blocked; the backend still enforces the prescription per product
   readonly recetaAvisoKey = computed<string | null>(() => {
     const receta = this.recetaOptions().find(r => r.id === this.selectedRecetaId());
     if (this.tieneLineaControlada()) {
@@ -256,6 +256,7 @@ export class NuevaVentaComponent implements OnInit {
       this.referenciasCompletas() &&
       this.montoCubiertoValido() &&
       recetaConfirmada &&
+      !this.recetaAvisoKey() &&
       !this.procesando()
     );
   });

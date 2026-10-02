@@ -12,7 +12,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
 import { ItemSugerido, RecetaListItem } from '../../recetas-medicas/models/receta-medica.model';
-import { CondicionVenta, LoteDisponibleVenta, MetodoPago, PresentacionProductoVenta, VentaConDetalle } from '../models/venta.model';
+import { CondicionVenta, EstadoVenta, LoteDisponibleVenta, MetodoPago, PresentacionProductoVenta, VentaConDetalle } from '../models/venta.model';
 import { VentaService } from '../services/venta.service';
 import { NuevaVentaComponent } from './nueva-venta.component';
 import { parsePosDraft, serializePosDraft } from './pos-draft';
@@ -396,6 +396,97 @@ describe('NuevaVentaComponent — prescription verification', () => {
 
     expect(host.querySelector('.pos3-rx-check')).toBeNull();
     expect(host.querySelector('.pos3-cart-hint')?.textContent).toContain('pos.checkout.recetaPendienteHint');
+  }));
+
+  for (const condicion of [CondicionVenta.RecetaRetenida, CondicionVenta.Estupefaciente]) {
+    it(`blocks checkout but not parking while a controlled line has no prescription (${CondicionVenta[condicion]})`, fakeAsync(() => {
+      const ctx = setup();
+      const host = render(ctx);
+      conLinea(ctx, condicion);
+      ctx.fixture.detectChanges();
+
+      expect(host.querySelector('.pos3-cart-hint')?.textContent).toContain('pos.checkout.recetaControladaHint');
+      expect(host.querySelector<HTMLButtonElement>('.pos3-btn-confirm')?.disabled).toBeTrue();
+      expect(host.querySelector<HTMLButtonElement>('.pos3-btn-secondary')?.disabled).toBeFalse();
+
+      ctx.component.procesarVenta();
+
+      expect(ctx.dialog.open).not.toHaveBeenCalled();
+    }));
+  }
+
+  it('blocks checkout while the prescription of a controlled line has no number and allows it with a numbered one', fakeAsync(() => {
+    const ctx = setup();
+    const host = render(ctx);
+    conLinea(ctx, CondicionVenta.RecetaRetenida);
+    ctx.component.recetaOptions.set([RECETA, { ...RECETA, id: 'receta-2', numeroReceta: 'RE-778899' }]);
+    ctx.component.selectedRecetaId.set('receta-1');
+    ctx.fixture.detectChanges();
+
+    expect(host.querySelector('.pos3-cart-hint')?.textContent).toContain('pos.checkout.recetaSinNumeroHint');
+    expect(host.querySelector<HTMLButtonElement>('.pos3-btn-confirm')?.disabled).toBeTrue();
+    expect(host.querySelector<HTMLButtonElement>('.pos3-btn-secondary')?.disabled).toBeFalse();
+
+    ctx.component.selectedRecetaId.set('receta-2');
+    ctx.fixture.detectChanges();
+
+    expect(host.querySelector('.pos3-cart-hint')).toBeNull();
+    expect(host.querySelector<HTMLButtonElement>('.pos3-btn-confirm')?.disabled).toBeFalse();
+  }));
+
+  it('blocks checkout but not parking in a strict company until a prescription is selected', fakeAsync(() => {
+    const ctx = setup();
+    ctx.ventaService.configuracion.and.returnValue(of({ exigirRegistroReceta: true }));
+    const host = render(ctx);
+    conLinea(ctx, CondicionVenta.RecetaSimple);
+    ctx.fixture.detectChanges();
+
+    expect(host.querySelector('.pos3-cart-hint')?.textContent).toContain('pos.checkout.recetaPendienteHint');
+    expect(host.querySelector<HTMLButtonElement>('.pos3-btn-confirm')?.disabled).toBeTrue();
+    expect(host.querySelector<HTMLButtonElement>('.pos3-btn-secondary')?.disabled).toBeFalse();
+
+    ctx.component.selectedRecetaId.set('receta-1');
+    ctx.fixture.detectChanges();
+
+    expect(host.querySelector('.pos3-cart-hint')).toBeNull();
+    expect(host.querySelector<HTMLButtonElement>('.pos3-btn-confirm')?.disabled).toBeFalse();
+  }));
+
+  it('still parks a sale whose checkout is blocked by a missing prescription', () => {
+    const ctx = setup();
+    conLinea(ctx, CondicionVenta.Estupefaciente);
+    ctx.ventaService.crear.and.returnValue(of({ ventaId: 'venta-9', comprobante: null }));
+
+    expect(ctx.component.puedeProcesar()).toBeFalse();
+    expect(ctx.component.puedeGuardarPendiente()).toBeTrue();
+
+    ctx.component.guardarPendiente();
+
+    expect(ctx.ventaService.crear).toHaveBeenCalledOnceWith(jasmine.objectContaining({ estado: EstadoVenta.Pendiente, pagos: [] }));
+  });
+
+  it('does not block checkout for lines of an old draft that carry no sale condition, even in a strict company', () => {
+    const ctx = setup();
+    conLinea(ctx);
+
+    expect(ctx.component.exigirRegistroReceta()).toBeTrue();
+    expect(ctx.component.recetaAvisoKey()).toBeNull();
+    expect(ctx.component.puedeProcesar()).toBeTrue();
+  });
+
+  it('keeps the confirmation and checkout allowed when another simple-prescription line is added', fakeAsync(() => {
+    const ctx = setup();
+    render(ctx);
+    conLinea(ctx, CondicionVenta.RecetaSimple);
+    ctx.component.recetaVerificada.set(true);
+    ctx.fixture.detectChanges();
+
+    ctx.component.cart.update(lines => [...lines, cartLine(1, 12, 'lote-rx-2', CondicionVenta.RecetaSimple)]);
+    ctx.component.updatePago(0, { monto: 24 });
+    ctx.fixture.detectChanges();
+
+    expect(ctx.component.recetaVerificada()).toBeTrue();
+    expect(ctx.component.puedeProcesar()).toBeTrue();
   }));
 
   it('sends recetaVerificada when a new sale is charged', () => {
