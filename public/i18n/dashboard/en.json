@@ -1,5 +1,24 @@
 {
   "title": "Operational Dashboard",
+  "home": {
+    "welcomeTitle": "Welcome to SOFIA",
+    "welcomeSubtitle": "Optimized Pharmaceutical System with Artificial Intelligence",
+    "welcomeText": "From here you can navigate through the platform's modules using the side menu.",
+    "cards": {
+      "pos": {
+        "title": "POS / Sales",
+        "description": "Point of sale and quick checkout"
+      },
+      "inventario": {
+        "title": "Inventory & Batches",
+        "description": "Stock and expiry control"
+      },
+      "recetas": {
+        "title": "Prescriptions",
+        "description": "Digitization and AI analysis"
+      }
+    }
+  },
   "actions": {
     "viewServices": "View Services Schedule",
     "viewInventory": "View Inventory Batches",

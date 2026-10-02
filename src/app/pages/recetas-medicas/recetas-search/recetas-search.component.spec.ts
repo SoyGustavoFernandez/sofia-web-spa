@@ -5,9 +5,11 @@ import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
+import { AuthService, UserPermission } from '@core/auth/auth.service';
 import { RecetasSearchComponent } from './recetas-search.component';
 
 const BASE = `${environment.api.baseurl}/api/v1/recetas`;
+const ME = `${environment.api.baseurl}/api/v1/auth/me`;
 
 const page = {
   items: [
@@ -45,6 +47,41 @@ describe('RecetasSearchComponent', () => {
   });
 
   afterEach(() => httpMock.verify());
+
+  function grant(permisos: UserPermission[], roles: string[] = ['Cajero']): void {
+    TestBed.inject(AuthService).loadPermissions().subscribe();
+    httpMock.expectOne(ME).flush({ roles, permisos });
+  }
+
+  function scanButton(fixture: { nativeElement: unknown }): HTMLButtonElement | undefined {
+    const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'));
+    return buttons.find(b => b.textContent?.includes('recetasMedicas.search.btn-scan'));
+  }
+
+  it('hides the scan entry point from a user who can read and create prescriptions but not analyze them', () => {
+    grant([{ modulo: 'Recetas', accion: 'Leer' }, { modulo: 'Recetas', accion: 'Crear' }]);
+    const fixture = TestBed.createComponent(RecetasSearchComponent);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.puedeEscanear()).toBeFalse();
+    expect(scanButton(fixture)).toBeUndefined();
+  });
+
+  it('shows the scan entry point with Recetas:Analizar', () => {
+    grant([{ modulo: 'Recetas', accion: 'Leer' }, { modulo: 'recetas', accion: 'analizar' }]);
+    const fixture = TestBed.createComponent(RecetasSearchComponent);
+    fixture.detectChanges();
+
+    expect(scanButton(fixture)).toBeDefined();
+  });
+
+  it('shows the scan entry point to an administrator without explicit permissions', () => {
+    grant([], ['Admin']);
+    const fixture = TestBed.createComponent(RecetasSearchComponent);
+    fixture.detectChanges();
+
+    expect(scanButton(fixture)).toBeDefined();
+  });
 
   it('starts with the results table hidden', () => {
     const fixture = TestBed.createComponent(RecetasSearchComponent);

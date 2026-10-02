@@ -25,6 +25,11 @@ export const ROUTE_PERMISSIONS: Readonly<Record<string, string>> = {
   'series-fiscales': 'SeriesFiscales',
 };
 
+// Nested routes that need one more action besides reading their module; keyed by their first two segments
+export const ROUTE_ACTIONS: Readonly<Record<string, string>> = {
+  'recetas-medicas/escanear': 'Analizar',
+};
+
 export const READ_ACTION = 'Leer';
 
 export interface PermissionGrant {
@@ -50,6 +55,20 @@ function sameName(a: string, b: string): boolean {
 
 // Resolves the module from the first URL segment, so nested routes (/sucursales/:id) inherit it.
 export function routeModule(url: string): string | undefined {
-  const segment = url.split(/[/?#]/).find(part => part.length > 0) ?? '';
-  return ROUTE_PERMISSIONS[segment];
+  return ROUTE_PERMISSIONS[pathSegments(url)[0] ?? ''];
+}
+
+// Extra action the route needs on top of Leer, or undefined when reading the module is enough
+export function routeAction(url: string): string | undefined {
+  const [first, second] = pathSegments(url);
+  return ROUTE_ACTIONS[`${first}/${second}`];
+}
+
+// Path segments without query, fragment or matrix parameters, so /roles;x=1 still resolves to roles
+function pathSegments(url: string): string[] {
+  return url
+    .split(/[?#]/)[0]
+    .split('/')
+    .map(part => part.split(';')[0])
+    .filter(part => part.length > 0);
 }

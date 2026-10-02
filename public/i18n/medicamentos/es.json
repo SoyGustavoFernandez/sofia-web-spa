@@ -14,7 +14,7 @@
     "delete-success": "Medicamento eliminado correctamente",
     "delete-error": "Error al eliminar el medicamento",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este medicamento?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este medicamento?",
     "load-error": "Error al cargar el medicamento",
     "condiciones-error": "Error al cargar las condiciones de venta",
     "stock-section": "Stock por Sucursal",

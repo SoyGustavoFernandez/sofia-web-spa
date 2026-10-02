@@ -33,7 +33,7 @@
   },
   "deleteDialog": {
     "title": "Confirmar Eliminación",
-    "message": "¿Está seguro de que desea eliminar al paciente \"{{name}}\"?",
+    "message": "¿Estás seguro de que deseas eliminar al paciente \"{{name}}\"?",
     "confirm": "Eliminar",
     "cancel": "Cancelar"
   },
@@ -83,7 +83,7 @@
     "delete-success": "Paciente eliminado correctamente",
     "delete-error": "Error al eliminar el paciente",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este paciente?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este paciente?",
     "load-error": "Error al cargar el paciente",
     "documento-formato": "El número no corresponde al tipo de documento (DNI: 8 dígitos, RUC: 11 dígitos, CE: hasta 12 y pasaporte: hasta 20 letras o números).",
     "tipo-documento-requerido": "Selecciona un tipo de documento válido."

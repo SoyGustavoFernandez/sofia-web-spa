@@ -150,7 +150,11 @@
                 <mat-label>{{ t('fields.bloqueado') }}</mat-label>
                 <input
                   matInput
-                  [value]="isBloqueado() ? t('status.blocked') : t('status.ok')"
+                  [value]="
+                    isBloqueado()
+                      ? ('generic-labels.yes' | transloco)
+                      : ('generic-labels.no' | transloco)
+                  "
                   disabled />
               </mat-form-field>
             </div>

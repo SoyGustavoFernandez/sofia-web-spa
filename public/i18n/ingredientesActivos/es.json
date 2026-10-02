@@ -14,7 +14,7 @@
     "delete-success": "Ingrediente activo eliminado correctamente",
     "delete-error": "Error al eliminar el ingrediente activo",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este ingrediente activo?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este ingrediente activo?",
     "load-error": "Error al cargar el ingrediente activo"
   },
   "fields": {

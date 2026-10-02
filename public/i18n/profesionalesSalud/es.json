@@ -14,7 +14,7 @@
     "delete-success": "Profesional de salud eliminado correctamente",
     "delete-error": "Error al eliminar el profesional de salud",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este profesional de salud?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este profesional de salud?",
     "load-error": "Error al cargar el profesional de salud"
   },
   "fields": {

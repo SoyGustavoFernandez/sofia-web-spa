@@ -14,7 +14,7 @@
     "delete-error": "Error al eliminar la jerarquía",
     "delete-in-use": "No se puede eliminar la jerarquía porque está en uso.",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar esta jerarquía?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar esta jerarquía?",
     "multiplicador-hint": "Cuántas unidades menores equivalen a una unidad mayor",
     "multiplicador-error": "El multiplicador debe ser mayor que cero",
     "same-unidad-error": "La unidad mayor y la unidad menor no pueden ser la misma"

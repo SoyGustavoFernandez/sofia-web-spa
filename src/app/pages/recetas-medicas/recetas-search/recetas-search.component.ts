@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -11,6 +11,7 @@ import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SearchStateService } from '@core/services/shared/search-state.service';
+import { AuthService } from '@core/auth/auth.service';
 import { RecetaMedicaService } from '../services/receta-medica.service';
 import { RecetaListItem } from '../models/receta-medica.model';
 import { PacienteService } from '../../pacientes/services/paciente.service';
@@ -34,6 +35,10 @@ export class RecetasSearchComponent implements OnInit {
   private readonly transloco = inject(TranslocoService);
   private readonly notifier = inject(ErrorNotifierService);
   private readonly searchState = inject(SearchStateService);
+  private readonly auth = inject(AuthService);
+
+  // Mirrors [HasPermission("Recetas", "Analizar")] on the scan endpoint
+  readonly puedeEscanear = computed(() => this.auth.hasPermission('Recetas', 'Analizar'));
 
   readonly displayedColumns = ['clienteNombre', 'medicoNombre', 'fechaExpedicion', 'repeticionesMax', 'indicacionesUso'];
 

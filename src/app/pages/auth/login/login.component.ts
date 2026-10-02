@@ -11,10 +11,20 @@ import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsver
 import { AuthService } from '@core/auth/auth.service';
 import { environment } from '@environment/environment';
 
-// Login rejections that have a specific message; anything else is shown as invalid credentials
+// Login rejections that have a specific message
 const LOGIN_ERROR_KEYS: Record<string, string> = {
   'Auth.EmpresaNoVigente': 'auth.empresaNoVigente',
 };
+
+// Blames the credentials only when the API answered; an unreachable or failing API gets its own message
+export function loginErrorKey(err: unknown): string {
+  if (!(err instanceof HttpErrorResponse) || err.status === 0 || err.status === 408 || err.status >= 500) {
+    return 'auth.serviceUnavailable';
+  }
+  const code: unknown = err.error?.code;
+  if (typeof code === 'string' && LOGIN_ERROR_KEYS[code]) return LOGIN_ERROR_KEYS[code];
+  return err.status === 429 ? 'auth.recovery.tooManyRequests' : 'auth.invalidCredentials';
+}
 
 @Component({
   selector: 'app-login',
@@ -66,9 +76,7 @@ export class LoginComponent {
       },
       error: (err: unknown) => {
         this.submitting.set(false);
-        const code: unknown = err instanceof HttpErrorResponse ? err.error?.code : undefined;
-        const key = typeof code === 'string' ? LOGIN_ERROR_KEYS[code] : undefined;
-        this.loginError.set(this.transloco.translate(key ?? 'auth.invalidCredentials'));
+        this.loginError.set(this.transloco.translate(loginErrorKey(err)));
       },
     });
   }

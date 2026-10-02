@@ -13,7 +13,7 @@
     "delete-success": "Producto DIGEMID eliminado correctamente",
     "delete-error": "Error al eliminar el producto DIGEMID",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este producto del catálogo DIGEMID?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este producto del catálogo DIGEMID?",
     "load-error": "Error al cargar el producto DIGEMID"
   },
   "fields": {

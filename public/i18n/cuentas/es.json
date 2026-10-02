@@ -14,7 +14,7 @@
     "delete-success": "Cuenta eliminada correctamente",
     "delete-error": "Error al eliminar la cuenta",
     "confirm-delete-title": "Eliminar cuenta",
-    "confirm-delete-message": "¿Está seguro de que desea eliminar esta cuenta de usuario? Esta acción no se puede deshacer.",
+    "confirm-delete-message": "¿Estás seguro de que deseas eliminar esta cuenta de usuario? Esta acción no se puede deshacer.",
     "confirm-delete-confirm": "Eliminar",
     "confirm-delete-cancel": "Cancelar"
   },
@@ -35,7 +35,7 @@
   },
   "roles": {
     "title": "Roles Asignados",
-    "subtitle": "Gestione los roles de acceso de esta cuenta",
+    "subtitle": "Gestiona los roles de acceso de esta cuenta",
     "empty": "Sin roles asignados",
     "add-placeholder": "Agregar rol...",
     "assign-success": "Rol asignado correctamente",
@@ -70,8 +70,6 @@
   },
   "status": {
     "active": "Activa",
-    "inactive": "Inactiva",
-    "blocked": "Bloqueada",
-    "ok": "OK"
+    "inactive": "Inactiva"
   }
 }

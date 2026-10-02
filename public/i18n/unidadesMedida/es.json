@@ -27,7 +27,7 @@
   },
   "deleteDialog": {
     "title": "Confirmar Eliminación",
-    "message": "¿Está seguro de que desea eliminar la unidad de medida \"{{name}}\"?",
+    "message": "¿Estás seguro de que deseas eliminar la unidad de medida \"{{name}}\"?",
     "confirm": "Eliminar",
     "cancel": "Cancelar"
   },
@@ -73,7 +73,7 @@
     "delete-error": "Error al eliminar la unidad de medida",
     "delete-in-use": "No se puede eliminar la unidad de medida porque está asociada a medicamentos o jerarquías de unidades.",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar esta unidad de medida?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar esta unidad de medida?",
     "load-error": "Error al cargar la unidad de medida"
   },
   "fields": {

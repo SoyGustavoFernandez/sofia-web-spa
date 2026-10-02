@@ -65,7 +65,10 @@
           </div>
 
           <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field
+              appearance="outline"
+              class="w-100"
+              [subscriptSizing]="isEditMode() ? 'dynamic' : 'fixed'">
               <mat-label>{{ t('fields.prefijoSerie') }}</mat-label>
               <input
                 matInput
@@ -94,7 +97,10 @@
           </div>
 
           <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field
+              appearance="outline"
+              class="w-100"
+              [subscriptSizing]="isEditMode() ? 'dynamic' : 'fixed'">
               <mat-label>{{ t('fields.correlativoActual') }}</mat-label>
               <input
                 matInput

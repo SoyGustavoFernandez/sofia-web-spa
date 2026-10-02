@@ -142,6 +142,33 @@ describe('CuentasDetailComponent — roles', () => {
   });
 });
 
+describe('CuentasDetailComponent — bloqueo', () => {
+  function bloqueadoValue(fixture: ReturnType<typeof setup>['fixture']): string | undefined {
+    const field = fixture.debugElement
+      .queryAll(By.css('mat-form-field'))
+      .find(f => (f.query(By.css('mat-label'))?.nativeElement as HTMLElement | undefined)?.textContent?.trim() === 'cuentas.fields.bloqueado');
+    return (field?.query(By.css('input'))?.nativeElement as HTMLInputElement | undefined)?.value;
+  }
+
+  it('answers No in the Bloqueado field when the account is not locked', () => {
+    const { fixture } = loadWith(cuenta({ bloqueadoHasta: null }));
+
+    expect(bloqueadoValue(fixture)).toBe('generic-labels.no');
+  });
+
+  it('answers No once the lock has already expired', () => {
+    const { fixture } = loadWith(cuenta({ bloqueadoHasta: '2020-01-01T00:00:00Z' }));
+
+    expect(bloqueadoValue(fixture)).toBe('generic-labels.no');
+  });
+
+  it('answers Sí while the lock is still in force', () => {
+    const { fixture } = loadWith(cuenta({ bloqueadoHasta: new Date(Date.now() + 3_600_000).toISOString() }));
+
+    expect(bloqueadoValue(fixture)).toBe('generic-labels.yes');
+  });
+});
+
 describe('CuentasDetailComponent — sucursales', () => {
   const MIRAFLORES: SucursalListItem = {
     id: 'suc-1',

@@ -15,7 +15,7 @@
     "delete-success": "Rol eliminado correctamente",
     "delete-error": "Error al eliminar el rol",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este rol?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este rol?",
     "load-error": "Error al cargar el rol"
   },
   "fields": {
@@ -33,7 +33,7 @@
   },
   "configuracion": {
     "title": "Configuración del Rol",
-    "subtitle": "Defina el menú, permisos y sucursales para este rol.",
+    "subtitle": "Define el menú, permisos y sucursales para este rol.",
     "tab-menu": "Menú",
     "tab-permisos": "Permisos",
     "tab-sucursales": "Sucursales",
@@ -46,7 +46,7 @@
   },
   "permisos": {
     "title": "Permisos del Rol",
-    "subtitle": "Seleccione los permisos que tendrá este rol en el sistema.",
+    "subtitle": "Selecciona los permisos que tendrá este rol en el sistema.",
     "save": "Guardar permisos",
     "save-success": "Permisos guardados correctamente",
     "save-error": "Error al guardar los permisos",

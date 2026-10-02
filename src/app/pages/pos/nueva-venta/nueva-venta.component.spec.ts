@@ -41,7 +41,7 @@ function cartLine(cantidad: number, precioUnitario: number, loteId = 'lote-1') {
   return { loteId, productoNombre: 'Paracetamol', numeroLote: 'L-001', cantidadDisponible: 50, cantidad, precioUnitario };
 }
 
-function setup(continuar?: string) {
+function setup(continuar?: string, permisos: string[] = []) {
   const ventaService = jasmine.createSpyObj<VentaService>('VentaService', ['lotesDisponibles', 'presentacionesProducto', 'crear', 'getById']);
   const medicamentoService = jasmine.createSpyObj<MedicamentoService>('MedicamentoService', ['search', 'getCondicionesVenta']);
   const notifier = jasmine.createSpyObj<ErrorNotifierService>('ErrorNotifierService', ['showError', 'showSuccess']);
@@ -56,7 +56,15 @@ function setup(continuar?: string) {
       provideRouter([]),
       provideNoopAnimations(),
       provideTranslocoTesting(),
-      { provide: AuthService, useValue: { sucursalId: () => null, empleadoId: () => null, userId: () => 'cajero-spec', hasPermission: () => false } },
+      {
+        provide: AuthService,
+        useValue: {
+          sucursalId: () => null,
+          empleadoId: () => null,
+          userId: () => 'cajero-spec',
+          hasPermission: (modulo: string, accion: string) => permisos.includes(`${modulo}:${accion}`),
+        },
+      },
       { provide: VentaService, useValue: ventaService },
       { provide: MedicamentoService, useValue: medicamentoService },
       { provide: ErrorNotifierService, useValue: notifier },
@@ -150,6 +158,38 @@ describe('NuevaVentaComponent — POS lookups', () => {
     expect(component.presentacionOptions()).toEqual([]);
     expect(notifier.showError).toHaveBeenCalledOnceWith('pos.messages.presentacionesError');
   });
+});
+
+describe('NuevaVentaComponent — prescription scan tab', () => {
+  function renderToggle(permisos: string[]): HTMLElement | null {
+    const { fixture, component } = setup(undefined, permisos);
+    component.sesionId.set('sesion-1');
+    fixture.detectChanges();
+    tick(300);
+    fixture.detectChanges();
+    return (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.pos3-toggle');
+  }
+
+  it('hides the scan tab from a cashier without Recetas:Analizar and keeps the catalog search', fakeAsync(() => {
+    const { fixture, component } = setup(undefined, ['Recetas:Leer', 'Recetas:Crear']);
+    component.sesionId.set('sesion-1');
+    fixture.detectChanges();
+    tick(300);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.querySelector('.pos3-toggle')).toBeNull();
+    expect(host.textContent).not.toContain('pos.checkout.tabReceta');
+    expect(component.activeTab()).toBe('buscar');
+    expect(host.querySelectorAll('.pos3-product-card').length).toBe(1);
+  }));
+
+  it('offers the scan tab with Recetas:Analizar', fakeAsync(() => {
+    const toggle = renderToggle(['Recetas:Analizar']);
+
+    expect(toggle?.textContent).toContain('pos.checkout.tabBuscar');
+    expect(toggle?.textContent).toContain('pos.checkout.tabReceta');
+  }));
 });
 
 describe('NuevaVentaComponent — product cards', () => {

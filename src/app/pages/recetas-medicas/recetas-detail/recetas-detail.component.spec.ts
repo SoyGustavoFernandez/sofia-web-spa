@@ -6,9 +6,11 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
+import { AuthService, UserPermission } from '@core/auth/auth.service';
 import { RecetasDetailComponent } from './recetas-detail.component';
 
 const BASE = `${environment.api.baseurl}/api/v1/recetas`;
+const ME = `${environment.api.baseurl}/api/v1/auth/me`;
 
 function setup(params: Record<string, string>, data: Record<string, unknown> = {}) {
   TestBed.configureTestingModule({
@@ -118,5 +120,42 @@ describe('RecetasDetailComponent — /:id (view mode)', () => {
     expect(component.isEditing()).toBeFalse();
     expect(component.snapshot()?.id).toBe('rec-1');
     httpMock.verify();
+  });
+});
+
+describe('RecetasDetailComponent — delete permission', () => {
+  const receta = {
+    id: 'rec-1',
+    clienteId: 'pac-1',
+    clienteNombre: 'María Quispe',
+    medicoId: 'med-1',
+    medicoNombre: 'Dra. Rosa Díaz',
+    fechaExpedicion: '2026-09-05',
+    repeticionesMax: 1,
+    indicacionesUso: null,
+  };
+
+  function editExisting(permisos: UserPermission[]) {
+    const { fixture, httpMock } = setup({ id: 'rec-1' });
+    TestBed.inject(AuthService).loadPermissions().subscribe();
+    httpMock.expectOne(ME).flush({ roles: ['Cajero'], permisos });
+    fixture.detectChanges();
+    httpMock.expectOne(`${BASE}/rec-1`).flush(receta);
+    fixture.componentInstance.startEdit();
+    fixture.detectChanges();
+    httpMock.verify();
+    return (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.sofia-btn-delete');
+  }
+
+  it('hides Eliminar from a user who can update prescriptions but not delete them', () => {
+    const deleteButton = editExisting([{ modulo: 'Recetas', accion: 'Leer' }, { modulo: 'Recetas', accion: 'Actualizar' }]);
+
+    expect(deleteButton).toBeNull();
+  });
+
+  it('shows Eliminar when editing an existing prescription with Recetas:Eliminar', () => {
+    const deleteButton = editExisting([{ modulo: 'Recetas', accion: 'Leer' }, { modulo: 'Recetas', accion: 'Eliminar' }]);
+
+    expect(deleteButton).not.toBeNull();
   });
 });

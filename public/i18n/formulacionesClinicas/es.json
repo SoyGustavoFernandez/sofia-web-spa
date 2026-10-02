@@ -12,7 +12,7 @@
     "delete-success": "Formulación clínica eliminada correctamente",
     "delete-error": "Error al eliminar la formulación clínica",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar esta formulación clínica?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar esta formulación clínica?",
     "load-error": "Error al cargar la formulación clínica"
   },
   "fields": {

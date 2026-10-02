@@ -42,8 +42,8 @@
     "sucursal-placeholder": "Buscar sucursal...",
     "producto-placeholder": "Buscar producto...",
     "lote-placeholder": "Buscar por número de lote...",
-    "sucursal-required": "Debe seleccionar una sucursal",
-    "lote-required": "Debe seleccionar un lote",
+    "sucursal-required": "Debes seleccionar una sucursal",
+    "lote-required": "Debes seleccionar un lote",
     "no-results": "Sin resultados",
     "sucursales-error": "No se pudieron cargar tus sucursales"
   },

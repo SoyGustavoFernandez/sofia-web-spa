@@ -1,5 +1,24 @@
 {
   "title": "Panel de Control Operativo",
+  "home": {
+    "welcomeTitle": "Bienvenido a SOFIA",
+    "welcomeSubtitle": "Sistema Optimizado Farmacéutico con Inteligencia Artificial",
+    "welcomeText": "Desde aquí puedes navegar por los distintos módulos de la plataforma usando el menú lateral.",
+    "cards": {
+      "pos": {
+        "title": "POS / Ventas",
+        "description": "Punto de venta y caja rápida"
+      },
+      "inventario": {
+        "title": "Inventario & Lotes",
+        "description": "Control de stock y vencimientos"
+      },
+      "recetas": {
+        "title": "Recetas Médicas",
+        "description": "Digitalización y análisis con IA"
+      }
+    }
+  },
   "actions": {
     "viewServices": "Ver Agenda de Servicios",
     "viewInventory": "Ver Lotes de Inventario",

@@ -4,12 +4,13 @@ import { TranslocoService } from '@jsverse/transloco';
 import { catchError, map, of, take } from 'rxjs';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { AuthService } from './auth.service';
-import { routeModule } from './route-permissions';
+import { routeAction, routeModule } from './route-permissions';
 
 // Blocks shell routes the user cannot read; the API still enforces every call, this keeps the UI honest.
 export const permissionGuard: CanActivateChildFn = (_childRoute, state) => {
   const modulo = routeModule(state.url);
   if (!modulo) return true;
+  const accion = routeAction(state.url);
 
   const auth = inject(AuthService);
   const router = inject(Router);
@@ -23,7 +24,10 @@ export const permissionGuard: CanActivateChildFn = (_childRoute, state) => {
   };
 
   return auth.loadPermissions().pipe(
-    map(() => auth.hasPermission(modulo) || deny('errors.forbiddenPage')),
+    map(() => {
+      const allowed = auth.hasPermission(modulo) && (!accion || auth.hasPermission(modulo, accion));
+      return allowed || deny('errors.forbiddenPage');
+    }),
     catchError(() => of(deny('errors.permissionsLoad'))),
   );
 };

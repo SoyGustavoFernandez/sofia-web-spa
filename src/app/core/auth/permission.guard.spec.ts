@@ -58,6 +58,40 @@ describe('permissionGuard', () => {
     });
   });
 
+  it('blocks the prescription scanner for a user who can read prescriptions but not analyze them', done => {
+    authServiceSpy.loadPermissions.and.returnValue(of(profile));
+    authServiceSpy.hasPermission.and.callFake((_modulo: string, accion?: string) => accion !== 'Analizar');
+
+    (runGuard('/recetas-medicas/escanear') as Observable<boolean | UrlTree>).subscribe(result => {
+      expect(router.serializeUrl(result as UrlTree)).toBe('/dashboard');
+      expect(authServiceSpy.hasPermission).toHaveBeenCalledWith('Recetas', 'Analizar');
+      expect(notifierSpy.showError).toHaveBeenCalledTimes(1);
+      done();
+    });
+  });
+
+  it('opens the prescription scanner when the user can read and analyze prescriptions', done => {
+    authServiceSpy.loadPermissions.and.returnValue(of(profile));
+    authServiceSpy.hasPermission.and.returnValue(true);
+
+    (runGuard('/recetas-medicas/escanear') as Observable<boolean | UrlTree>).subscribe(result => {
+      expect(result).toBeTrue();
+      expect(authServiceSpy.hasPermission).toHaveBeenCalledWith('Recetas', 'Analizar');
+      done();
+    });
+  });
+
+  it('keeps the other prescription routes open with read access only', done => {
+    authServiceSpy.loadPermissions.and.returnValue(of(profile));
+    authServiceSpy.hasPermission.and.callFake((_modulo: string, accion?: string) => accion === undefined);
+
+    (runGuard('/recetas-medicas/abc-123') as Observable<boolean | UrlTree>).subscribe(result => {
+      expect(result).toBeTrue();
+      expect(notifierSpy.showError).not.toHaveBeenCalled();
+      done();
+    });
+  });
+
   it('fails closed and informs the user when permissions cannot be loaded', done => {
     authServiceSpy.loadPermissions.and.returnValue(throwError(() => new Error('network')));
 

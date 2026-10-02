@@ -3,26 +3,27 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoModule, provideTranslocoScope } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, TranslocoModule],
+  providers: [provideTranslocoScope('dashboard')],
   template: `
-    <div class="dashboard-container" style="padding: 24px;">
+    <div class="dashboard-container" style="padding: 24px;" *transloco="let t; scope: 'dashboard'; read: 'dashboard.home'">
       <mat-card style="border-radius: 12px; padding: 24px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; margin-bottom: 24px;">
         <mat-card-header>
           <mat-card-title style="font-size: 24px; font-weight: 700; color: #38bdf8;">
-            Bienvenido a SOFIA
+            {{ t('welcomeTitle') }}
           </mat-card-title>
           <mat-card-subtitle style="color: #94a3b8;">
-            Sistema Optimizado Farmacéutico con Inteligencia Artificial
+            {{ t('welcomeSubtitle') }}
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="margin-top: 16px;">
           <p style="font-size: 15px; color: #cbd5e1; line-height: 1.6;">
-            El cascarón de la SPA con el tema <strong>MatDash PRO</strong> está listo y configurado. 
-            Desde aquí podrás navegar por los distintos módulos de la plataforma.
+            {{ t('welcomeText') }}
           </p>
         </mat-card-content>
       </mat-card>
@@ -34,8 +35,8 @@ import { MatButtonModule } from '@angular/material/button';
               <mat-icon>point_of_sale</mat-icon>
             </div>
             <div>
-              <h3 style="margin: 0; font-size: 18px; font-weight: 600;">POS / Ventas</h3>
-              <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">Punto de venta y caja rápida</p>
+              <h3 style="margin: 0; font-size: 18px; font-weight: 600;">{{ t('cards.pos.title') }}</h3>
+              <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">{{ t('cards.pos.description') }}</p>
             </div>
           </div>
         </mat-card>
@@ -46,8 +47,8 @@ import { MatButtonModule } from '@angular/material/button';
               <mat-icon>inventory_2</mat-icon>
             </div>
             <div>
-              <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Inventario & Lotes</h3>
-              <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">Control de stock y vencimientos</p>
+              <h3 style="margin: 0; font-size: 18px; font-weight: 600;">{{ t('cards.inventario.title') }}</h3>
+              <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">{{ t('cards.inventario.description') }}</p>
             </div>
           </div>
         </mat-card>
@@ -58,20 +59,8 @@ import { MatButtonModule } from '@angular/material/button';
               <mat-icon>description</mat-icon>
             </div>
             <div>
-              <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Recetas Médicas</h3>
-              <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">Digitalización y análisis con IA</p>
-            </div>
-          </div>
-        </mat-card>
-
-        <mat-card style="border-radius: 12px; padding: 16px;">
-          <div style="display: flex; align-items: center; gap: 16px;">
-            <div style="width: 48px; height: 48px; border-radius: 10px; background: #ffedd5; color: #ea580c; display: flex; align-items: center; justify-content: center;">
-              <mat-icon>local_shipping</mat-icon>
-            </div>
-            <div>
-              <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Delivery</h3>
-              <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">Programación e itinerario</p>
+              <h3 style="margin: 0; font-size: 18px; font-weight: 600;">{{ t('cards.recetas.title') }}</h3>
+              <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">{{ t('cards.recetas.description') }}</p>
             </div>
           </div>
         </mat-card>

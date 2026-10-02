@@ -9,7 +9,7 @@
     </div>
 
     <div class="panel-body">
-      <p class="panel-title">Gestión completa de tu farmacia</p>
+      <p class="panel-title">{{ t('panelTitle') }}</p>
       <p class="panel-sub">{{ t('system') }}</p>
       <ul class="features">
         <li class="feature-item">
@@ -117,7 +117,9 @@
         t('forgot')
       }}</a>
 
-      <div class="divider"><span>o</span></div>
+      <div class="divider">
+        <span>{{ t('or') }}</span>
+      </div>
 
       <p class="register-row">
         {{ t('registerPrompt') }}

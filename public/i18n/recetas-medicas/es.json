@@ -21,7 +21,7 @@
   },
   "delete": {
     "confirm-title": "Eliminar receta",
-    "confirm-message": "¿Está seguro de que desea eliminar esta receta médica? Esta acción no se puede deshacer.",
+    "confirm-message": "¿Estás seguro de que deseas eliminar esta receta médica? Esta acción no se puede deshacer.",
     "success": "Receta eliminada correctamente",
     "error": "Error al eliminar la receta",
     "in-use": "No puedes eliminar esta receta porque ya se usó en ventas."
@@ -46,20 +46,20 @@
     "no-results": "Sin resultados"
   },
   "validation": {
-    "paciente-required": "Debe seleccionar un paciente",
-    "medico-required": "Debe seleccionar un médico",
+    "paciente-required": "Debes seleccionar un paciente",
+    "medico-required": "Debes seleccionar un médico",
     "fecha-required": "La fecha de expedición es requerida"
   },
   "scanner": {
     "title": "Lector de Recetas IA",
     "card-title": "Escanear receta médica",
-    "card-subtitle": "Tome una foto de la receta o seleccione una imagen de la galería",
+    "card-subtitle": "Toma una foto de la receta o selecciona una imagen de la galería",
     "btn-camera": "Tomar foto",
     "btn-gallery": "Galería",
     "btn-clear": "Limpiar",
     "btn-interpret": "Interpretar receta",
     "interpreting": "Interpretando...",
-    "empty-hint": "Capture o seleccione una imagen para comenzar",
+    "empty-hint": "Captura o selecciona una imagen para comenzar",
     "detected-as": "Detectado como",
     "confidence": "Confianza",
     "suggested-quantity": "Cantidad sugerida",
@@ -70,8 +70,8 @@
     "units": "unidades",
     "equivalents": "Equivalentes terapéuticos",
     "no-stock-but-equivalent": "No hay stock del medicamento prescrito, pero hay equivalentes disponibles.",
-    "no-results": "No se detectaron medicamentos en la imagen. Intente con una foto más nítida.",
-    "error": "Error al interpretar la receta. Intente nuevamente.",
+    "no-results": "No se detectaron medicamentos en la imagen. Intenta con una foto más nítida.",
+    "error": "Error al interpretar la receta. Intenta nuevamente.",
     "confidence-high": "Alta",
     "confidence-medium": "Media",
     "confidence-low": "Baja",

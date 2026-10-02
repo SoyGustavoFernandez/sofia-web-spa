@@ -13,7 +13,7 @@
     "delete-success": "Aseguradora eliminada correctamente",
     "delete-error": "Error al eliminar la aseguradora",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar esta aseguradora?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar esta aseguradora?",
     "load-error": "Error al cargar la aseguradora"
   },
   "fields": {

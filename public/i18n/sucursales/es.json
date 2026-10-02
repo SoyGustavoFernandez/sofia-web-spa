@@ -12,7 +12,7 @@
     "delete-success": "Sucursal eliminada correctamente",
     "delete-error": "Error al eliminar la sucursal",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar esta sucursal?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar esta sucursal?",
     "load-error": "Error al cargar la sucursal"
   },
   "fields": {

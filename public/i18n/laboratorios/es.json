@@ -27,7 +27,7 @@
   },
   "deleteDialog": {
     "title": "Confirmar Eliminación",
-    "message": "¿Está seguro de que desea eliminar el laboratorio \"{{name}}\"?",
+    "message": "¿Estás seguro de que deseas eliminar el laboratorio \"{{name}}\"?",
     "confirm": "Eliminar",
     "cancel": "Cancelar"
   },
@@ -74,7 +74,7 @@
     "delete-error": "Error al eliminar el laboratorio",
     "delete-in-use": "No se puede eliminar el laboratorio porque tiene medicamentos asociados.",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este laboratorio?",
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este laboratorio?",
     "load-error": "Error al cargar el laboratorio"
   },
   "fields": {

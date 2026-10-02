@@ -14,7 +14,7 @@
     "delete-error": "Error al eliminar el lote",
     "delete-in-use": "No se puede eliminar un lote con stock o ventas registradas.",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este lote?"
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este lote?"
   },
   "fields": {
     "producto": "Producto",

@@ -14,9 +14,9 @@
     "invalid-email": "Ingresa un correo electrónico válido.",
     "delete-success": "Empleado eliminado correctamente",
     "delete-error": "Error al eliminar el empleado",
-    "delete-manager": "No se puede eliminar un empleado que gerencia una sucursal. Asigne otro gerente primero.",
+    "delete-manager": "No se puede eliminar un empleado que gerencia una sucursal. Asigna otro gerente primero.",
     "delete-confirm-title": "Confirmar eliminación",
-    "delete-confirm-message": "¿Está seguro de que desea eliminar este empleado?"
+    "delete-confirm-message": "¿Estás seguro de que deseas eliminar este empleado?"
   },
   "fields": {
     "nombres": "Nombres",

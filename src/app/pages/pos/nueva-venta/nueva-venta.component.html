@@ -29,21 +29,23 @@
           <!-- ── Column A: search / scan ─────────────────────────── -->
           <div class="pos3-col">
             <div class="pos3-panel">
-              <div class="pos3-toggle">
-                <button
-                  class="pos3-toggle-opt"
-                  [class.active]="activeTab() === 'buscar'"
-                  (click)="setTab('buscar')">
-                  <mat-icon>search</mat-icon>{{ t('checkout.tabBuscar') }}
-                </button>
-                <button
-                  class="pos3-toggle-opt"
-                  [class.active]="activeTab() === 'receta'"
-                  (click)="setTab('receta')">
-                  <mat-icon>document_scanner</mat-icon
-                  >{{ t('checkout.tabReceta') }}
-                </button>
-              </div>
+              @if (puedeEscanearReceta()) {
+                <div class="pos3-toggle">
+                  <button
+                    class="pos3-toggle-opt"
+                    [class.active]="activeTab() === 'buscar'"
+                    (click)="setTab('buscar')">
+                    <mat-icon>search</mat-icon>{{ t('checkout.tabBuscar') }}
+                  </button>
+                  <button
+                    class="pos3-toggle-opt"
+                    [class.active]="activeTab() === 'receta'"
+                    (click)="setTab('receta')">
+                    <mat-icon>document_scanner</mat-icon
+                    >{{ t('checkout.tabReceta') }}
+                  </button>
+                </div>
+              }
 
               @if (activeTab() === 'buscar') {
                 <form [formGroup]="catalogoForm">

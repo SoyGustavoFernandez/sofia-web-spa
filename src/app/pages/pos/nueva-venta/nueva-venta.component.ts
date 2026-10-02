@@ -143,6 +143,8 @@ export class NuevaVentaComponent implements OnInit {
 
   // ── Column A: catalog tabs ────────────────────────────
   readonly activeTab = signal<CatalogTab>('buscar');
+  // Without Recetas:Analizar the scan tab is hidden and only the catalog search remains
+  readonly puedeEscanearReceta = computed(() => this.authService.hasPermission('Recetas', 'Analizar'));
 
   readonly catalogoForm = this.fb.group({ productoNombre: [''] });
   readonly medicamentoOptions = signal<MedicamentoListItem[]>([]);

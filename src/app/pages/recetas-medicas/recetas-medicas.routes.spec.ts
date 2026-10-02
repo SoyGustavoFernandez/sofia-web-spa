@@ -1,3 +1,4 @@
+import { ROUTE_ACTIONS } from '@core/auth/route-permissions';
 import { RECETAS_MEDICAS_ROUTES } from './recetas-medicas.routes';
 import { RecetasSearchComponent } from './recetas-search/recetas-search.component';
 import { RecetasDetailComponent } from './recetas-detail/recetas-detail.component';
@@ -25,5 +26,12 @@ describe('RECETAS_MEDICAS_ROUTES', () => {
     const paths = RECETAS_MEDICAS_ROUTES.map(r => r.path);
     expect(paths.indexOf('escanear')).toBeLessThan(paths.indexOf(':id'));
     expect(paths.indexOf('nueva')).toBeLessThan(paths.indexOf(':id'));
+  });
+
+  it('declares every prescription route the permission guard gates by action, so a rename cannot unguard it', () => {
+    const gated = Object.keys(ROUTE_ACTIONS).filter(key => key.startsWith('recetas-medicas/')).map(key => key.split('/')[1]);
+
+    expect(gated).toContain('escanear');
+    expect(gated.filter(path => !byPath(path))).toEqual([]);
   });
 });
