@@ -98,6 +98,30 @@ describe('VentaDetailComponent — returns', () => {
   });
 });
 
+describe('VentaDetailComponent — pending sale checkout', () => {
+  const pendiente = () => venta({ estado: 'Pendiente', comprobante: null });
+
+  it('offers Cobrar on a pending sale to a user who can create and update sales', () => {
+    const { component, fixture } = setup(pendiente(), ['Ventas:Crear', 'Ventas:Actualizar']);
+
+    expect(component.puedeCobrar()).toBeTrue();
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('pos.actions.cobrar');
+  });
+
+  it('hides Cobrar when the user lacks Ventas:Actualizar or Ventas:Crear', () => {
+    const sinActualizar = setup(pendiente(), ['Ventas:Crear']);
+    expect(sinActualizar.component.puedeCobrar()).toBeFalse();
+    expect((sinActualizar.fixture.nativeElement as HTMLElement).textContent).not.toContain('pos.actions.cobrar');
+    TestBed.resetTestingModule();
+
+    expect(setup(pendiente(), ['Ventas:Actualizar']).component.puedeCobrar()).toBeFalse();
+  });
+
+  it('never offers Cobrar on a sale that is not pending', () => {
+    expect(setup(venta(), ['Ventas:Crear', 'Ventas:Actualizar']).component.puedeCobrar()).toBeFalse();
+  });
+});
+
 describe('VentaDetailComponent — prescription verification', () => {
   it('shows who verified the prescription and when', () => {
     const { fixture } = setup(venta({ recetaVerificadaPor: 'Carla Cajera', recetaVerificadaEn: '2026-10-02T15:30:00Z' }));

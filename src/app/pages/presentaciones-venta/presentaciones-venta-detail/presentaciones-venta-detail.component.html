@@ -28,7 +28,11 @@
               </div>
             </div>
             <div class="d-flex gap-2">
-              <button mat-flat-button color="primary" (click)="enterEditMode()">
+              <button
+                *appPermiso="'Actualizar'"
+                mat-flat-button
+                color="primary"
+                (click)="enterEditMode()">
                 {{ 'actions.edit' | transloco }}
               </button>
             </div>
@@ -81,6 +85,7 @@
                   {{ t('detail.sin-jerarquia') }}
                 </div>
                 <button
+                  *appPermiso="'JerarquiasUoM:Crear'"
                   mat-stroked-button
                   color="primary"
                   type="button"
@@ -159,6 +164,7 @@
             </button>
             @if (!isNew()) {
               <button
+                *appPermiso="'Eliminar'"
                 mat-flat-button
                 class="sofia-btn-delete"
                 (click)="confirmDelete()"

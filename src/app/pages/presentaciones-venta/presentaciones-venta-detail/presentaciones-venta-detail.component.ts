@@ -19,6 +19,7 @@ import { MedicamentoService } from '../../medicamentos/services/medicamento.serv
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
 import { JerarquiaUoMService } from '../../jerarquias/services/jerarquia-uom.service';
 import { UnidadVendible } from '../../jerarquias/models/jerarquia-uom.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 interface Ref {
   id: string;
@@ -37,6 +38,7 @@ interface Ref {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class PresentacionesVentaDetailComponent implements OnInit {

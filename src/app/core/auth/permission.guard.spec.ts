@@ -92,6 +92,67 @@ describe('permissionGuard', () => {
     });
   });
 
+  for (const url of ['/laboratorios/nueva', '/laboratorios/nuevo', '/laboratorios/carga-masiva', '/laboratorios/nueva;a=1', '/pos/nueva?continuar=9']) {
+    it(`blocks ${url} for a user who can read the module but not create in it`, done => {
+      authServiceSpy.loadPermissions.and.returnValue(of(profile));
+      authServiceSpy.hasPermission.and.callFake((_modulo: string, accion?: string) => accion !== 'Crear');
+
+      (runGuard(url) as Observable<boolean | UrlTree>).subscribe(result => {
+        expect(router.serializeUrl(result as UrlTree)).toBe('/dashboard');
+        expect(authServiceSpy.hasPermission).toHaveBeenCalledWith(url.startsWith('/pos') ? 'Ventas' : 'Laboratorios', 'Crear');
+        expect(notifierSpy.showError).toHaveBeenCalledTimes(1);
+        done();
+      });
+    });
+  }
+
+  it('opens the create form when the user can read and create in the module', done => {
+    authServiceSpy.loadPermissions.and.returnValue(of(profile));
+    authServiceSpy.hasPermission.and.returnValue(true);
+
+    (runGuard('/laboratorios/nueva') as Observable<boolean | UrlTree>).subscribe(result => {
+      expect(result).toBeTrue();
+      expect(authServiceSpy.hasPermission).toHaveBeenCalledWith('Laboratorios', 'Crear');
+      done();
+    });
+  });
+
+  it('keeps the search and detail routes open with read access only', done => {
+    authServiceSpy.loadPermissions.and.returnValue(of(profile));
+    authServiceSpy.hasPermission.and.callFake((_modulo: string, accion?: string) => accion === undefined);
+
+    (runGuard('/laboratorios') as Observable<boolean | UrlTree>).subscribe(search => {
+      (runGuard('/laboratorios/abc-123') as Observable<boolean | UrlTree>).subscribe(detail => {
+        expect(search).toBeTrue();
+        expect(detail).toBeTrue();
+        expect(notifierSpy.showError).not.toHaveBeenCalled();
+        done();
+      });
+    });
+  });
+
+  it('asks for AperturarCaja, not Crear, to open the new cash session form', done => {
+    authServiceSpy.loadPermissions.and.returnValue(of(profile));
+    authServiceSpy.hasPermission.and.callFake((_modulo: string, accion?: string) => accion !== 'AperturarCaja');
+
+    (runGuard('/sesiones-caja/nueva') as Observable<boolean | UrlTree>).subscribe(result => {
+      expect(router.serializeUrl(result as UrlTree)).toBe('/dashboard');
+      expect(authServiceSpy.hasPermission).toHaveBeenCalledWith('POS', 'AperturarCaja');
+      done();
+    });
+  });
+
+  it('asks for Inventarios:Actualizar, not Crear, to open the new stock form', done => {
+    authServiceSpy.loadPermissions.and.returnValue(of(profile));
+    authServiceSpy.hasPermission.and.callFake((_modulo: string, accion?: string) => accion !== 'Actualizar');
+
+    (runGuard('/stock-por-sucursal/nueva') as Observable<boolean | UrlTree>).subscribe(result => {
+      expect(router.serializeUrl(result as UrlTree)).toBe('/dashboard');
+      expect(authServiceSpy.hasPermission).toHaveBeenCalledWith('Inventarios', 'Actualizar');
+      done();
+    });
+  });
+
   it('fails closed and informs the user when permissions cannot be loaded', done => {
     authServiceSpy.loadPermissions.and.returnValue(throwError(() => new Error('network')));
 

@@ -16,6 +16,7 @@ import { PresentacionVentaService } from '../services/presentacion-venta.service
 import { PresentacionVenta } from '../models/presentacion-venta.model';
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-presentaciones-venta-search',
@@ -29,6 +30,7 @@ import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class PresentacionesVentaSearchComponent implements OnInit {

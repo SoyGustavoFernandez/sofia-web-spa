@@ -11,6 +11,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { IngredienteActivoService } from '../services/ingrediente-activo.service';
 import { IngredienteActivoDetail } from '../models/ingrediente-activo.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'IngredienteActivo.DenominacionDci.Duplicado': 'ingredientesActivos.detail.duplicate-dci',
@@ -28,6 +29,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class IngredientesActivosDetailComponent implements OnInit {

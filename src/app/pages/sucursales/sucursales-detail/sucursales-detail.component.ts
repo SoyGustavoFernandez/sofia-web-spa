@@ -13,6 +13,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SucursalService } from '../services/sucursal.service';
 import { SucursalDetail, EmpleadoItem } from '../models/sucursal.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'Sucursal.NumeroLicencia.Duplicado': 'sucursales.detail.duplicate-licencia',
@@ -31,6 +32,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
     MaterialModule,
     PageHeaderComponent,
     AutocompleteInputComponent,
+    PermisoDirective,
   ],
 })
 export class SucursalesDetailComponent implements OnInit {

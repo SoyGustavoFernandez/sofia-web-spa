@@ -11,6 +11,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { ProveedorService } from '../services/proveedor.service';
 import { ProveedorListItem } from '../models/proveedor.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-proveedores-search',
@@ -25,6 +26,7 @@ import { ProveedorListItem } from '../models/proveedor.model';
     MaterialModule,
     PageHeaderComponent,
     RangeSliderFieldComponent,
+    PermisoDirective,
   ],
 })
 export class ProveedoresSearchComponent implements OnInit {

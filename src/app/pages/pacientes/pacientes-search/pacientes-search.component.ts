@@ -12,6 +12,7 @@ import { SearchStateService } from '@core/services/shared/search-state.service';
 import { PacienteService } from '../services/paciente.service';
 import { PacienteListItem } from '../models/paciente.model';
 import { TIPOS_DOCUMENTO_IDENTIDAD, tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-pacientes-search',
@@ -25,6 +26,7 @@ import { TIPOS_DOCUMENTO_IDENTIDAD, tipoDocumentoKey } from '@shared/utils/tipo-
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class PacientesSearchComponent implements OnInit {

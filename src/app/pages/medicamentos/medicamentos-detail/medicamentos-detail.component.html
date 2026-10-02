@@ -23,14 +23,21 @@
               </div>
             </div>
             <div class="d-flex gap-2">
+              <ng-container *appPermiso="'JerarquiasUoM:Leer'">
+                <button
+                  *appPermiso="'PresentacionesVenta:Leer'"
+                  mat-stroked-button
+                  color="primary"
+                  (click)="abrirPresentacionesVenta()">
+                  <mat-icon>sell</mat-icon>
+                  {{ t('detail.presentaciones-btn') }}
+                </button>
+              </ng-container>
               <button
-                mat-stroked-button
+                *appPermiso="'Actualizar'"
+                mat-flat-button
                 color="primary"
-                (click)="abrirPresentacionesVenta()">
-                <mat-icon>sell</mat-icon>
-                {{ t('detail.presentaciones-btn') }}
-              </button>
-              <button mat-flat-button color="primary" (click)="enterEditMode()">
+                (click)="enterEditMode()">
                 {{ 'actions.edit' | transloco }}
               </button>
             </div>
@@ -178,6 +185,7 @@
             </button>
             @if (!isNew()) {
               <button
+                *appPermiso="'Eliminar'"
                 mat-flat-button
                 class="sofia-btn-delete"
                 (click)="confirmDelete()"

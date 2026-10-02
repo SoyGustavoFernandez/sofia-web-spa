@@ -221,6 +221,40 @@ describe('NuevaVentaComponent — prescription scan tab', () => {
   }));
 });
 
+describe('NuevaVentaComponent — cross-module actions', () => {
+  function renderSinCaja(permisos: string[]): string {
+    const { fixture } = setup(undefined, permisos);
+    fixture.detectChanges();
+    return (fixture.nativeElement as HTMLElement).textContent ?? '';
+  }
+
+  function renderConCliente(permisos: string[]): string {
+    const { fixture, component } = setup(undefined, permisos);
+    component.sesionId.set('sesion-1');
+    component.selectedCliente.set({ id: 'pac-1', tipoDocumento: '1', nombreApellidos: 'Cliente QA', docIdentidadGub: '12345678', fechaNacimiento: '', contactoPrimario: null });
+    fixture.detectChanges();
+    return (fixture.nativeElement as HTMLElement).textContent ?? '';
+  }
+
+  it('offers opening the cash session from the POS only with POS:AperturarCaja', () => {
+    const conPermiso = renderSinCaja(['Ventas:Crear', 'POS:AperturarCaja']);
+    expect(conPermiso).toContain('pos.checkout.cajaRequeridaAviso');
+    expect(conPermiso).toContain('pos.actions.aperturar');
+    TestBed.resetTestingModule();
+
+    const sinPermiso = renderSinCaja(['Ventas:Crear', 'POS:Leer']);
+    expect(sinPermiso).toContain('pos.checkout.cajaRequeridaAviso');
+    expect(sinPermiso).not.toContain('pos.actions.aperturar');
+  });
+
+  it('links to registering a prescription only with Recetas:Crear', () => {
+    expect(renderConCliente(['Recetas:Leer', 'Recetas:Crear'])).toContain('pos.checkout.registrarReceta');
+    TestBed.resetTestingModule();
+
+    expect(renderConCliente(['Recetas:Leer'])).not.toContain('pos.checkout.registrarReceta');
+  });
+});
+
 describe('NuevaVentaComponent — product cards', () => {
   const OTC = { id: 'med-1', nombreComercial: 'Paracetamol', condicionVenta: 0, precioVentaBase: 2.5, stockTotal: 8 } as MedicamentoListItem;
   const CON_RECETA = { id: 'med-2', nombreComercial: 'Amoxicilina', condicionVenta: 1, precioVentaBase: null, stockTotal: 8 } as MedicamentoListItem;

@@ -73,6 +73,7 @@
           </div>
           @if (s.estadoSesion === EstadoSesion.Abierta) {
             <button
+              *appPermiso="'CerrarCaja'"
               mat-flat-button
               color="primary"
               (click)="showCierrePanel.set(true)">

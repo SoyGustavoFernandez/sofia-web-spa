@@ -10,6 +10,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { UnidadMedidaService } from '../services/unidad-medida.service';
 import { UnidadMedidaListItem } from '../models/unidad-medida.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 @Component({
   selector: 'app-unidades-medida-search',
   standalone: true,
@@ -22,6 +23,7 @@ import { UnidadMedidaListItem } from '../models/unidad-medida.model';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class UnidadesMedidaSearchComponent implements OnInit {

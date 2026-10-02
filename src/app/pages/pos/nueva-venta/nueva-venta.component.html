@@ -13,7 +13,11 @@
     } @else if (!sesionId()) {
       <div class="sofia-filter-card">
         <p class="pre-line mb-3">{{ t('checkout.cajaRequeridaAviso') }}</p>
-        <button mat-flat-button color="primary" (click)="abrirCaja()">
+        <button
+          *appPermiso="'POS:AperturarCaja'"
+          mat-flat-button
+          color="primary"
+          (click)="abrirCaja()">
           {{ t('actions.aperturar') }}
         </button>
       </div>
@@ -435,18 +439,18 @@
                   </mat-select>
                   <mat-hint>{{ t('checkout.recetaHint') }}</mat-hint>
                 </mat-form-field>
-                @if (puedeRegistrarReceta()) {
-                  <div class="d-flex justify-content-end mt-3">
-                    <a
-                      mat-button
-                      routerLink="/recetas-medicas/nueva"
-                      target="_blank"
-                      rel="noopener">
-                      <mat-icon>open_in_new</mat-icon>
-                      {{ t('checkout.registrarReceta') }}
-                    </a>
-                  </div>
-                }
+                <div
+                  *appPermiso="'Recetas:Crear'"
+                  class="d-flex justify-content-end mt-3">
+                  <a
+                    mat-button
+                    routerLink="/recetas-medicas/nueva"
+                    target="_blank"
+                    rel="noopener">
+                    <mat-icon>open_in_new</mat-icon>
+                    {{ t('checkout.registrarReceta') }}
+                  </a>
+                </div>
               }
 
               @if (mostrarAseguradora) {

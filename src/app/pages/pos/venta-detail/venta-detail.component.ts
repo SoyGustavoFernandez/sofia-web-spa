@@ -93,8 +93,10 @@ export class VentaDetailComponent implements OnInit {
     return anulable && sinDevoluciones && this.auth.hasPermission('Ventas', 'Anular');
   }
 
+  // Charging a pending sale reopens the POS (Ventas:Crear) and completes it (Ventas:Actualizar)
   puedeCobrar(): boolean {
-    return this.venta()?.estado === EstadoVenta[EstadoVenta.Pendiente];
+    const pendiente = this.venta()?.estado === EstadoVenta[EstadoVenta.Pendiente];
+    return pendiente && this.auth.hasPermission('Ventas', 'Crear') && this.auth.hasPermission('Ventas', 'Actualizar');
   }
 
   cobrar(): void {

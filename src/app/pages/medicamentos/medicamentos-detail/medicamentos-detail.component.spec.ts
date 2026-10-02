@@ -6,6 +6,8 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
 import { activatedRouteStub } from '@shared/testing/activated-route-stub';
+import { providePermissions } from '@shared/testing/permissions-testing.providers';
+import { stubRouterUrl } from '@shared/testing/router-url-stub';
 import { MedicamentosDetailComponent } from './medicamentos-detail.component';
 
 const BASE = `${environment.api.baseurl}/api/v1/medicamentos`;
@@ -69,5 +71,58 @@ describe('MedicamentosDetailComponent — /:id (view mode)', () => {
     expect(component.form.value.nombreComercial).toBe('Ibuprofeno');
     expect(component.selectedLab()?.nombreCompania).toBe('Lab X');
     httpMock.verify();
+  });
+});
+
+describe('MedicamentosDetailComponent — action buttons', () => {
+  function buttonLabels(permisos: string[]): string {
+    TestBed.configureTestingModule({
+      imports: [MedicamentosDetailComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+        provideNoopAnimations(),
+        provideTranslocoTesting(),
+        providePermissions(permisos),
+        { provide: ActivatedRoute, useValue: activatedRouteStub({ id: 'med-1' }) },
+      ],
+    });
+    stubRouterUrl('/medicamentos/med-1');
+    const fixture = TestBed.createComponent(MedicamentosDetailComponent);
+    const httpMock = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    httpMock.expectOne(`${BASE}/condiciones-venta`).flush(['Venta libre']);
+    httpMock.expectOne(`${BASE}/med-1`).flush({
+      id: 'med-1',
+      codigoNacional: 'CN-1',
+      nombreComercial: 'Ibuprofeno',
+      laboratorioId: 'lab-1',
+      laboratorioNombre: 'Lab X',
+      unidadBaseId: 'uom-1',
+      unidadBaseNombre: 'Caja',
+      condicionVenta: 0,
+      precioVentaBase: 12.5,
+      stockTotal: 10,
+      stockPorSucursal: null,
+    });
+    fixture.detectChanges();
+    return Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button'))
+      .map(b => b.textContent?.trim() ?? '')
+      .join('|');
+  }
+
+  it('opens the sale presentations only for a user who can read both presentations and unit hierarchies', () => {
+    const todos = buttonLabels(['Medicamentos:Leer', 'Medicamentos:Actualizar', 'PresentacionesVenta:Leer', 'JerarquiasUoM:Leer']);
+    expect(todos).toContain('medicamentos.detail.presentaciones-btn');
+    expect(todos).toContain('actions.edit');
+    TestBed.resetTestingModule();
+
+    expect(buttonLabels(['Medicamentos:Leer', 'PresentacionesVenta:Leer'])).not.toContain('medicamentos.detail.presentaciones-btn');
+    TestBed.resetTestingModule();
+
+    const soloMedicamentos = buttonLabels(['Medicamentos:Leer', 'Medicamentos:Actualizar', 'JerarquiasUoM:Leer']);
+    expect(soloMedicamentos).not.toContain('medicamentos.detail.presentaciones-btn');
+    expect(soloMedicamentos).toContain('actions.edit');
   });
 });

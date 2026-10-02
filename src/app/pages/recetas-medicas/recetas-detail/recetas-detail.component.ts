@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -12,7 +12,6 @@ import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
-import { AuthService } from '@core/auth/auth.service';
 import { RecetaMedicaService } from '../services/receta-medica.service';
 import { RecetaDetail } from '../models/receta-medica.model';
 import { PacienteService } from '../../pacientes/services/paciente.service';
@@ -20,6 +19,7 @@ import { PacienteListItem } from '../../pacientes/models/paciente.model';
 import { ProfesionalSaludService } from '../../profesionales-salud/services/profesional-salud.service';
 import { ProfesionalSaludListItem } from '../../profesionales-salud/models/profesional-salud.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 // Mirrors RecetaMedica.NumeroRecetaMaxLength in the backend
 const NUMERO_RECETA_MAX_LENGTH = 30;
@@ -46,7 +46,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
   standalone: true,
   templateUrl: './recetas-detail.component.html',
   providers: [provideTranslocoScope('recetas-medicas')],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent, PermisoDirective],
 })
 export class RecetasDetailComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -58,10 +58,6 @@ export class RecetasDetailComponent implements OnInit {
   private readonly transloco = inject(TranslocoService);
   private readonly notifier = inject(ErrorNotifierService);
   private readonly dialog = inject(MatDialog);
-  private readonly auth = inject(AuthService);
-
-  // Mirrors [HasPermission("Recetas", "Eliminar")] on the delete endpoint
-  readonly puedeEliminar = computed(() => this.auth.hasPermission('Recetas', 'Eliminar'));
 
   readonly isNew = signal(false);
   readonly isEditing = signal(false);

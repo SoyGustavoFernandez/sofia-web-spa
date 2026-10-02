@@ -14,7 +14,11 @@
             {{ 'generic-labels.search-subtitle' | transloco }}
           </div>
         </div>
-        <button mat-flat-button color="primary" (click)="goToNew()">
+        <button
+          *appPermiso="'Crear'"
+          mat-flat-button
+          color="primary"
+          (click)="goToNew()">
           <mat-icon>add</mat-icon>
           {{ 'actions.new' | transloco }}
         </button>

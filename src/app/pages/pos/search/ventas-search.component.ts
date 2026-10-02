@@ -19,6 +19,7 @@ import { EmpleadoService } from '../../empleados/services/empleado.service';
 import { Empleado } from '../../empleados/models/empleado.model';
 import { PacienteService } from '../../pacientes/services/paciente.service';
 import { PacienteListItem } from '../../pacientes/models/paciente.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-ventas-search',
@@ -32,6 +33,7 @@ import { PacienteListItem } from '../../pacientes/models/paciente.model';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class VentasSearchComponent implements OnInit {

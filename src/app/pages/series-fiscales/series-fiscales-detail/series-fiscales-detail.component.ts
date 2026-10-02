@@ -28,6 +28,7 @@ import {
 } from '../models/serie-fiscal.model';
 import { SucursalService } from '../../sucursales/services/sucursal.service';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 // Backend business-rule codes that have a specific message instead of the generic save error
 const SAVE_ERROR_KEYS: Record<string, string> = {
@@ -60,6 +61,7 @@ const prefijoPorTipoValidator: ValidatorFn = (group: AbstractControl): Validatio
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class SeriesFiscalesDetailComponent implements OnInit {

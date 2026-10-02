@@ -12,6 +12,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { LaboratorioService } from '../services/laboratorio.service';
 import { LaboratorioDetail } from '../models/laboratorio.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'Laboratorio.NombreCompania.Duplicado': 'laboratorios.detail.duplicate-nombre',
@@ -30,6 +31,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class LaboratoriosDetailComponent implements OnInit {

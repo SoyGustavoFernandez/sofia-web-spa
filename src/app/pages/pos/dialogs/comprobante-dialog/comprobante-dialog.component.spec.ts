@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
+import { providePermissions } from '@shared/testing/permissions-testing.providers';
 import { ComprobanteDto } from '../../models/venta.model';
 import { ReceiptPrintService } from '../../services/receipt-print.service';
 import { ComprobanteDialogComponent, ComprobanteDialogData } from './comprobante-dialog.component';
@@ -21,7 +22,7 @@ const comprobante: ComprobanteDto = {
   clienteNombre: 'Juan Perez',
 };
 
-function setup(overrides: Partial<ComprobanteDto> = {}) {
+function setup(overrides: Partial<ComprobanteDto> = {}, permisos: string[] = ['Ventas:Crear']) {
   const data: ComprobanteDialogData = {
     comprobante: { ...comprobante, ...overrides },
     total: 50,
@@ -40,6 +41,7 @@ function setup(overrides: Partial<ComprobanteDto> = {}) {
     providers: [
       provideNoopAnimations(),
       provideTranslocoTesting(),
+      providePermissions(permisos),
       { provide: MatDialogRef, useValue: { close: () => undefined } },
       { provide: MAT_DIALOG_DATA, useValue: data },
       { provide: ReceiptPrintService, useValue: receiptPrint },
@@ -69,6 +71,16 @@ describe('ComprobanteDialogComponent', () => {
   it('prints no document for the anonymous customer', () => {
     const { component } = setup({ clienteTipoDocumento: '-', clienteNumeroDocumento: '00000000', clienteNombre: 'CLIENTE EVENTUAL' });
     expect(component.clienteDocumento()).toBeNull();
+  });
+
+  it('offers starting a new sale only to a user who can create sales', () => {
+    expect(setup().text).toContain('pos.actions.nuevaVenta');
+    TestBed.resetTestingModule();
+
+    const { text } = setup({}, ['Ventas:Leer']);
+
+    expect(text).not.toContain('pos.actions.nuevaVenta');
+    expect(text).toContain('pos.actions.imprimirComprobante');
   });
 
   it('sends only the receipt element to the isolated printer', () => {

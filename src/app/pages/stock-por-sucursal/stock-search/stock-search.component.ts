@@ -18,6 +18,7 @@ import { SucursalService } from '../../sucursales/services/sucursal.service';
 import { SucursalPermitida } from '../../sucursales/models/sucursal.model';
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-stock-search',
@@ -31,6 +32,7 @@ import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class StockSearchComponent implements OnInit {

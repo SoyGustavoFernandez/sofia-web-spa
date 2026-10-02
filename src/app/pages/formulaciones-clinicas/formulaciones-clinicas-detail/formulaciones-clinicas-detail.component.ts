@@ -20,6 +20,7 @@ import { IngredienteActivoService } from '../../ingredientes-activos/services/in
 import { IngredienteActivoListItem } from '../../ingredientes-activos/models/ingrediente-activo.model';
 import { UnidadMedidaService } from '../../unidades-medida/services/unidad-medida.service';
 import { UnidadMedidaListItem } from '../../unidades-medida/models/unidad-medida.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 interface Ref {
   id: string;
@@ -38,6 +39,7 @@ interface Ref {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class FormulacionesClinicasDetailComponent implements OnInit {

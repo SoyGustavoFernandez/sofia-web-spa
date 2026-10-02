@@ -13,7 +13,11 @@
           <div class="search-info-text">{{ t('ventasSearch.subtitle') }}</div>
         </div>
         <div class="d-flex gap-2">
-          <button mat-flat-button color="primary" (click)="goToNew()">
+          <button
+            *appPermiso="'Crear'"
+            mat-flat-button
+            color="primary"
+            (click)="goToNew()">
             <mat-icon>add</mat-icon>
             {{ t('actions.nuevaVenta') }}
           </button>

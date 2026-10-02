@@ -10,13 +10,14 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { SucursalService } from '../services/sucursal.service';
 import { SucursalListItem } from '../models/sucursal.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-sucursales-search',
   standalone: true,
   templateUrl: './sucursales-search.component.html',
   providers: [provideTranslocoScope('sucursales')],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent, PermisoDirective],
 })
 export class SucursalesSearchComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

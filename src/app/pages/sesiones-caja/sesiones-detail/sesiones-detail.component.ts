@@ -10,6 +10,7 @@ import { AuthService } from '@core/auth/auth.service';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { SesionCajaService } from '../services/sesion-caja.service';
 import { SesionCaja, EstadoSesion } from '../models/sesion-caja.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 // Backend close-rule codes that have a specific message instead of the generic close error
 const CIERRE_ERROR_KEYS: Record<string, string> = {
@@ -34,7 +35,7 @@ const APERTURA_ERROR_KEYS: Record<string, string> = {
     .lote-option__sub { font-size: 0.8em; opacity: 0.65; }
   `],
   providers: [provideTranslocoScope('sesiones-caja')],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent, PermisoDirective],
 })
 export class SesionesDetailComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

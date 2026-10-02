@@ -16,6 +16,7 @@ import { LoteService } from '../services/lote.service';
 import { Lote } from '../models/lote.model';
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-lotes-search',
@@ -29,6 +30,7 @@ import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class LotesSearchComponent implements OnInit {

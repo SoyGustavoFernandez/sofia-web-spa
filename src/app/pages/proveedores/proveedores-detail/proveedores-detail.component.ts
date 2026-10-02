@@ -11,6 +11,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { ProveedorService } from '../services/proveedor.service';
 import { ProveedorDetail } from '../models/proveedor.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'Proveedor.TaxId.Duplicado': 'proveedores.detail.duplicate-tax-id',
@@ -29,6 +30,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class ProveedoresDetailComponent implements OnInit {

@@ -23,7 +23,11 @@
               </div>
             </div>
             <div class="d-flex gap-2">
-              <button mat-flat-button color="primary" (click)="enterEditMode()">
+              <button
+                *appPermiso="'Actualizar'"
+                mat-flat-button
+                color="primary"
+                (click)="enterEditMode()">
                 {{ 'actions.edit' | transloco }}
               </button>
             </div>
@@ -72,6 +76,7 @@
             </button>
             @if (!isNew()) {
               <button
+                *appPermiso="'Eliminar'"
                 mat-flat-button
                 class="sofia-btn-delete"
                 style="margin-left: 0.5rem"

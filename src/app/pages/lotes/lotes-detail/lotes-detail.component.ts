@@ -17,6 +17,7 @@ import { LoteService } from '../services/lote.service';
 import { Lote } from '../models/lote.model';
 import { MedicamentoService } from '../../medicamentos/services/medicamento.service';
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 interface Ref {
   id: string;
@@ -35,6 +36,7 @@ interface Ref {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class LotesDetailComponent implements OnInit {

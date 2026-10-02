@@ -10,6 +10,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { AseguradoraService } from '../services/aseguradora.service';
 import { AseguradoraListItem } from '../models/aseguradora.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-aseguradoras-search',
@@ -23,6 +24,7 @@ import { AseguradoraListItem } from '../models/aseguradora.model';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class AseguradorasSearchComponent implements OnInit {

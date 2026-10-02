@@ -15,6 +15,7 @@ import { EmpleadoService } from '../services/empleado.service';
 import { Empleado } from '../models/empleado.model';
 import { SucursalService } from '../../sucursales/services/sucursal.service';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-empleados-search',
@@ -28,6 +29,7 @@ import { SucursalListItem } from '../../sucursales/models/sucursal.model';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class EmpleadosSearchComponent implements OnInit {

@@ -11,13 +11,14 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { SesionCajaService } from '../services/sesion-caja.service';
 import { SesionCaja, SesionCajaFilter, EstadoSesion } from '../models/sesion-caja.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-sesiones-search',
   standalone: true,
   templateUrl: './sesiones-search.component.html',
   providers: [provideTranslocoScope('sesiones-caja')],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent, PermisoDirective],
 })
 export class SesionesSearchComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

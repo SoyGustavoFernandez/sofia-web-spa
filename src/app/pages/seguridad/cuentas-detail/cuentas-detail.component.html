@@ -103,7 +103,11 @@
               </div>
             </div>
             <div class="d-flex gap-2">
-              <button mat-flat-button color="primary" (click)="enterEditMode()">
+              <button
+                *appPermiso="'Actualizar'"
+                mat-flat-button
+                color="primary"
+                (click)="enterEditMode()">
                 {{ 'actions.edit' | transloco }}
               </button>
             </div>
@@ -261,6 +265,7 @@
                 }
               </button>
               <button
+                *appPermiso="'Eliminar'"
                 mat-flat-button
                 class="sofia-btn-delete"
                 (click)="confirmDelete()"
@@ -286,7 +291,7 @@
           </div>
         </div>
 
-        @if (!isEditMode()) {
+        @if (!isEditMode() || !puedeAsignarRoles()) {
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ t('roles.title') }}</mat-label>
             <input
@@ -296,7 +301,7 @@
           </mat-form-field>
         }
 
-        @if (isEditMode()) {
+        @if (isEditMode() && puedeAsignarRoles()) {
           <csw-autocomplete-input
             [fetch]="fetchRoles"
             [displayWith]="displayRol"

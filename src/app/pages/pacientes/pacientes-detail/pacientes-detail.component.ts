@@ -13,6 +13,7 @@ import { PacienteService } from '../services/paciente.service';
 import { PacienteDetail } from '../models/paciente.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
 import { TIPOS_DOCUMENTO_IDENTIDAD, documentoIdentidadValidator, tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'Paciente.DocIdentidadGub.Duplicado': 'pacientes.detail.duplicate-documento',
@@ -36,6 +37,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class PacientesDetailComponent implements OnInit {

@@ -16,13 +16,18 @@
         </div>
         <div class="d-flex gap-2">
           <button
+            *appPermiso="'Crear'"
             mat-stroked-button
             color="primary"
             [routerLink]="['carga-masiva']">
             <mat-icon>upload</mat-icon>
             {{ 'carga-masiva.btn' | transloco }}
           </button>
-          <button mat-flat-button color="primary" (click)="goToNew()">
+          <button
+            *appPermiso="'Crear'"
+            mat-flat-button
+            color="primary"
+            (click)="goToNew()">
             <mat-icon>add</mat-icon>
             {{ 'actions.new' | transloco }}
           </button>

@@ -12,6 +12,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { UnidadMedidaService } from '../services/unidad-medida.service';
 import { UnidadMedidaDetail } from '../models/unidad-medida.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'UnidadMedida.Codigo.Duplicado': 'unidadesMedida.detail.duplicate-codigo',
@@ -29,6 +30,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class UnidadesMedidaDetailComponent implements OnInit {

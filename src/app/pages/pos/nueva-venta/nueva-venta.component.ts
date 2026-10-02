@@ -39,6 +39,7 @@ import { ConfirmarVentaDialogComponent, ConfirmarVentaDialogData } from '../dial
 import { ComprobanteDialogComponent, ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
 import { AperturarCajaDialogComponent } from '../dialogs/aperturar-caja-dialog/aperturar-caja-dialog.component';
 import { PosDraft, isEmptyPosDraft, parsePosDraft, serializePosDraft } from './pos-draft';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 interface CartLine {
   loteId: string;
@@ -102,7 +103,7 @@ const VENTA_ERROR_KEYS: Record<string, string> = {
   templateUrl: './nueva-venta.component.html',
   styleUrl: './nueva-venta.component.scss',
   providers: [provideTranslocoScope('pos'), provideTranslocoScope('recetas-medicas')],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, MaterialModule, PageHeaderComponent, PermisoDirective],
 })
 export class NuevaVentaComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -182,7 +183,6 @@ export class NuevaVentaComponent implements OnInit {
   // Registered prescription of the selected customer, attached to every sale line (the backend enforces it per product)
   readonly recetaOptions = signal<RecetaListItem[]>([]);
   readonly selectedRecetaId = signal<string>('');
-  readonly puedeRegistrarReceta = computed(() => this.authService.hasPermission('Recetas', 'Crear'));
 
   // Company rule mirrored from the backend; strict until it loads, and strict when it cannot be read
   readonly exigirRegistroReceta = signal(true);

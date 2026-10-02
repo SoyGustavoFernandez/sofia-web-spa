@@ -6,6 +6,7 @@ import { MaterialModule } from '@shared/material.module';
 import { ComprobanteDto, estadoComprobanteKey } from '../../models/venta.model';
 import { tipoDocumentoKey } from '@shared/utils/tipo-documento.util';
 import { ReceiptPrintService } from '../../services/receipt-print.service';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 const NUMERO_CLIENTE_EVENTUAL = '00000000';
 
@@ -40,7 +41,7 @@ export interface ComprobanteDialogData {
   templateUrl: './comprobante-dialog.component.html',
   styleUrl: './comprobante-dialog.component.scss',
   providers: [provideTranslocoScope('pos')],
-  imports: [CommonModule, MatDialogActions, MatDialogContent, MatDialogTitle, MaterialModule, TranslocoModule],
+  imports: [CommonModule, MatDialogActions, MatDialogContent, MatDialogTitle, MaterialModule, TranslocoModule, PermisoDirective],
 })
 export class ComprobanteDialogComponent {
   private readonly transloco = inject(TranslocoService);

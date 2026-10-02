@@ -10,6 +10,7 @@ import { SearchStateService } from '@core/services/shared/search-state.service';
 import { CuentaService } from '../services/cuenta.service';
 import { CuentaDto, SearchCuentaParams } from '../models/cuenta.model';
 import { PageEvent } from '@angular/material/paginator';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-cuentas-search',
@@ -23,6 +24,7 @@ import { PageEvent } from '@angular/material/paginator';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class CuentasSearchComponent implements OnInit {

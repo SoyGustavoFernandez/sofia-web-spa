@@ -16,6 +16,7 @@ import { SucursalService } from '../../sucursales/services/sucursal.service';
 import { SucursalPermitida } from '../../sucursales/models/sucursal.model';
 import { LoteService } from '../../lotes/services/lote.service';
 import { Lote } from '../../lotes/models/lote.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-stock-detail',
@@ -34,6 +35,7 @@ import { Lote } from '../../lotes/models/lote.model';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class StockDetailComponent implements OnInit {

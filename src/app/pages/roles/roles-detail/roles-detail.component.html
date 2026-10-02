@@ -23,7 +23,11 @@
               </div>
             </div>
             <div class="d-flex gap-2">
-              <button mat-flat-button color="primary" (click)="enterEditMode()">
+              <button
+                *appPermiso="'Actualizar'"
+                mat-flat-button
+                color="primary"
+                (click)="enterEditMode()">
                 {{ 'actions.edit' | transloco }}
               </button>
             </div>
@@ -210,7 +214,9 @@
                                 areSomeSelected(group.modulo, group.acciones) &&
                                 !areAllSelected(group.modulo, group.acciones)
                               "
-                              [disabled]="!isEditMode()"
+                              [disabled]="
+                                !isEditMode() || !puedeGestionarPermisos()
+                              "
                               (change)="
                                 toggleModulo(group.modulo, group.acciones)
                               "
@@ -233,7 +239,9 @@
                                 [checked]="
                                   isPermisoActivo(group.modulo, accion)
                                 "
-                                [disabled]="!isEditMode()"
+                                [disabled]="
+                                  !isEditMode() || !puedeGestionarPermisos()
+                                "
                                 (change)="togglePermiso(group.modulo, accion)">
                                 {{ accionLabel(accion) }}
                               </mat-checkbox>
@@ -264,7 +272,9 @@
                       <div class="col-md-6 col-12">
                         <mat-checkbox
                           [checked]="sucursal.asignada"
-                          [disabled]="!isEditMode()"
+                          [disabled]="
+                            !isEditMode() || !puedeGestionarPermisos()
+                          "
                           (change)="toggleSucursal(sucursal.id)">
                           {{ sucursal.nombre }}
                         </mat-checkbox>
@@ -294,6 +304,7 @@
                 }
               </button>
               <button
+                *appPermiso="'Eliminar'"
                 mat-flat-button
                 class="sofia-btn-delete"
                 (click)="confirmDelete()"

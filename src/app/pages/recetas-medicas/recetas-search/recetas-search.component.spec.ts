@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
+import { stubRouterUrl } from '@shared/testing/router-url-stub';
 import { AuthService, UserPermission } from '@core/auth/auth.service';
 import { RecetasSearchComponent } from './recetas-search.component';
 
@@ -44,6 +45,7 @@ describe('RecetasSearchComponent', () => {
       ],
     }).compileComponents();
     httpMock = TestBed.inject(HttpTestingController);
+    stubRouterUrl('/recetas-medicas');
   });
 
   afterEach(() => httpMock.verify());
@@ -63,7 +65,6 @@ describe('RecetasSearchComponent', () => {
     const fixture = TestBed.createComponent(RecetasSearchComponent);
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.puedeEscanear()).toBeFalse();
     expect(scanButton(fixture)).toBeUndefined();
   });
 

@@ -11,11 +11,13 @@ import { MaterialModule } from '@shared/material.module';
 import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-header/page-header.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
+import { AuthService } from '@core/auth/auth.service';
 import { grantsPermission, routeModule } from '@core/auth/route-permissions';
 import { navItems } from '@matdash/layouts/full/vertical/sidebar/sidebar-data';
 import { RolService } from '../services/rol.service';
 import { RolResponse, PermisoCatalogGroup, PermisoRolDto, SucursalRolItem } from '../models/rol.model';
 import { buildMenuPreview } from '../models/menu-preview';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-roles-detail',
@@ -29,6 +31,7 @@ import { buildMenuPreview } from '../models/menu-preview';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class RolesDetailComponent implements OnInit {
@@ -39,6 +42,10 @@ export class RolesDetailComponent implements OnInit {
   private readonly transloco = inject(TranslocoService);
   private readonly notifier = inject(ErrorNotifierService);
   private readonly dialog = inject(MatDialog);
+  private readonly auth = inject(AuthService);
+
+  // Mirrors [HasPermission("Seguridad", "GestionarPermisos")]: without it permissions and branches stay read-only
+  readonly puedeGestionarPermisos = computed(() => this.auth.hasPermission('Seguridad', 'GestionarPermisos'));
 
   readonly isNew = signal(false);
   readonly isEditMode = signal(false);
@@ -277,8 +284,8 @@ export class RolesDetailComponent implements OnInit {
     } else {
       const ids = this.sucursales().filter(s => s.asignada).map(s => s.id);
       this.service.update(this.entityId!, { descripcion, nivelJerarquia }).pipe(
-        switchMap(() => this.service.setSucursales(this.entityId!, ids)),
-        switchMap(() => this.buildPermisosObs())
+        switchMap(() => this.puedeGestionarPermisos() ? this.service.setSucursales(this.entityId!, ids) : of(undefined)),
+        switchMap(() => this.puedeGestionarPermisos() ? this.buildPermisosObs() : of(undefined))
       ).subscribe({
         next: () => {
           this.notifier.showSuccess(this.transloco.translate('roles.detail.save-success'));

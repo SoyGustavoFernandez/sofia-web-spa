@@ -17,6 +17,7 @@ import { LaboratorioService } from '../../laboratorios/services/laboratorio.serv
 import { LaboratorioListItem } from '../../laboratorios/models/laboratorio.model';
 import { UnidadMedidaService } from '../../unidades-medida/services/unidad-medida.service';
 import { UnidadMedidaListItem } from '../../unidades-medida/models/unidad-medida.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-medicamentos-search',
@@ -30,6 +31,7 @@ import { UnidadMedidaListItem } from '../../unidades-medida/models/unidad-medida
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class MedicamentosSearchComponent implements OnInit {

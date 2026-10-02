@@ -11,6 +11,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { ProfesionalSaludService } from '../services/profesional-salud.service';
 import { ProfesionalSaludDetail } from '../models/profesional-salud.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'ProfesionalSalud.NumeroRegistro.Duplicado': 'profesionalesSalud.detail.duplicate-registro',
@@ -28,6 +29,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class ProfesionalesSaludDetailComponent implements OnInit {

@@ -23,6 +23,7 @@ import { MedicamentoService } from '../../medicamentos/services/medicamento.serv
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
 import { UnidadMedidaService } from '../../unidades-medida/services/unidad-medida.service';
 import { UnidadMedidaListItem } from '../../unidades-medida/models/unidad-medida.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 interface Ref {
   id: string;
@@ -41,6 +42,7 @@ interface Ref {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class JerarquiasDetailComponent implements OnInit {

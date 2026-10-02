@@ -18,6 +18,7 @@ import { MedicamentoService } from '../../medicamentos/services/medicamento.serv
 import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model';
 import { UnidadMedidaService } from '../../unidades-medida/services/unidad-medida.service';
 import { UnidadMedidaListItem } from '../../unidades-medida/models/unidad-medida.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-jerarquias-search',
@@ -32,6 +33,7 @@ import { UnidadMedidaListItem } from '../../unidades-medida/models/unidad-medida
     MaterialModule,
     PageHeaderComponent,
     RangeSliderFieldComponent,
+    PermisoDirective,
   ],
 })
 export class JerarquiasSearchComponent implements OnInit {

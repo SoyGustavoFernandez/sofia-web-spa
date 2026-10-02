@@ -10,6 +10,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { ProfesionalSaludService } from '../services/profesional-salud.service';
 import { ProfesionalSaludListItem } from '../models/profesional-salud.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 @Component({
   selector: 'app-profesionales-salud-search',
   standalone: true,
@@ -22,6 +23,7 @@ import { ProfesionalSaludListItem } from '../models/profesional-salud.model';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class ProfesionalesSaludSearchComponent implements OnInit {

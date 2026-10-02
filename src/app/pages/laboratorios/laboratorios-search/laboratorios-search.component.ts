@@ -10,6 +10,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { SearchStateService } from '@core/services/shared/search-state.service';
 import { LaboratorioService } from '../services/laboratorio.service';
 import { LaboratorioListItem } from '../models/laboratorio.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-laboratorios-search',
@@ -23,6 +24,7 @@ import { LaboratorioListItem } from '../models/laboratorio.model';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class LaboratoriosSearchComponent implements OnInit {

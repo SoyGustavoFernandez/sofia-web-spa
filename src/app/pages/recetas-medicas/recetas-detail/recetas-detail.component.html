@@ -151,8 +151,9 @@
 
         <div class="d-flex justify-content-between align-items-center mt-3">
           <div>
-            @if (!isNew() && puedeEliminar()) {
+            @if (!isNew()) {
               <button
+                *appPermiso="'Eliminar'"
                 mat-flat-button
                 class="sofia-btn-delete"
                 (click)="eliminar()"
@@ -197,7 +198,11 @@
               {{ 'generic-labels.detail-subtitle' | transloco }}
             </div>
           </div>
-          <button mat-flat-button color="primary" (click)="startEdit()">
+          <button
+            *appPermiso="'Actualizar'"
+            mat-flat-button
+            color="primary"
+            (click)="startEdit()">
             {{ 'actions.edit' | transloco }}
           </button>
         </div>

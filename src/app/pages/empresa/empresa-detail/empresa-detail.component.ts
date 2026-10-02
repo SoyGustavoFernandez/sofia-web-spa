@@ -8,6 +8,7 @@ import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-hea
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { EmpresaService } from '../services/empresa.service';
 import { EmpresaDto, EstadoEmpresa } from '../models/empresa.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-empresa-detail',
@@ -21,6 +22,7 @@ import { EmpresaDto, EstadoEmpresa } from '../models/empresa.model';
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class EmpresaDetailComponent implements OnInit {

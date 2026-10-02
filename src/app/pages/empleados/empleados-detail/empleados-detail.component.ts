@@ -23,6 +23,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
 };
 import { SucursalService } from '../../sucursales/services/sucursal.service';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 interface Ref {
   id: string;
@@ -41,6 +42,7 @@ interface Ref {
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class EmpleadosDetailComponent implements OnInit {

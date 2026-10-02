@@ -11,6 +11,7 @@ import { SearchStateService } from '@core/services/shared/search-state.service';
 import { RolService } from '../services/rol.service';
 import { RolResponse, SearchRolParams } from '../models/rol.model';
 import { PageEvent } from '@angular/material/paginator';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-roles-search',
@@ -25,6 +26,7 @@ import { PageEvent } from '@angular/material/paginator';
     MaterialModule,
     PageHeaderComponent,
     RangeSliderFieldComponent,
+    PermisoDirective,
   ],
 })
 export class RolesSearchComponent implements OnInit {

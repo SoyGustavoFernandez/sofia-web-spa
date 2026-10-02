@@ -16,7 +16,11 @@
           </div>
         </div>
         <div>
-          <button mat-flat-button color="primary" (click)="goToNew()">
+          <button
+            *appPermiso="'Actualizar'"
+            mat-flat-button
+            color="primary"
+            (click)="goToNew()">
             <mat-icon>add</mat-icon>
             {{ 'actions.new' | transloco }}
           </button>

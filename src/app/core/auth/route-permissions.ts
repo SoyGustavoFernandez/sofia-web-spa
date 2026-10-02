@@ -25,12 +25,18 @@ export const ROUTE_PERMISSIONS: Readonly<Record<string, string>> = {
   'series-fiscales': 'SeriesFiscales',
 };
 
-// Nested routes that need one more action besides reading their module; keyed by their first two segments
+// Nested routes whose extra action is not the create rule below; keyed by their first two segments
 export const ROUTE_ACTIONS: Readonly<Record<string, string>> = {
   'recetas-medicas/escanear': 'Analizar',
+  'sesiones-caja/nueva': 'AperturarCaja',
+  'stock-por-sucursal/nueva': 'Actualizar',
 };
 
+// Second segments that open the create form or the bulk import of any mapped route
+export const CREATE_SEGMENTS: readonly string[] = ['nueva', 'nuevo', 'carga-masiva'];
+
 export const READ_ACTION = 'Leer';
+export const CREATE_ACTION = 'Crear';
 
 export interface PermissionGrant {
   modulo: string;
@@ -61,7 +67,8 @@ export function routeModule(url: string): string | undefined {
 // Extra action the route needs on top of Leer, or undefined when reading the module is enough
 export function routeAction(url: string): string | undefined {
   const [first, second] = pathSegments(url);
-  return ROUTE_ACTIONS[`${first}/${second}`];
+  if (!first || !second || !ROUTE_PERMISSIONS[first]) return undefined;
+  return ROUTE_ACTIONS[`${first}/${second}`] ?? (CREATE_SEGMENTS.includes(second) ? CREATE_ACTION : undefined);
 }
 
 // Path segments without query, fragment or matrix parameters, so /roles;x=1 still resolves to roles

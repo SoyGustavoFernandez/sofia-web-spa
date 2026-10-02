@@ -12,6 +12,7 @@ import { PresentacionVentaService } from '../services/presentacion-venta.service
 import { PresentacionVenta } from '../models/presentacion-venta.model';
 import { JerarquiaUoMService } from '../../jerarquias/services/jerarquia-uom.service';
 import { UnidadVendible } from '../../jerarquias/models/jerarquia-uom.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 export interface PresentacionesVentaModalData {
   productoId: string;
@@ -24,7 +25,7 @@ export interface PresentacionesVentaModalData {
   standalone: true,
   templateUrl: './presentaciones-venta-modal.component.html',
   providers: [provideTranslocoScope('presentaciones-venta')],
-  imports: [CommonModule, ReactiveFormsModule, TranslocoModule, MaterialModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslocoModule, MaterialModule, PermisoDirective],
 })
 export class PresentacionesVentaModalComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

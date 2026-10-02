@@ -5,6 +5,7 @@ import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/route
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
+import { stubRouterUrl } from '@shared/testing/router-url-stub';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { AuthService, UserPermission } from '@core/auth/auth.service';
 import { RecetasDetailComponent } from './recetas-detail.component';
@@ -225,6 +226,7 @@ describe('RecetasDetailComponent — delete permission', () => {
 
   function editExisting(permisos: UserPermission[]) {
     const { fixture, httpMock } = setup({ id: 'rec-1' });
+    stubRouterUrl('/recetas-medicas/rec-1');
     TestBed.inject(AuthService).loadPermissions().subscribe();
     httpMock.expectOne(ME).flush({ roles: ['Cajero'], permisos });
     fixture.detectChanges();

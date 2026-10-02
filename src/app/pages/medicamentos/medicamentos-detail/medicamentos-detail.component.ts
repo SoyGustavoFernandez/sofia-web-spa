@@ -23,6 +23,7 @@ import { LaboratorioListItem } from '../../laboratorios/models/laboratorio.model
 import { UnidadMedidaService } from '../../unidades-medida/services/unidad-medida.service';
 import { UnidadMedidaListItem } from '../../unidades-medida/models/unidad-medida.model';
 import { PresentacionesVentaModalComponent } from '../../presentaciones-venta/presentaciones-venta-modal/presentaciones-venta-modal.component';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 @Component({
   selector: 'app-medicamentos-detail',
@@ -36,6 +37,7 @@ import { PresentacionesVentaModalComponent } from '../../presentaciones-venta/pr
     TranslocoModule,
     MaterialModule,
     PageHeaderComponent,
+    PermisoDirective,
   ],
 })
 export class MedicamentosDetailComponent implements OnInit {

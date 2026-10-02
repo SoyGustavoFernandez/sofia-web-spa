@@ -8,6 +8,8 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { environment } from '@environment/environment';
 import { activatedRouteStub } from '@shared/testing/activated-route-stub';
+import { providePermissions } from '@shared/testing/permissions-testing.providers';
+import { stubRouterUrl } from '@shared/testing/router-url-stub';
 import { AutocompleteInputComponent } from '@shared/components/autocomplete-input/autocomplete-input.component';
 import { CuentaDto } from '../models/cuenta.model';
 import { RolResponse } from '../../roles/models/rol.model';
@@ -36,7 +38,9 @@ function cuenta(overrides: Partial<CuentaDto> = {}): CuentaDto {
   };
 }
 
-function setup() {
+const ALL_PERMISSIONS = ['Seguridad:Leer', 'Seguridad:Actualizar', 'Seguridad:Eliminar', 'Seguridad:AsignarRoles'];
+
+function setup(permisos: string[] = ALL_PERMISSIONS) {
   TestBed.configureTestingModule({
     imports: [CuentasDetailComponent],
     providers: [
@@ -51,16 +55,18 @@ function setup() {
           preloadLangs: true,
         }),
       ),
+      providePermissions(permisos),
       { provide: ActivatedRoute, useValue: activatedRouteStub({ id: 'cta-1' }) },
     ],
   });
+  stubRouterUrl('/cuentas/cta-1');
   const fixture = TestBed.createComponent(CuentasDetailComponent);
   const httpMock = TestBed.inject(HttpTestingController);
   return { fixture, httpMock, component: fixture.componentInstance };
 }
 
-function loadWith(data: CuentaDto) {
-  const ctx = setup();
+function loadWith(data: CuentaDto, permisos?: string[]) {
+  const ctx = setup(permisos);
   ctx.fixture.detectChanges();
   ctx.httpMock.expectOne(`${BASE}/cta-1`).flush(data);
   ctx.fixture.detectChanges();
@@ -139,6 +145,58 @@ describe('CuentasDetailComponent — roles', () => {
     httpMock.expectNone(r => r.url.includes('/roles/'));
     httpMock.expectOne(`${BASE}/cta-1`).flush(cuenta({ roles: [CAJERO] }));
     expect(component.isEditMode()).toBeFalse();
+  });
+});
+
+describe('CuentasDetailComponent — action buttons', () => {
+  function labels(fixture: ReturnType<typeof setup>['fixture']): string[] {
+    return Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button')).map(b => b.textContent?.trim() ?? '');
+  }
+
+  it('hides Editar from a user who can only read accounts', () => {
+    const { fixture } = loadWith(cuenta({ roles: [CAJERO] }), ['Seguridad:Leer']);
+
+    expect(labels(fixture)).not.toContain('actions.edit');
+  });
+
+  it('offers Editar with Seguridad:Actualizar and Eliminar only with Seguridad:Eliminar', () => {
+    const { fixture, component } = loadWith(cuenta({ roles: [CAJERO] }), ['Seguridad:Leer', 'Seguridad:Actualizar']);
+    expect(labels(fixture)).toContain('actions.edit');
+
+    component.enterEditMode();
+    fixture.detectChanges();
+
+    expect(labels(fixture)).toContain('actions.save');
+    expect((fixture.nativeElement as HTMLElement).querySelector('.sofia-btn-delete')).toBeNull();
+    TestBed.resetTestingModule();
+
+    const conEliminar = loadWith(cuenta({ roles: [CAJERO] }), ['Seguridad:Leer', 'Seguridad:Actualizar', 'Seguridad:Eliminar']);
+    conEliminar.component.enterEditMode();
+    conEliminar.fixture.detectChanges();
+
+    expect((conEliminar.fixture.nativeElement as HTMLElement).querySelector('.sofia-btn-delete')).not.toBeNull();
+  });
+
+  it('keeps the role read-only while editing without Seguridad:AsignarRoles', () => {
+    const { fixture, component } = loadWith(cuenta({ roles: [CAJERO] }), ['Seguridad:Leer', 'Seguridad:Actualizar']);
+
+    component.enterEditMode();
+    fixture.detectChanges();
+
+    const disabledValues = fixture.debugElement.queryAll(By.css('input[disabled]')).map(i => (i.nativeElement as HTMLInputElement).value);
+    expect(fixture.debugElement.queryAll(By.directive(AutocompleteInputComponent)).length).toBe(1);
+    expect(disabledValues).toContain('Cajero');
+  });
+
+  it('offers the role picker while editing with Seguridad:AsignarRoles', () => {
+    const { fixture, component } = loadWith(cuenta({ roles: [CAJERO] }));
+
+    component.enterEditMode();
+    fixture.detectChanges();
+
+    const autocompletes = fixture.debugElement.queryAll(By.directive(AutocompleteInputComponent));
+    expect(autocompletes.length).toBe(2);
+    expect((autocompletes[0].componentInstance as AutocompleteInputComponent<RolResponse>).initialText).toBe('Cajero');
   });
 });
 

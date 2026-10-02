@@ -11,11 +11,13 @@ import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-hea
 import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { AutocompleteInputComponent } from '@shared/components/autocomplete-input/autocomplete-input.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
+import { AuthService } from '@core/auth/auth.service';
 import { CuentaService } from '../services/cuenta.service';
 import { CuentaDto, EmpleadoItem } from '../models/cuenta.model';
 import { RolService } from '../../roles/services/rol.service';
 import { RolResponse } from '../../roles/models/rol.model';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';
+import { PermisoDirective } from '@shared/directives/permiso.directive';
 
 // Backend business-rule codes that have a specific message instead of the generic error
 const ERROR_KEYS: Record<string, string> = {
@@ -39,6 +41,7 @@ const ERROR_KEYS: Record<string, string> = {
     MaterialModule,
     PageHeaderComponent,
     AutocompleteInputComponent,
+    PermisoDirective,
   ],
 })
 export class CuentasDetailComponent implements OnInit {
@@ -50,6 +53,10 @@ export class CuentasDetailComponent implements OnInit {
   private readonly transloco = inject(TranslocoService);
   private readonly notifier = inject(ErrorNotifierService);
   private readonly dialog = inject(MatDialog);
+  private readonly auth = inject(AuthService);
+
+  // Mirrors [HasPermission("Seguridad", "AsignarRoles")]: without it the role stays read-only while editing
+  readonly puedeAsignarRoles = computed(() => this.auth.hasPermission('Seguridad', 'AsignarRoles'));
 
   readonly isNew = signal(false);
   readonly isEditMode = signal(false);
