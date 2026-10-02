@@ -10,7 +10,7 @@ export interface Empleado {
   sucursal_Base_ID: string;
   nombres: string;
   apellido_Paterno: string;
-  apellido_Materno: string;
+  apellido_Materno: string | null;
   nombre_Completo: string;
   licencia_Prof: string | null;
   email: string | null;
@@ -31,7 +31,7 @@ export interface CreateEmpleadoRequest {
   sucursal_Base_ID: string;
   nombres: string;
   apellido_Paterno: string;
-  apellido_Materno: string;
+  apellido_Materno: string | null;
   licencia_Prof?: string;
   email?: string;
 }

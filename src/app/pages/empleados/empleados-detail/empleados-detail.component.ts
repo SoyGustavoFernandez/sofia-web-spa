@@ -71,7 +71,7 @@ export class EmpleadosDetailComponent implements OnInit {
   readonly form = this.fb.group({
     nombres: ['', [Validators.required, Validators.maxLength(75)]],
     apellidoPaterno: ['', [Validators.required, Validators.maxLength(75)]],
-    apellidoMaterno: ['', [Validators.required, Validators.maxLength(75)]],
+    apellidoMaterno: ['', [Validators.maxLength(75)]],
     licencia: ['', [Validators.maxLength(50)]],
     email: ['', [Validators.email, Validators.maxLength(254)]],
   });
@@ -130,7 +130,7 @@ export class EmpleadosDetailComponent implements OnInit {
     this.form.patchValue({
       nombres: s.nombres,
       apellidoPaterno: s.apellido_Paterno,
-      apellidoMaterno: s.apellido_Materno,
+      apellidoMaterno: s.apellido_Materno ?? '',
       licencia: s.licencia_Prof ?? '',
       email: s.email ?? '',
     });
@@ -179,7 +179,7 @@ export class EmpleadosDetailComponent implements OnInit {
       sucursal_Base_ID: this.selectedSucursal()!.id,
       nombres: v.nombres!,
       apellido_Paterno: v.apellidoPaterno!,
-      apellido_Materno: v.apellidoMaterno!,
+      apellido_Materno: v.apellidoMaterno?.trim() || null,
       licencia_Prof: v.licencia ? v.licencia : undefined,
       email: v.email?.trim() ? v.email.trim() : undefined,
     };
