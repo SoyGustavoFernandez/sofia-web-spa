@@ -1,105 +1,91 @@
 {
-  "title": "Panel de Control Operativo",
-  "home": {
-    "welcomeTitle": "Bienvenido a SOFIA",
-    "welcomeSubtitle": "Sistema Optimizado Farmacéutico con Inteligencia Artificial",
-    "welcomeText": "Desde aquí puedes navegar por los distintos módulos de la plataforma usando el menú lateral.",
-    "cards": {
-      "pos": {
-        "title": "POS / Ventas",
-        "description": "Punto de venta y caja rápida"
-      },
-      "inventario": {
-        "title": "Inventario & Lotes",
-        "description": "Control de stock y vencimientos"
-      },
-      "recetas": {
-        "title": "Recetas Médicas",
-        "description": "Digitalización y análisis con IA"
-      }
-    }
+  "loading": "Cargando",
+  "header": {
+    "greeting": "Hola, {{nombre}}",
+    "welcome": "Bienvenido a SOFIA",
+    "subtitle": "Este es el resumen de hoy.",
+    "updatedAt": "Actualizado a las {{hora}}",
+    "refresh": "Actualizar",
+    "noSections": "Tu usuario no tiene indicadores disponibles aquí. Usa el menú lateral para ir a tus módulos.",
+    "permissionsError": "No se pudieron cargar tus permisos."
   },
-  "actions": {
-    "viewServices": "Ver Agenda de Servicios",
-    "viewInventory": "Ver Lotes de Inventario",
-    "viewMedicaments": "Ver Catálogo Medicamentos",
-    "viewPOS": "Ver Caja POS",
-    "viewRecetas": "Ver Recetas",
-    "viewProveedores": "Ver Proveedores",
-    "viewSucursales": "Ver Sucursales",
-    "notificar": "NOTIFICAR"
+  "error": {
+    "section": "No se pudo cargar esta sección.",
+    "retry": "Reintentar"
   },
-  "kpi": {
-    "ventasHoy": "Ventas de Hoy",
-    "ventasMes": "Ventas del Mes",
-    "ticketPromedio": "Ticket Promedio",
-    "transacciones": "Transacciones Hoy"
+  "ventas": {
+    "title": "Ventas de hoy",
+    "soldToday": "Vendido hoy",
+    "vsYesterday": "vs. ayer",
+    "yesterday": "Ayer",
+    "receipts": "Comprobantes",
+    "avgTicket": "Ticket promedio",
+    "mine": "Mis ventas de hoy",
+    "receiptsCount": "{{count}} comprobantes",
+    "parked": "Ventas en espera",
+    "parkedAmount": "Por cobrar",
+    "linkToday": "Ver ventas de hoy",
+    "linkMine": "Ver mis ventas",
+    "linkParked": "Ver ventas en espera",
+    "byMethod": "Cobrado por método de pago",
+    "byMethodHint": "El efectivo ya descuenta el vuelto entregado.",
+    "byBranch": "Ventas por sucursal",
+    "colBranch": "Sucursal",
+    "colReceipts": "Comprobantes",
+    "colSold": "Vendido",
+    "totalCompany": "Total empresa",
+    "totalBranches": "Total de tus sucursales",
+    "grossHint": "Los montos vendidos son brutos: las devoluciones se muestran aparte."
   },
-  "pos": {
-    "title": "Estado de Caja POS & Distribución de Pagos",
-    "statusOpen": "Caja Abierta",
-    "statusClosed": "Caja Cerrada",
-    "efectivo": "Efectivo",
-    "yapePlin": "Yape / Plin",
-    "tarjeta": "Tarjeta Débito/Crédito"
+  "metodo": {
+    "Efectivo": "Efectivo",
+    "YapePlin": "Yape / Plin",
+    "Tarjeta": "Tarjeta",
+    "Transferencia": "Transferencia"
   },
-  "citas": {
-    "title": "Programaciones del Día",
-    "colPaciente": "Paciente / Cliente",
-    "colServicio": "Servicio / Producto",
-    "colHora": "Hora Programada",
-    "colEstado": "Estado",
-    "colAcciones": "Acciones",
-    "noData": "No hay citas programadas para el día de hoy."
+  "caja": {
+    "title": "Caja",
+    "open": "Tienes una caja abierta",
+    "none": "No tienes una caja abierta",
+    "branch": "Sucursal",
+    "since": "Abierta desde",
+    "opening": "Monto de apertura",
+    "expected": "Efectivo esperado",
+    "linkMine": "Ver mi caja",
+    "linkOpen": "Abrir caja",
+    "openSessions": "Cajas abiertas",
+    "colCashier": "Cajero",
+    "colBranch": "Sucursal",
+    "colSince": "Abierta desde",
+    "linkOpenSessions": "Ver cajas abiertas"
   },
-  "lotes": {
-    "title": "Lotes por Vencer",
-    "colProducto": "Producto / Medicamento",
-    "colLote": "Nº Lote",
-    "colFechaCaducidad": "Fecha Caducidad",
-    "noData": "No existen lotes próximos a vencer en los siguientes 30 días."
+  "inventario": {
+    "title": "Inventario",
+    "expired": "Lotes vencidos con stock",
+    "expiring30": "Lotes que vencen en 30 días o menos",
+    "expiring60": "Lotes que vencen en 31 a 60 días",
+    "expiring90": "Lotes que vencen en 61 a 90 días",
+    "outOfStock": "Productos sin stock",
+    "lowStock": "Productos con stock bajo",
+    "lowStockHint": "{{umbral}} unidades o menos, por sucursal",
+    "perBranchHint": "Sin unidades vendibles, por sucursal",
+    "quarantine": "Lotes en cuarentena",
+    "quarantineHint": "Retenidos: no se pueden vender",
+    "linkLots": "Ver lotes"
   },
-  "stock": {
-    "title": "Bajo Stock",
-    "colProducto": "Medicamento / Insumo",
-    "colCodigo": "Código",
-    "colStock": "Stock Actual",
-    "noData": "No hay medicamentos con alertas de bajo stock."
+  "tendencia": {
+    "title": "Ventas de los últimos 7 días",
+    "today": "Hoy",
+    "barAria": "{{dia}}: S/ {{monto}} en {{comprobantes}} comprobantes"
   },
-  "recetas": {
-    "title": "Recetas Pendientes de Despacho",
-    "colPaciente": "Paciente",
-    "colMedico": "Médico Prescriptor",
-    "colFecha": "Fecha Emisión",
-    "colEstado": "Estado Despacho",
-    "noData": "No hay recetas pendientes de despacho."
+  "top": {
+    "title": "Productos más vendidos en 7 días",
+    "units": "unidades",
+    "empty": "Aún no hay ventas en los últimos 7 días."
   },
-  "topProducts": {
-    "title": "Top Rotación de Medicamentos",
-    "colProducto": "Medicamento / Insumo",
-    "colCategoria": "Condición Venta",
-    "colVendidos": "Rotación",
-    "noData": "No hay medicamentos registrados en el ranking de rotación."
-  },
-  "sucursalesSales": {
-    "title": "Resumen de Ventas por Sucursal",
-    "colSucursal": "Sucursal / Sede",
-    "colLicencia": "Licencia",
-    "colVentas": "Ventas de Hoy (S/)",
-    "noData": "No hay sucursales registradas en el sistema."
-  },
-  "delivery": {
-    "title": "Despachos Delivery del Día",
-    "colCliente": "Cliente / Dirección",
-    "colRepartidor": "Repartidor",
-    "colHora": "Hora Salida",
-    "colEstado": "Estado Envío",
-    "noData": "No hay entregas por delivery agendadas para hoy."
-  },
-  "notifications": {
-    "whatsappOpened": "Abriendo WhatsApp para enviar recordatorio de cita a {{name}}.",
-    "whatsappMessageTemplate": "Estimado(a) {{paciente}}, le recordamos su cita para el servicio '{{servicio}}' programada para el día de hoy a las {{hora}}. Por favor acérquese a nuestra sucursal - Boticas Multifer.",
-    "defaultPaciente": "Estimado(a) Paciente",
-    "defaultServicio": "Servicio Programado"
+  "devoluciones": {
+    "title": "Devoluciones de hoy",
+    "count": "Devoluciones",
+    "refunded": "Monto reembolsado"
   }
 }

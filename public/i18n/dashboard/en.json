@@ -1,105 +1,91 @@
 {
-  "title": "Operational Dashboard",
-  "home": {
-    "welcomeTitle": "Welcome to SOFIA",
-    "welcomeSubtitle": "Optimized Pharmaceutical System with Artificial Intelligence",
-    "welcomeText": "From here you can navigate through the platform's modules using the side menu.",
-    "cards": {
-      "pos": {
-        "title": "POS / Sales",
-        "description": "Point of sale and quick checkout"
-      },
-      "inventario": {
-        "title": "Inventory & Batches",
-        "description": "Stock and expiry control"
-      },
-      "recetas": {
-        "title": "Prescriptions",
-        "description": "Digitization and AI analysis"
-      }
-    }
+  "loading": "Loading",
+  "header": {
+    "greeting": "Hello, {{nombre}}",
+    "welcome": "Welcome to SOFIA",
+    "subtitle": "This is today's summary.",
+    "updatedAt": "Updated at {{hora}}",
+    "refresh": "Refresh",
+    "noSections": "Your user has no indicators available here. Use the side menu to go to your modules.",
+    "permissionsError": "Your permissions could not be loaded."
   },
-  "actions": {
-    "viewServices": "View Services Schedule",
-    "viewInventory": "View Inventory Batches",
-    "viewMedicaments": "View Product Catalog",
-    "viewPOS": "View POS Register",
-    "viewRecetas": "View Prescriptions",
-    "viewProveedores": "View Suppliers",
-    "viewSucursales": "View Branches",
-    "notificar": "NOTIFY"
+  "error": {
+    "section": "This section could not be loaded.",
+    "retry": "Retry"
   },
-  "kpi": {
-    "ventasHoy": "Today's Sales",
-    "ventasMes": "Monthly Sales",
-    "ticketPromedio": "Average Ticket",
-    "transacciones": "Transactions Today"
+  "ventas": {
+    "title": "Today's sales",
+    "soldToday": "Sold today",
+    "vsYesterday": "vs. yesterday",
+    "yesterday": "Yesterday",
+    "receipts": "Receipts",
+    "avgTicket": "Average ticket",
+    "mine": "My sales today",
+    "receiptsCount": "{{count}} receipts",
+    "parked": "Parked sales",
+    "parkedAmount": "To be collected",
+    "linkToday": "View today's sales",
+    "linkMine": "View my sales",
+    "linkParked": "View parked sales",
+    "byMethod": "Collected by payment method",
+    "byMethodHint": "Cash is already net of the change given.",
+    "byBranch": "Sales by branch",
+    "colBranch": "Branch",
+    "colReceipts": "Receipts",
+    "colSold": "Sold",
+    "totalCompany": "Company total",
+    "totalBranches": "Total of your branches",
+    "grossHint": "Amounts sold are gross: returns are shown separately."
   },
-  "pos": {
-    "title": "POS Cash Status & Payment Breakdown",
-    "statusOpen": "Register Open",
-    "statusClosed": "Register Closed",
-    "efectivo": "Cash",
-    "yapePlin": "Digital Yape / Plin",
-    "tarjeta": "Debit/Credit Card"
+  "metodo": {
+    "Efectivo": "Cash",
+    "YapePlin": "Yape / Plin",
+    "Tarjeta": "Card",
+    "Transferencia": "Bank transfer"
   },
-  "citas": {
-    "title": "Daily Schedule",
-    "colPaciente": "Patient / Client",
-    "colServicio": "Service / Product",
-    "colHora": "Scheduled Time",
-    "colEstado": "Status",
-    "colAcciones": "Actions",
-    "noData": "No appointments scheduled for today."
+  "caja": {
+    "title": "Cash register",
+    "open": "You have an open cash session",
+    "none": "You have no open cash session",
+    "branch": "Branch",
+    "since": "Open since",
+    "opening": "Opening amount",
+    "expected": "Expected cash",
+    "linkMine": "View my cash session",
+    "linkOpen": "Open cash session",
+    "openSessions": "Open cash sessions",
+    "colCashier": "Cashier",
+    "colBranch": "Branch",
+    "colSince": "Open since",
+    "linkOpenSessions": "View open cash sessions"
   },
-  "lotes": {
-    "title": "Expiring Batches",
-    "colProducto": "Product / Medicine",
-    "colLote": "Batch No.",
-    "colFechaCaducidad": "Expiration Date",
-    "noData": "No batches expiring within the next 30 days."
+  "inventario": {
+    "title": "Inventory",
+    "expired": "Expired lots with stock",
+    "expiring30": "Lots expiring in 30 days or less",
+    "expiring60": "Lots expiring in 31 to 60 days",
+    "expiring90": "Lots expiring in 61 to 90 days",
+    "outOfStock": "Products out of stock",
+    "lowStock": "Products with low stock",
+    "lowStockHint": "{{umbral}} units or less, per branch",
+    "perBranchHint": "No sellable units, per branch",
+    "quarantine": "Lots in quarantine",
+    "quarantineHint": "Retained: they cannot be sold",
+    "linkLots": "View lots"
   },
-  "stock": {
-    "title": "Low Stock",
-    "colProducto": "Medicine / Supply",
-    "colCodigo": "Code",
-    "colStock": "Current Stock",
-    "noData": "No medicines with low stock alerts."
+  "tendencia": {
+    "title": "Sales of the last 7 days",
+    "today": "Today",
+    "barAria": "{{dia}}: S/ {{monto}} in {{comprobantes}} receipts"
   },
-  "recetas": {
-    "title": "Pending Prescriptions",
-    "colPaciente": "Patient",
-    "colMedico": "Prescribing Doctor",
-    "colFecha": "Issue Date",
-    "colEstado": "Dispense Status",
-    "noData": "No pending prescriptions to dispense."
+  "top": {
+    "title": "Best-selling products in 7 days",
+    "units": "units",
+    "empty": "There are no sales in the last 7 days yet."
   },
-  "topProducts": {
-    "title": "Top Selling Products",
-    "colProducto": "Medicine / Item",
-    "colCategoria": "Sale Condition",
-    "colVendidos": "Rotation",
-    "noData": "No medicines registered in rotation ranking."
-  },
-  "sucursalesSales": {
-    "title": "Branch Sales Summary",
-    "colSucursal": "Branch / Location",
-    "colLicencia": "License",
-    "colVentas": "Today's Sales (S/)",
-    "noData": "No branches registered in system."
-  },
-  "delivery": {
-    "title": "Today's Deliveries",
-    "colCliente": "Client / Address",
-    "colRepartidor": "Courier",
-    "colHora": "Departure Time",
-    "colEstado": "Delivery Status",
-    "noData": "No delivery orders scheduled for today."
-  },
-  "notifications": {
-    "whatsappOpened": "Opening WhatsApp to send appointment reminder to {{name}}.",
-    "whatsappMessageTemplate": "Dear {{paciente}}, this is a reminder for your appointment for '{{servicio}}' scheduled for today at {{hora}}. Please visit our branch - Boticas Multifer.",
-    "defaultPaciente": "Dear Patient",
-    "defaultServicio": "Scheduled Service"
+  "devoluciones": {
+    "title": "Today's returns",
+    "count": "Returns",
+    "refunded": "Refunded amount"
   }
 }

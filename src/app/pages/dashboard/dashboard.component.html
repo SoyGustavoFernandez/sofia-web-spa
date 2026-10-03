@@ -1,0 +1,575 @@
+<ng-container *transloco="let t; scope: 'dashboard'; read: 'dashboard'">
+  <div class="sofia-page dash">
+    <!-- Header -->
+    <header class="dash-card dash-header">
+      <div class="dash-header__text">
+        <h2 class="dash-header__title">
+          {{
+            nombreUsuario()
+              ? t('header.greeting', { nombre: nombreUsuario() })
+              : t('header.welcome')
+          }}
+        </h2>
+        <p class="dash-header__subtitle">{{ t('header.subtitle') }}</p>
+      </div>
+      <div class="dash-header__actions">
+        @if (actualizado(); as momento) {
+          <span class="dash-muted" data-testid="actualizado">
+            {{ t('header.updatedAt', { hora: (momento | date: 'HH:mm') }) }}
+          </span>
+        }
+        <button
+          mat-stroked-button
+          type="button"
+          data-testid="actualizar"
+          [disabled]="cargando()"
+          (click)="actualizar()">
+          <mat-icon>refresh</mat-icon>
+          {{ t('header.refresh') }}
+        </button>
+      </div>
+      @if (permisosError()) {
+        <div class="dash-error" role="alert">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ t('header.permissionsError') }}</span>
+          <button mat-button type="button" (click)="cargarPermisos()">
+            {{ t('error.retry') }}
+          </button>
+        </div>
+      }
+      @if (sinSecciones()) {
+        <p class="dash-header__hint">{{ t('header.noSections') }}</p>
+      }
+    </header>
+
+    <!-- Sales today -->
+    @if (puedeVentas()) {
+      <section class="dash-section" data-seccion="ventas">
+        <h3 class="dash-section__title">{{ t('ventas.title') }}</h3>
+        @if (ventas().error) {
+          <div class="dash-card dash-error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ t('error.section') }}</span>
+            <button mat-button type="button" (click)="cargarVentas()">
+              {{ t('error.retry') }}
+            </button>
+          </div>
+        } @else if (ventas().datos; as v) {
+          <div class="dash-tiles">
+            <article class="dash-card dash-tile" data-testid="vendido-hoy">
+              <span class="dash-tile__label">{{ t('ventas.soldToday') }}</span>
+              <span class="dash-tile__value"
+                >S/ {{ v.hoy.monto | number: '1.2-2' }}</span
+              >
+              <span class="dash-tile__detail" data-testid="variacion">
+                @if (variacionAyer(); as variacion) {
+                  <mat-icon class="dash-inline-icon">{{
+                    variacion > 0 ? 'trending_up' : 'trending_down'
+                  }}</mat-icon>
+                  {{ variacion > 0 ? '+' : ''
+                  }}{{ variacion | number: '1.1-1' }}%
+                  {{ t('ventas.vsYesterday') }} ·
+                } @else if (variacionAyer() === 0) {
+                  <mat-icon class="dash-inline-icon">trending_flat</mat-icon>
+                  0% {{ t('ventas.vsYesterday') }} ·
+                }
+                {{ t('ventas.yesterday') }}: S/
+                {{ v.ayer.monto | number: '1.2-2' }}
+              </span>
+              @if (enlacesDeVentas()) {
+                <button
+                  mat-button
+                  type="button"
+                  class="dash-link"
+                  (click)="abrir(ventasDeHoy())">
+                  {{ t('ventas.linkToday') }}
+                </button>
+              }
+            </article>
+
+            <article class="dash-card dash-tile" data-testid="comprobantes">
+              <span class="dash-tile__label">{{ t('ventas.receipts') }}</span>
+              <span class="dash-tile__value">{{ v.hoy.comprobantes }}</span>
+              <span class="dash-tile__detail">
+                {{ t('ventas.avgTicket') }}: S/
+                {{ v.ticketPromedio | number: '1.2-2' }}
+              </span>
+            </article>
+
+            @if (v.mias; as mias) {
+              <article class="dash-card dash-tile" data-testid="mis-ventas">
+                <span class="dash-tile__label">{{ t('ventas.mine') }}</span>
+                <span class="dash-tile__value"
+                  >S/ {{ mias.monto | number: '1.2-2' }}</span
+                >
+                <span class="dash-tile__detail">{{
+                  t('ventas.receiptsCount', { count: mias.comprobantes })
+                }}</span>
+                @if (enlacesDeVentas()) {
+                  @if (empleadoId(); as id) {
+                    <button
+                      mat-button
+                      type="button"
+                      class="dash-link"
+                      (click)="abrir(misVentasDeHoy(id))">
+                      {{ t('ventas.linkMine') }}
+                    </button>
+                  }
+                }
+              </article>
+            }
+
+            <article class="dash-card dash-tile" data-testid="en-espera">
+              <span class="dash-tile__label">{{ t('ventas.parked') }}</span>
+              <span class="dash-tile__value">{{ v.pendientes.cantidad }}</span>
+              <span class="dash-tile__detail">
+                {{ t('ventas.parkedAmount') }}: S/
+                {{ v.pendientes.monto | number: '1.2-2' }}
+              </span>
+              @if (enlacesDeVentas()) {
+                <button
+                  mat-button
+                  type="button"
+                  class="dash-link"
+                  (click)="abrir(ventasEnEspera())">
+                  {{ t('ventas.linkParked') }}
+                </button>
+              }
+            </article>
+          </div>
+
+          <div class="dash-columns">
+            <article class="dash-card" data-testid="metodos-pago">
+              <h4 class="dash-card__title">{{ t('ventas.byMethod') }}</h4>
+              @for (fila of metodos(); track fila.metodo) {
+                <div class="dash-row">
+                  <div class="dash-row__head">
+                    <span>{{ t('metodo.' + MetodoPago[fila.metodo]) }}</span>
+                    <span class="dash-row__amount"
+                      >S/ {{ fila.monto | number: '1.2-2' }}</span
+                    >
+                  </div>
+                  <div class="dash-bar">
+                    <div
+                      class="dash-bar__fill"
+                      [style.width.%]="fila.proporcion"></div>
+                  </div>
+                </div>
+              }
+              <p class="dash-muted dash-card__hint">
+                {{ t('ventas.byMethodHint') }}
+              </p>
+            </article>
+
+            @if (v.multiSucursal) {
+              <article class="dash-card" data-testid="por-sucursal">
+                <h4 class="dash-card__title">{{ t('ventas.byBranch') }}</h4>
+                <div class="sofia-table-container">
+                  <table mat-table [dataSource]="v.porSucursal">
+                    <ng-container matColumnDef="nombre">
+                      <th mat-header-cell *matHeaderCellDef>
+                        {{ t('ventas.colBranch') }}
+                      </th>
+                      <td mat-cell *matCellDef="let fila">{{ fila.nombre }}</td>
+                      <td mat-footer-cell *matFooterCellDef>
+                        {{
+                          v.empresaCompleta
+                            ? t('ventas.totalCompany')
+                            : t('ventas.totalBranches')
+                        }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="comprobantes">
+                      <th mat-header-cell *matHeaderCellDef>
+                        {{ t('ventas.colReceipts') }}
+                      </th>
+                      <td mat-cell *matCellDef="let fila">
+                        {{ fila.comprobantes }}
+                      </td>
+                      <td mat-footer-cell *matFooterCellDef>
+                        {{ v.hoy.comprobantes }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="monto">
+                      <th mat-header-cell *matHeaderCellDef>
+                        {{ t('ventas.colSold') }}
+                      </th>
+                      <td mat-cell *matCellDef="let fila">
+                        S/ {{ fila.monto | number: '1.2-2' }}
+                      </td>
+                      <td mat-footer-cell *matFooterCellDef>
+                        S/ {{ v.hoy.monto | number: '1.2-2' }}
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasSucursal"></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let fila; columns: columnasSucursal"></tr>
+                    <tr
+                      mat-footer-row
+                      *matFooterRowDef="columnasSucursal"
+                      class="dash-total-row"></tr>
+                  </table>
+                </div>
+              </article>
+            }
+          </div>
+          <p class="dash-muted">{{ t('ventas.grossHint') }}</p>
+        } @else {
+          <div class="dash-card dash-loading">
+            <mat-spinner diameter="28" [attr.aria-label]="t('loading')" />
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Cash -->
+    @if (puedeCaja()) {
+      <section class="dash-section" data-seccion="caja">
+        <h3 class="dash-section__title">{{ t('caja.title') }}</h3>
+        @if (caja().error) {
+          <div class="dash-card dash-error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ t('error.section') }}</span>
+            <button mat-button type="button" (click)="cargarCaja()">
+              {{ t('error.retry') }}
+            </button>
+          </div>
+        } @else if (caja().datos; as c) {
+          <div class="dash-columns">
+            <article class="dash-card" data-testid="mi-caja">
+              @if (c.miSesion; as sesion) {
+                <p class="dash-status">
+                  <mat-icon class="dash-inline-icon">lock_open</mat-icon>
+                  {{ t('caja.open') }}
+                </p>
+                <dl class="dash-facts">
+                  <div>
+                    <dt>{{ t('caja.branch') }}</dt>
+                    <dd>{{ sesion.sucursalNombre }}</dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('caja.since') }}</dt>
+                    <dd>
+                      {{ sesion.fechaHoraApertura | date: 'dd/MM/yyyy HH:mm' }}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('caja.opening') }}</dt>
+                    <dd>
+                      S/ {{ sesion.montoAperturaEfectivo | number: '1.2-2' }}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('caja.expected') }}</dt>
+                    <dd data-testid="efectivo-esperado">
+                      S/ {{ sesion.efectivoEsperado | number: '1.2-2' }}
+                    </dd>
+                  </div>
+                </dl>
+                <a
+                  mat-button
+                  class="dash-link"
+                  [routerLink]="['/sesiones-caja', sesion.id]">
+                  {{ t('caja.linkMine') }}
+                </a>
+              } @else {
+                <p class="dash-status">
+                  <mat-icon class="dash-inline-icon">lock</mat-icon>
+                  {{ t('caja.none') }}
+                </p>
+                <a
+                  *appPermiso="'POS:AperturarCaja'"
+                  mat-flat-button
+                  color="primary"
+                  data-testid="abrir-caja"
+                  routerLink="/sesiones-caja/nueva">
+                  {{ t('caja.linkOpen') }}
+                </a>
+              }
+            </article>
+
+            @if (otrasSesiones().length > 0) {
+              <article class="dash-card" data-testid="cajas-abiertas">
+                <h4 class="dash-card__title">
+                  {{ t('caja.openSessions') }} ({{ otrasSesiones().length }})
+                </h4>
+                <div class="sofia-table-container">
+                  <table mat-table [dataSource]="otrasSesiones()">
+                    <ng-container matColumnDef="empleadoNombre">
+                      <th mat-header-cell *matHeaderCellDef>
+                        {{ t('caja.colCashier') }}
+                      </th>
+                      <td mat-cell *matCellDef="let fila">
+                        {{ fila.empleadoNombre }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sucursalNombre">
+                      <th mat-header-cell *matHeaderCellDef>
+                        {{ t('caja.colBranch') }}
+                      </th>
+                      <td mat-cell *matCellDef="let fila">
+                        {{ fila.sucursalNombre }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaHoraApertura">
+                      <th mat-header-cell *matHeaderCellDef>
+                        {{ t('caja.colSince') }}
+                      </th>
+                      <td mat-cell *matCellDef="let fila">
+                        {{ fila.fechaHoraApertura | date: 'dd/MM/yyyy HH:mm' }}
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasSesion"></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let fila; columns: columnasSesion"></tr>
+                  </table>
+                </div>
+                <button
+                  mat-button
+                  type="button"
+                  class="dash-link"
+                  (click)="abrir(sesionesAbiertas())">
+                  {{ t('caja.linkOpenSessions') }}
+                </button>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="dash-card dash-loading">
+            <mat-spinner diameter="28" [attr.aria-label]="t('loading')" />
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Inventory and quarantine -->
+    @if (puedeInventario() || puedeCuarentena()) {
+      <section class="dash-section" data-seccion="inventario">
+        <h3 class="dash-section__title">{{ t('inventario.title') }}</h3>
+        @if (puedeInventario() && inventario().error) {
+          <div class="dash-card dash-error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ t('error.section') }}</span>
+            <button mat-button type="button" (click)="cargarInventario()">
+              {{ t('error.retry') }}
+            </button>
+          </div>
+        }
+        @if (puedeCuarentena() && cuarentena().error) {
+          <div class="dash-card dash-error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ t('error.section') }}</span>
+            <button mat-button type="button" (click)="cargarCuarentena()">
+              {{ t('error.retry') }}
+            </button>
+          </div>
+        }
+        <div class="dash-tiles">
+          @if (puedeInventario() && !inventario().error) {
+            @if (inventario().datos; as i) {
+              <article class="dash-card dash-tile" data-testid="lotes-vencidos">
+                <span class="dash-tile__label">{{
+                  t('inventario.expired')
+                }}</span>
+                <span class="dash-tile__value">{{
+                  i.lotesVencidosConStock
+                }}</span>
+                <button
+                  mat-button
+                  type="button"
+                  class="dash-link"
+                  (click)="abrir(lotesVencidos())">
+                  {{ t('inventario.linkLots') }}
+                </button>
+              </article>
+              <article class="dash-card dash-tile" data-testid="lotes-30">
+                <span class="dash-tile__label">{{
+                  t('inventario.expiring30')
+                }}</span>
+                <span class="dash-tile__value">{{ i.lotesVencen30 }}</span>
+                <button
+                  mat-button
+                  type="button"
+                  class="dash-link"
+                  (click)="abrir(lotesPorVencer(0, 30))">
+                  {{ t('inventario.linkLots') }}
+                </button>
+              </article>
+              <article class="dash-card dash-tile" data-testid="lotes-60">
+                <span class="dash-tile__label">{{
+                  t('inventario.expiring60')
+                }}</span>
+                <span class="dash-tile__value">{{ i.lotesVencen60 }}</span>
+                <button
+                  mat-button
+                  type="button"
+                  class="dash-link"
+                  (click)="abrir(lotesPorVencer(31, 60))">
+                  {{ t('inventario.linkLots') }}
+                </button>
+              </article>
+              <article class="dash-card dash-tile" data-testid="lotes-90">
+                <span class="dash-tile__label">{{
+                  t('inventario.expiring90')
+                }}</span>
+                <span class="dash-tile__value">{{ i.lotesVencen90 }}</span>
+                <button
+                  mat-button
+                  type="button"
+                  class="dash-link"
+                  (click)="abrir(lotesPorVencer(61, 90))">
+                  {{ t('inventario.linkLots') }}
+                </button>
+              </article>
+              <article class="dash-card dash-tile" data-testid="sin-stock">
+                <span class="dash-tile__label">{{
+                  t('inventario.outOfStock')
+                }}</span>
+                <span class="dash-tile__value">{{ i.productosSinStock }}</span>
+                <span class="dash-tile__detail">{{
+                  t('inventario.perBranchHint')
+                }}</span>
+              </article>
+              <article class="dash-card dash-tile" data-testid="stock-bajo">
+                <span class="dash-tile__label">{{
+                  t('inventario.lowStock')
+                }}</span>
+                <span class="dash-tile__value">{{ i.productosStockBajo }}</span>
+                <span class="dash-tile__detail">
+                  {{
+                    t('inventario.lowStockHint', {
+                      umbral: (i.umbralStockBajo | number: '1.0-2'),
+                    })
+                  }}
+                </span>
+              </article>
+            } @else {
+              <div class="dash-card dash-loading">
+                <mat-spinner diameter="28" [attr.aria-label]="t('loading')" />
+              </div>
+            }
+          }
+          @if (puedeCuarentena() && !cuarentena().error) {
+            @if (cuarentena().datos; as q) {
+              <article class="dash-card dash-tile" data-testid="cuarentena">
+                <span class="dash-tile__label">{{
+                  t('inventario.quarantine')
+                }}</span>
+                <span class="dash-tile__value">{{ q.lotesRetenidos }}</span>
+                <span class="dash-tile__detail">{{
+                  t('inventario.quarantineHint')
+                }}</span>
+              </article>
+            } @else {
+              <div class="dash-card dash-loading">
+                <mat-spinner diameter="28" [attr.aria-label]="t('loading')" />
+              </div>
+            }
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Trend and best sellers -->
+    @if (puedeVentas() && !ventas().error) {
+      @if (ventas().datos; as v) {
+        <section class="dash-section" data-seccion="tendencia">
+          <div class="dash-columns dash-columns--wide-first">
+            <article class="dash-card" data-testid="tendencia">
+              <h4 class="dash-card__title">{{ t('tendencia.title') }}</h4>
+              <div class="dash-trend">
+                @for (barra of barras(); track barra.desde) {
+                  <div
+                    class="dash-trend__day"
+                    role="img"
+                    [attr.aria-label]="
+                      t('tendencia.barAria', {
+                        dia: (barra.desde | date: 'dd/MM'),
+                        monto: (barra.monto | number: '1.2-2'),
+                        comprobantes: barra.comprobantes,
+                      })
+                    ">
+                    <span class="dash-trend__amount"
+                      >S/ {{ barra.monto | number: '1.2-2' }}</span
+                    >
+                    <div class="dash-trend__track">
+                      <div
+                        class="dash-trend__bar"
+                        [class.dash-trend__bar--today]="barra.esHoy"
+                        [style.height.%]="barra.altura"></div>
+                    </div>
+                    <span class="dash-trend__label">
+                      {{
+                        barra.esHoy
+                          ? t('tendencia.today')
+                          : (barra.desde | date: 'dd/MM')
+                      }}
+                    </span>
+                  </div>
+                }
+              </div>
+            </article>
+
+            <article class="dash-card" data-testid="top-productos">
+              <h4 class="dash-card__title">{{ t('top.title') }}</h4>
+              @for (producto of top(); track producto.productoId) {
+                <div class="dash-row">
+                  <div class="dash-row__head">
+                    <span>{{ producto.nombre }}</span>
+                    <span class="dash-row__amount">
+                      {{ producto.unidades | number: '1.0-2' }}
+                      {{ t('top.units') }} · S/
+                      {{ producto.monto | number: '1.2-2' }}
+                    </span>
+                  </div>
+                  <div class="dash-bar">
+                    <div
+                      class="dash-bar__fill"
+                      [style.width.%]="producto.proporcion"></div>
+                  </div>
+                </div>
+              } @empty {
+                <p class="dash-muted">{{ t('top.empty') }}</p>
+              }
+            </article>
+          </div>
+        </section>
+      }
+    }
+
+    <!-- Returns today -->
+    @if (puedeDevoluciones()) {
+      <section class="dash-section" data-seccion="devoluciones">
+        <h3 class="dash-section__title">{{ t('devoluciones.title') }}</h3>
+        @if (devoluciones().error) {
+          <div class="dash-card dash-error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ t('error.section') }}</span>
+            <button mat-button type="button" (click)="cargarDevoluciones()">
+              {{ t('error.retry') }}
+            </button>
+          </div>
+        } @else if (devoluciones().datos; as d) {
+          <div class="dash-tiles">
+            <article class="dash-card dash-tile" data-testid="devoluciones">
+              <span class="dash-tile__label">{{
+                t('devoluciones.count')
+              }}</span>
+              <span class="dash-tile__value">{{ d.cantidad }}</span>
+              <span class="dash-tile__detail">
+                {{ t('devoluciones.refunded') }}: S/
+                {{ d.montoReembolsado | number: '1.2-2' }}
+              </span>
+            </article>
+          </div>
+        } @else {
+          <div class="dash-card dash-loading">
+            <mat-spinner diameter="28" [attr.aria-label]="t('loading')" />
+          </div>
+        }
+      </section>
+    }
+  </div>
+</ng-container>
