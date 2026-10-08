@@ -99,7 +99,8 @@
     "motivoRequired": "Reason is required.",
     "anularSuccess": "Sale cancelled successfully.",
     "anularError": "Error cancelling the sale.",
-    "anularConDevoluciones": "This sale has registered returns and can no longer be cancelled. Handle any changes from Returns."
+    "anularConDevoluciones": "This sale has registered returns and can no longer be cancelled. Handle any changes from Returns.",
+    "anularSinSesionAbierta": "You need your own open register in this branch to cancel a charged sale."
   },
   "devolucion": {
     "btnDevolver": "Return",

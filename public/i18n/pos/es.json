@@ -99,7 +99,8 @@
     "motivoRequired": "El motivo es obligatorio.",
     "anularSuccess": "Venta anulada correctamente.",
     "anularError": "Error al anular la venta.",
-    "anularConDevoluciones": "Esta venta tiene devoluciones registradas y ya no puede anularse. Gestiona los cambios desde Devoluciones."
+    "anularConDevoluciones": "Esta venta tiene devoluciones registradas y ya no puede anularse. Gestiona los cambios desde Devoluciones.",
+    "anularSinSesionAbierta": "Necesitas tener tu propia caja abierta en esta sucursal para anular una venta cobrada."
   },
   "devolucion": {
     "btnDevolver": "Devolver",

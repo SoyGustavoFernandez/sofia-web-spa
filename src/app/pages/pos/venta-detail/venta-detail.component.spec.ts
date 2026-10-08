@@ -3,9 +3,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { of } from 'rxjs';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
 import { AuthService } from '@core/auth/auth.service';
+import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
+import { AnularVentaDialogComponent } from '../dialogs/anular-venta-dialog/anular-venta-dialog.component';
 import { VentaConDetalle } from '../models/venta.model';
 import { VentaDetailComponent } from './venta-detail.component';
 
@@ -135,6 +139,38 @@ describe('VentaDetailComponent — prescription verification', () => {
     const { fixture } = setup(venta());
 
     expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('recetaVerificada');
+  });
+});
+
+describe('VentaDetailComponent — void errors', () => {
+  function anularCon(body: object) {
+    const { component, fixture, httpMock } = setup(venta());
+    const notifier = TestBed.inject(ErrorNotifierService);
+    const showError = spyOn(notifier, 'showError');
+    const dialogRef = { afterClosed: () => of('Error de cobro') } as MatDialogRef<AnularVentaDialogComponent>;
+    spyOn(fixture.debugElement.injector.get(MatDialog), 'open').and.returnValue(dialogRef);
+
+    component.anular();
+    httpMock.expectOne(`${BASE}/venta-1/anular`).flush(body, { status: 400, statusText: 'Bad Request' });
+
+    expect(component.anulando()).toBeFalse();
+    httpMock.verify();
+    return showError;
+  }
+
+  it('explains that voiding a charged sale needs the own open register', () => {
+    expect(anularCon({ code: 'Venta.Anular.SinSesionAbierta' })).toHaveBeenCalledOnceWith('pos.ventasDetail.anularSinSesionAbierta');
+  });
+
+  it('falls back to the generic void error for an unmapped code', () => {
+    expect(anularCon({ code: 'Venta.Anular' })).toHaveBeenCalledOnceWith('pos.ventasDetail.anularError');
+  });
+
+  it('has the open-register message in Spanish and English', async () => {
+    for (const lang of ['es', 'en']) {
+      const pos = (await (await fetch(`/i18n/pos/${lang}.json`)).json()) as { ventasDetail: Record<string, string> };
+      expect(pos.ventasDetail['anularSinSesionAbierta']).withContext(lang).toBeTruthy();
+    }
   });
 });
 
