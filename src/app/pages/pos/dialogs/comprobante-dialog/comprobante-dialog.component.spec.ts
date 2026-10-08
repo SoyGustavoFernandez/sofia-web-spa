@@ -22,7 +22,7 @@ const comprobante: ComprobanteDto = {
   clienteNombre: 'Juan Perez',
 };
 
-function setup(overrides: Partial<ComprobanteDto> = {}, permisos: string[] = ['Ventas:Crear']) {
+function setup(overrides: Partial<ComprobanteDto> = {}, permisos: string[] = ['Ventas:Crear'], dataOverrides: Partial<ComprobanteDialogData> = {}) {
   const data: ComprobanteDialogData = {
     comprobante: { ...comprobante, ...overrides },
     total: 50,
@@ -31,9 +31,11 @@ function setup(overrides: Partial<ComprobanteDto> = {}, permisos: string[] = ['V
     metodosPago: 'Efectivo',
     detalles: [],
     pagos: [],
+    vuelto: 0,
     clienteNombre: 'Juan Perez',
     cajeroNombre: 'Cajero QA',
     fecha: new Date(2026, 8, 30),
+    ...dataOverrides,
   };
   const receiptPrint = jasmine.createSpyObj<ReceiptPrintService>('ReceiptPrintService', ['print']);
   TestBed.configureTestingModule({
@@ -49,7 +51,9 @@ function setup(overrides: Partial<ComprobanteDto> = {}, permisos: string[] = ['V
   });
   const fixture = TestBed.createComponent(ComprobanteDialogComponent);
   fixture.detectChanges();
-  return { component: fixture.componentInstance, receiptPrint, text: (fixture.nativeElement as HTMLElement).textContent ?? '' };
+  const root = fixture.nativeElement as HTMLElement;
+  const printed = root.querySelector('.pos-print-receipt') as HTMLElement;
+  return { fixture, component: fixture.componentInstance, receiptPrint, text: root.textContent ?? '', printed };
 }
 
 describe('ComprobanteDialogComponent', () => {
@@ -91,5 +95,53 @@ describe('ComprobanteDialogComponent', () => {
     expect(printed.classList).toContain('pos-print-receipt');
     expect(printed.textContent).toContain('B001-00000012');
     expect(printed.querySelector('button')).toBeNull();
+  });
+
+  describe('printed change', () => {
+    const pagos = [{ metodo: 'Efectivo', monto: 10 }];
+
+    it('prints the change after the payments when there is any', () => {
+      const { printed } = setup({}, ['Ventas:Crear'], { total: 7.5, pagos, vuelto: 2.5 });
+      const rows = Array.from(printed.querySelectorAll('.pos-print-row')).map(r => r.textContent?.replace(/\s+/g, ' ').trim());
+
+      const pago = rows.findIndex(r => r?.startsWith('Efectivo'));
+      expect(rows[pago + 1]).toBe('pos.checkout.vueltoCortoLabelS/ 2.50');
+    });
+
+    it('prints no change row when the payment was exact', () => {
+      const { printed } = setup({}, ['Ventas:Crear'], { total: 7.5, pagos: [{ metodo: 'Efectivo', monto: 7.5 }], vuelto: 0 });
+      expect(printed.textContent).not.toContain('pos.checkout.vueltoCortoLabel');
+    });
+  });
+
+  describe('printed lines', () => {
+    const detalles = [
+      { productoNombre: 'Paracetamol', numeroLote: 'L-A', cantidad: 10, precioUnitario: 2.2, presentacionDescripcion: 'Caja', cantidadEnPresentacion: 1 },
+      { productoNombre: 'Paracetamol', numeroLote: 'L-A', cantidad: 2, precioUnitario: 2.5 },
+    ];
+
+    function filas(printed: HTMLElement): string[][] {
+      return Array.from(printed.querySelectorAll('tbody tr')).map(tr => Array.from(tr.querySelectorAll('td')).map(td => td.textContent?.replace(/\s+/g, ' ').trim() ?? ''));
+    }
+
+    it('prints a line sold by presentation with its presentation quantity, price and the same total', () => {
+      const { printed } = setup({}, ['Ventas:Crear'], { detalles });
+      expect(filas(printed)[0]).toEqual(['Paracetamol (L-A)', '1 × Caja (10)', '22.00', '22.00']);
+    });
+
+    it('prints a loose line of the same lot in units', () => {
+      const { printed } = setup({}, ['Ventas:Crear'], { detalles });
+      expect(filas(printed)[1]).toEqual(['Paracetamol (L-A)', '2', '2.50', '5.00']);
+    });
+
+    it('renders two rows for two lines of the same lot', () => {
+      const { printed } = setup({}, ['Ventas:Crear'], { detalles });
+      expect(printed.querySelectorAll('tbody tr').length).toBe(2);
+    });
+
+    it('prints a line with a presentation description but no presentation quantity in units', () => {
+      const { printed } = setup({}, ['Ventas:Crear'], { detalles: [{ ...detalles[1], presentacionDescripcion: 'Caja', cantidadEnPresentacion: null }] });
+      expect(filas(printed)[0]).toEqual(['Paracetamol (L-A)', '2', '2.50', '5.00']);
+    });
   });
 });

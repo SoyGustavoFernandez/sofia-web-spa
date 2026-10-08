@@ -4,12 +4,13 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
 import { AuthService } from '@core/auth/auth.service';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { AnularVentaDialogComponent } from '../dialogs/anular-venta-dialog/anular-venta-dialog.component';
+import { ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
 import { VentaConDetalle } from '../models/venta.model';
 import { VentaDetailComponent } from './venta-detail.component';
 
@@ -184,5 +185,52 @@ describe('VentaDetailComponent — receipt', () => {
     const { component } = setup(anulada);
     expect(component.puedeReimprimir()).toBeFalse();
     expect(component.estadoComprobanteLabel('Anulado')).toBe('pos.estadoComprobante.Anulado');
+  });
+});
+
+describe('VentaDetailComponent — change and reprint data', () => {
+  const detalles = [
+    { id: 'a', loteId: 'l-a', productoNombre: 'Paracetamol E2E2', numeroLote: 'L-A', cantidad: 10, precioUnitario: 2.2, subtotal: 22, cantidadDevuelta: 0, presentacionVentaId: 'pres-1', presentacionDescripcion: 'Caja', cantidadEnPresentacion: 1 },
+    { id: 'b', loteId: 'l-a', productoNombre: 'Paracetamol E2E2', numeroLote: 'L-A', cantidad: 2, precioUnitario: 2.5, subtotal: 5, cantidadDevuelta: 0 },
+  ];
+  const pagoEfectivo = { id: 'p1', metodoPago: 'Efectivo', montoPagado: 30, referenciaOperacion: null, fechaPago: '2026-09-30T10:00:00Z' };
+
+  function reimprimir(data: VentaConDetalle): ComprobanteDialogData {
+    const { component, fixture } = setup(data);
+    const open = spyOn(fixture.debugElement.injector.get(MatDialog), 'open').and.returnValue({ afterClosed: () => EMPTY } as unknown as MatDialogRef<unknown>);
+    component.reimprimirComprobante();
+    return open.calls.mostRecent().args[1]!.data as ComprobanteDialogData;
+  }
+
+  it('shows the change below the payments when the cash exceeded the total', () => {
+    const { fixture, component } = setup(venta({ total: 27, detalles, pagos: [pagoEfectivo] }));
+
+    expect(component.vueltoVenta(component.venta()!)).toBe(3);
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('pos.checkout.vueltoCortoLabel');
+  });
+
+  it('shows no change for an exact payment', () => {
+    const { fixture, component } = setup(venta({ total: 30, detalles, pagos: [pagoEfectivo] }));
+
+    expect(component.vueltoVenta(component.venta()!)).toBe(0);
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('pos.checkout.vueltoCortoLabel');
+  });
+
+  it('builds the same receipt data as the original print for the same sale', () => {
+    const data = reimprimir(venta({ total: 27, detalles, pagos: [pagoEfectivo] }));
+
+    expect(data.total).toBe(27);
+    expect(data.vuelto).toBe(3);
+    expect(data.pagos).toEqual([{ metodo: 'pos.checkout.efectivo', monto: 30 }]);
+    expect(data.detalles).toEqual([
+      { productoNombre: 'Paracetamol E2E2', numeroLote: 'L-A', cantidad: 10, precioUnitario: 2.2, presentacionDescripcion: 'Caja', cantidadEnPresentacion: 1 },
+      { productoNombre: 'Paracetamol E2E2', numeroLote: 'L-A', cantidad: 2, precioUnitario: 2.5, presentacionDescripcion: undefined, cantidadEnPresentacion: undefined },
+    ]);
+  });
+
+  it('names the anonymous customer like the original print even though the backend sends "Público General"', () => {
+    expect(reimprimir(venta({ clienteId: null, clienteNombre: 'Público General' })).clienteNombre).toBe('pos.checkout.clienteEventual');
+    TestBed.resetTestingModule();
+    expect(reimprimir(venta({ clienteId: 'c-1', clienteNombre: 'Juan Perez' })).clienteNombre).toBe('Juan Perez');
   });
 });

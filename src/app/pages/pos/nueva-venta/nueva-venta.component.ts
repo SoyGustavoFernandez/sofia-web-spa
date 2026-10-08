@@ -15,6 +15,7 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 import { AuthService } from '@core/auth/auth.service';
 import { POS_DRAFT_PREFIX, userStorageKey } from '@core/auth/user-storage';
 import { VentaService } from '../services/venta.service';
+import { calcularVuelto, roundMoney } from '../utils/vuelto.util';
 import {
   CreateVentaRequest,
   CreateVentaDetalleRequest,
@@ -66,8 +67,6 @@ type CatalogTab = 'buscar' | 'receta';
 type VentaDraft = PosDraft<CartLine, PagoLine, AseguradoraListItem>;
 
 const VERIFICACION_RECETA_REQUERIDA = 'Venta.Receta.VerificacionRequerida';
-
-const roundMoney = (value: number): number => Math.round(value * 100) / 100;
 
 // Backend business-rule codes that have a specific message instead of the generic sale error
 const VENTA_ERROR_KEYS: Record<string, string> = {
@@ -242,7 +241,7 @@ export class NuevaVentaComponent implements OnInit {
   );
   readonly subtotalSinIgv = computed(() => this.subtotalBruto() / 1.18);
   readonly igv = computed(() => this.subtotalBruto() - this.subtotalSinIgv());
-  readonly cambioAEntregar = computed(() => Math.max(0, -this.montoPendiente()));
+  readonly cambioAEntregar = computed(() => calcularVuelto(this.montoAPagar(), this.pagos().map(p => p.monto)));
 
   readonly puedeProcesar = computed(() => {
     const pendiente = this.montoPendiente();
@@ -1110,8 +1109,16 @@ export class NuevaVentaComponent implements OnInit {
           subtotal: this.subtotalSinIgv(),
           igv: this.igv(),
           metodosPago: this.pagos().map(p => this.metodoPagoLabel(p.metodoPago)).join(', '),
-          detalles: this.cart().map(l => ({ productoNombre: l.productoNombre, numeroLote: l.numeroLote, cantidad: l.cantidad, precioUnitario: l.precioUnitario })),
+          detalles: this.cart().map(l => ({
+            productoNombre: l.productoNombre,
+            numeroLote: l.numeroLote,
+            cantidad: l.cantidad,
+            precioUnitario: l.precioUnitario,
+            presentacionDescripcion: l.presentacionDescripcion,
+            cantidadEnPresentacion: l.cantidadEnPresentacion,
+          })),
           pagos: this.pagos().map(p => ({ metodo: this.metodoPagoLabel(p.metodoPago), monto: p.monto })),
+          vuelto: this.cambioAEntregar(),
           clienteNombre: this.selectedCliente()?.nombreApellidos ?? this.transloco.translate('pos.checkout.clienteEventual'),
           cajeroNombre: this.authService.currentUser()?.fullName ?? null,
           fecha: new Date(),

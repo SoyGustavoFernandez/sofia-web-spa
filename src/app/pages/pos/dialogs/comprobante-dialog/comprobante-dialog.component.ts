@@ -15,6 +15,8 @@ export interface ComprobanteDialogLinea {
   numeroLote: string;
   cantidad: number;
   precioUnitario: number;
+  presentacionDescripcion?: string | null;
+  cantidadEnPresentacion?: number | null;
 }
 
 export interface ComprobanteDialogPago {
@@ -30,6 +32,7 @@ export interface ComprobanteDialogData {
   metodosPago: string;
   detalles: ComprobanteDialogLinea[];
   pagos: ComprobanteDialogPago[];
+  vuelto: number;
   clienteNombre: string;
   cajeroNombre: string | null;
   fecha: Date;
@@ -64,6 +67,15 @@ export class ComprobanteDialogComponent {
     if (!c || c.clienteNumeroDocumento === NUMERO_CLIENTE_EVENTUAL) return null;
     const key = c.clienteTipoDocumento !== '-' ? tipoDocumentoKey(c.clienteTipoDocumento) : null;
     return key ? `${this.transloco.translate(key)} ${c.clienteNumeroDocumento}` : c.clienteNumeroDocumento;
+  }
+
+  // A line sold by presentation prints its presentation quantity and price (e.g. "1 × Caja (10)"), the rest prints base units
+  esPorPresentacion(linea: ComprobanteDialogLinea): boolean {
+    return !!linea.presentacionDescripcion && !!linea.cantidadEnPresentacion;
+  }
+
+  precioPresentacion(linea: ComprobanteDialogLinea): number {
+    return (linea.cantidad * linea.precioUnitario) / (linea.cantidadEnPresentacion || 1);
   }
 
   nuevaVenta(): void {

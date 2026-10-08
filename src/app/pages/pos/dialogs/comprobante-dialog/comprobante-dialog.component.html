@@ -82,11 +82,19 @@
         </tr>
       </thead>
       <tbody>
-        @for (linea of data.detalles; track linea.numeroLote) {
+        @for (linea of data.detalles; track $index) {
           <tr>
             <td>{{ linea.productoNombre }} ({{ linea.numeroLote }})</td>
-            <td>{{ linea.cantidad }}</td>
-            <td>{{ linea.precioUnitario | number: '1.2-2' }}</td>
+            @if (esPorPresentacion(linea)) {
+              <td>
+                {{ linea.cantidadEnPresentacion }} ×
+                {{ linea.presentacionDescripcion }} ({{ linea.cantidad }})
+              </td>
+              <td>{{ precioPresentacion(linea) | number: '1.2-2' }}</td>
+            } @else {
+              <td>{{ linea.cantidad }}</td>
+              <td>{{ linea.precioUnitario | number: '1.2-2' }}</td>
+            }
             <td>
               {{ linea.cantidad * linea.precioUnitario | number: '1.2-2' }}
             </td>
@@ -118,10 +126,16 @@
       ><span>S/ {{ data.total | number: '1.2-2' }}</span>
     </div>
 
-    @for (pago of data.pagos; track pago.metodo) {
+    @for (pago of data.pagos; track $index) {
       <div class="pos-print-row">
         <span>{{ pago.metodo }}</span
         ><span>S/ {{ pago.monto | number: '1.2-2' }}</span>
+      </div>
+    }
+    @if (data.vuelto > 0) {
+      <div class="pos-print-row">
+        <span>{{ t('checkout.vueltoCortoLabel') }}</span
+        ><span>S/ {{ data.vuelto | number: '1.2-2' }}</span>
       </div>
     }
 

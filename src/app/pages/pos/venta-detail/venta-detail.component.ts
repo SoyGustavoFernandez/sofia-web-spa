@@ -12,6 +12,7 @@ import { VentaService } from '../services/venta.service';
 import { VentaConDetalle, EstadoVenta, estadoComprobanteKey } from '../models/venta.model';
 import { AnularVentaDialogComponent } from '../dialogs/anular-venta-dialog/anular-venta-dialog.component';
 import { DevolverVentaDialogComponent, DevolverVentaDialogData, cantidadDevolvible } from '../dialogs/devolver-venta-dialog/devolver-venta-dialog.component';
+import { calcularVuelto } from '../utils/vuelto.util';
 import { ComprobanteDialogComponent, ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
 
 // Backend void-rule codes that have a specific message instead of the generic void error
@@ -115,6 +116,11 @@ export class VentaDetailComponent implements OnInit {
     return !!v?.comprobante && v.estado !== EstadoVenta[EstadoVenta.Anulada];
   }
 
+  // The covered amount is not part of the sale detail, so the change is computed against the full total
+  vueltoVenta(v: VentaConDetalle): number {
+    return calcularVuelto(v.total, v.pagos.map(p => p.montoPagado));
+  }
+
   reimprimirComprobante(): void {
     const v = this.venta()!;
     const total = v.total;
@@ -131,9 +137,12 @@ export class VentaDetailComponent implements OnInit {
         numeroLote: d.numeroLote,
         cantidad: d.cantidad,
         precioUnitario: d.precioUnitario,
+        presentacionDescripcion: d.presentacionDescripcion,
+        cantidadEnPresentacion: d.cantidadEnPresentacion,
       })),
       pagos: v.pagos.map(p => ({ metodo: this.metodoPagoLabel(p.metodoPago), monto: p.montoPagado })),
-      clienteNombre: v.clienteNombre ?? this.transloco.translate('pos.checkout.clienteEventual'),
+      vuelto: this.vueltoVenta(v),
+      clienteNombre: (v.clienteId ? v.clienteNombre : null) ?? this.transloco.translate('pos.checkout.clienteEventual'),
       cajeroNombre: v.empleadoNombre,
       fecha: new Date(v.fechaHora),
     };

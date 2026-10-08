@@ -211,6 +211,12 @@
             <tr mat-row *matRowDef="let row; columns: pagosColumns"></tr>
           </table>
         </div>
+        @if (vueltoVenta(v) > 0) {
+          <p class="mt-2 mb-0">
+            <strong>{{ t('checkout.vueltoCortoLabel') }}</strong>
+            S/ {{ vueltoVenta(v) | number: '1.2-2' }}
+          </p>
+        }
 
         @if (v.devoluciones.length) {
           <h5 class="mb-2 mt-4">{{ t('devolucion.sectionTitle') }}</h5>

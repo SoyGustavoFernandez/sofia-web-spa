@@ -14,6 +14,7 @@ import { MedicamentoListItem } from '../../medicamentos/models/medicamento.model
 import { ItemSugerido, RecetaListItem } from '../../recetas-medicas/models/receta-medica.model';
 import { CondicionVenta, EstadoVenta, LoteDisponibleVenta, MetodoPago, PresentacionProductoVenta, VentaConDetalle } from '../models/venta.model';
 import { VentaService } from '../services/venta.service';
+import { ComprobanteDialogData } from '../dialogs/comprobante-dialog/comprobante-dialog.component';
 import { NuevaVentaComponent } from './nueva-venta.component';
 import { parsePosDraft, serializePosDraft } from './pos-draft';
 
@@ -852,5 +853,49 @@ describe('NuevaVentaComponent — stale payments', () => {
     expect(component.continuandoVentaId()).toBe('venta-9');
     expect(component.cargandoContinuacion()).toBeFalse();
     expect(component.pagos()).toEqual([PAGO_INICIAL]);
+  });
+});
+
+describe('NuevaVentaComponent — receipt data', () => {
+  it('hands the receipt the change and the sale presentation of each line', () => {
+    const ctx = setup();
+    ctx.component.sesionId.set('sesion-1');
+    ctx.component.cart.set([
+      { ...cartLine(10, 2.2), productoNombre: 'Paracetamol E2E2', numeroLote: 'L-A', presentacionVentaId: 'pres-1', presentacionDescripcion: 'Caja', cantidadEnPresentacion: 1, presentacionCantidadUnidadesBase: 10 },
+      { ...cartLine(2, 2.5), productoNombre: 'Paracetamol E2E2', numeroLote: 'L-A' },
+    ]);
+    ctx.component.updatePago(0, { monto: 30 });
+    ctx.ventaService.crear.and.returnValue(of({ ventaId: 'venta-1', comprobante: null }));
+
+    ctx.component.procesarVenta();
+
+    const data = ctx.dialog.open.calls.mostRecent().args[1]!.data as ComprobanteDialogData;
+    expect(data.total).toBe(27);
+    expect(data.vuelto).toBe(3);
+    expect(data.pagos).toEqual([{ metodo: 'pos.checkout.efectivo', monto: 30 }]);
+    expect(data.detalles).toEqual([
+      { productoNombre: 'Paracetamol E2E2', numeroLote: 'L-A', cantidad: 10, precioUnitario: 2.2, presentacionDescripcion: 'Caja', cantidadEnPresentacion: 1 },
+      { productoNombre: 'Paracetamol E2E2', numeroLote: 'L-A', cantidad: 2, precioUnitario: 2.5, presentacionDescripcion: undefined, cantidadEnPresentacion: undefined },
+    ]);
+  });
+
+  it('hands the receipt no change when the payment is exact', () => {
+    const ctx = setup();
+    ctx.component.sesionId.set('sesion-1');
+    ctx.component.cart.set([cartLine(3, 2.5)]);
+    ctx.component.updatePago(0, { monto: 7.5 });
+    ctx.ventaService.crear.and.returnValue(of({ ventaId: 'venta-1', comprobante: null }));
+
+    ctx.component.procesarVenta();
+
+    expect((ctx.dialog.open.calls.mostRecent().args[1]!.data as ComprobanteDialogData).vuelto).toBe(0);
+  });
+
+  it('shows the change to hand back through the shared calculation', () => {
+    const { component } = setup();
+    component.cart.set([cartLine(3, 2.5)]);
+    component.updatePago(0, { monto: 10 });
+
+    expect(component.cambioAEntregar()).toBe(2.5);
   });
 });
