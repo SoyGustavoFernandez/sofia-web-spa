@@ -1,0 +1,104 @@
+<ng-container *transloco="let t; scope: 'proveedores'; read: 'proveedores'">
+  <h2 mat-dialog-title>{{ t('precios.dialog.title') }}</h2>
+
+  <mat-dialog-content>
+    <p class="search-info-text">{{ t('precios.dialog.hint') }}</p>
+
+    <form [formGroup]="form" class="row g-3" (ngSubmit)="save()">
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ t('precios.dialog.producto') }}</mat-label>
+          <input
+            matInput
+            formControlName="producto"
+            [matAutocomplete]="productoAuto"
+            [placeholder]="t('precios.dialog.producto-placeholder')" />
+          <mat-autocomplete
+            #productoAuto="matAutocomplete"
+            [displayWith]="displayProducto">
+            @for (p of productoOptions(); track p.id) {
+              <mat-option [value]="p">{{ p.nombreComercial }}</mat-option>
+            }
+            @if (
+              productoOptions().length === 0 && form.controls.producto.value
+            ) {
+              <mat-option disabled>{{
+                t('precios.dialog.no-results')
+              }}</mat-option>
+            }
+          </mat-autocomplete>
+          <mat-error>{{ t('precios.dialog.errors.producto') }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-7">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ t('precios.dialog.precio') }}</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.0001"
+            formControlName="precioCompra" />
+          <mat-error>
+            @if (form.controls.precioCompra.hasError('required')) {
+              {{ 'general.errors.required' | transloco }}
+            } @else if (form.controls.precioCompra.hasError('max')) {
+              {{ t('precios.dialog.errors.precio-max') }}
+            } @else {
+              {{ t('precios.dialog.errors.precio-min') }}
+            }
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-5">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ t('precios.dialog.descuento') }}</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.01"
+            formControlName="descuentoPorcentaje" />
+          <mat-error>
+            @if (form.controls.descuentoPorcentaje.hasError('required')) {
+              {{ 'general.errors.required' | transloco }}
+            } @else {
+              {{ t('precios.dialog.errors.descuento-rango') }}
+            }
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <div class="search-info-text">{{ t('precios.dialog.costo-neto') }}</div>
+        <div>
+          <strong id="costo-neto">
+            @if (costoNeto() !== null) {
+              S/ {{ costoNeto() | number: '1.2-4' }}
+            } @else {
+              —
+            }
+          </strong>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()" [disabled]="saving()">
+      {{ 'actions.cancel' | transloco }}
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="save()"
+      [disabled]="saving()">
+      @if (saving()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        {{ 'actions.save' | transloco }}
+      }
+    </button>
+  </mat-dialog-actions>
+</ng-container>

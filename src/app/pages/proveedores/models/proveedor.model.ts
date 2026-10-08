@@ -48,3 +48,20 @@ export interface SearchProveedorParams {
   pageNumber: number;
   pageSize: number;
 }
+
+export interface PrecioProveedor {
+  id: string;
+  productoId: string;
+  productoNombre: string;
+  costoPorUnidadBase: number;
+  fechaInicioVigencia: string;
+  fechaFinVigencia: string | null;
+  vigente: boolean;
+}
+
+export interface RegistrarPrecioProveedorRequest {
+  proveedorId: string;
+  medicamentoId: string;
+  precioCompra: number;
+  descuentoPorcentaje: number;
+}

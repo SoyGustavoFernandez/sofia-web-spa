@@ -8,6 +8,8 @@ import {
   ProveedorDetail,
   CreateProveedorRequest,
   UpdateProveedorRequest,
+  PrecioProveedor,
+  RegistrarPrecioProveedorRequest,
   SearchProveedorParams,
 } from '../models/proveedor.model';
 
@@ -45,6 +47,15 @@ export class ProveedorService {
 
   update(id: string, body: UpdateProveedorRequest): Observable<void> {
     return this.http.put<void>(`${this.base}/${id}`, body);
+  }
+
+  getPrecios(id: string, pageNumber: number, pageSize: number): Observable<PaginatedList<PrecioProveedor>> {
+    const params = new HttpParams().set('pageNumber', pageNumber).set('pageSize', pageSize);
+    return this.http.get<PaginatedList<PrecioProveedor>>(`${this.base}/${id}/precios`, { params });
+  }
+
+  registrarPrecio(body: RegistrarPrecioProveedorRequest): Observable<string> {
+    return this.http.post<string>(`${this.base}/precios`, body);
   }
 
   delete(id: string): Observable<void> {

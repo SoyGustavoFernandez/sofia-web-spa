@@ -98,5 +98,39 @@
     "razonSocial": "Business Name",
     "taxId": "Tax ID / RUC",
     "tasaCumplimiento": "Compliance Rate"
+  },
+  "precios": {
+    "title": "Purchase prices",
+    "subtitle": "Cost per base unit this supplier charges you, with its discount already applied. Each product has a single current price and earlier ones are kept in the history.",
+    "register-btn": "Register price",
+    "empty": "This supplier has no prices registered yet.",
+    "load-error": "Error loading the supplier prices",
+    "vigente": "Current",
+    "cols": {
+      "producto": "Product",
+      "costo": "Cost per base unit",
+      "desde": "Valid from",
+      "hasta": "Valid until"
+    },
+    "dialog": {
+      "title": "Register purchase price",
+      "hint": "The new price replaces the current one for this product with this supplier; the previous one is kept in the history.",
+      "producto": "Product",
+      "producto-placeholder": "Type to search for a product",
+      "no-results": "No results",
+      "precio": "Purchase price per base unit (S/)",
+      "descuento": "Discount (%)",
+      "costo-neto": "Net cost per base unit",
+      "success": "Price registered successfully",
+      "save-error": "Error registering the price",
+      "errors": {
+        "producto": "Select a product from the list",
+        "precio-min": "Must be greater than 0",
+        "precio-max": "The price is too high",
+        "descuento-rango": "Must be between 0 and 100",
+        "proveedor-not-found": "The supplier no longer exists.",
+        "medicamento-not-found": "The selected product no longer exists."
+      }
+    }
   }
 }

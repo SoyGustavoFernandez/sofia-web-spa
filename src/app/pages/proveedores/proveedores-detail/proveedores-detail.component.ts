@@ -9,9 +9,11 @@ import { PageHeaderComponent, BreadcrumbItem } from '@shared/components/page-hea
 import { ConfirmDialogComponent, ConfirmDialogData } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { ProveedorService } from '../services/proveedor.service';
-import { ProveedorDetail } from '../models/proveedor.model';
+import { PrecioProveedor, ProveedorDetail } from '../models/proveedor.model';
 import { saveErrorKey } from '@shared/utils/save-error-key.util';
 import { PermisoDirective } from '@shared/directives/permiso.directive';
+import { PageEvent } from '@angular/material/paginator';
+import { PrecioProveedorDialogComponent, PrecioProveedorDialogData } from '../precio-proveedor-dialog/precio-proveedor-dialog.component';
 
 const SAVE_ERROR_KEYS: Record<string, string> = {
   'Proveedor.TaxId.Duplicado': 'proveedores.detail.duplicate-tax-id',
@@ -48,6 +50,13 @@ export class ProveedoresDetailComponent implements OnInit {
   readonly saving = signal(false);
   readonly deleting = signal(false);
 
+  readonly precios = signal<PrecioProveedor[]>([]);
+  readonly preciosTotal = signal(0);
+  readonly preciosPageIndex = signal(0);
+  readonly preciosPageSize = signal(10);
+  readonly loadingPrecios = signal(false);
+  readonly preciosColumns = ['producto', 'costo', 'desde', 'hasta'];
+
   private entityId: string | null = null;
   private snapshot: ProveedorDetail | null = null;
 
@@ -74,7 +83,42 @@ export class ProveedoresDetailComponent implements OnInit {
       this.entityId = id;
       this.form.disable();
       this.load();
+      this.loadPrecios();
     }
+  }
+
+  private loadPrecios(): void {
+    this.loadingPrecios.set(true);
+    this.service.getPrecios(this.entityId!, this.preciosPageIndex() + 1, this.preciosPageSize()).subscribe({
+      next: page => {
+        this.precios.set(page.items);
+        this.preciosTotal.set(page.totalCount);
+        this.loadingPrecios.set(false);
+      },
+      error: () => {
+        this.loadingPrecios.set(false);
+        this.notifier.showError(this.transloco.translate('proveedores.precios.load-error'));
+      },
+    });
+  }
+
+  onPreciosPageChange(event: PageEvent): void {
+    this.preciosPageIndex.set(event.pageIndex);
+    this.preciosPageSize.set(event.pageSize);
+    this.loadPrecios();
+  }
+
+  openRegistrarPrecio(): void {
+    const ref = this.dialog.open(PrecioProveedorDialogComponent, {
+      data: { proveedorId: this.entityId! } as PrecioProveedorDialogData,
+      width: '520px',
+    });
+    ref.afterClosed().subscribe((registrado?: boolean) => {
+      if (registrado) {
+        this.preciosPageIndex.set(0);
+        this.loadPrecios();
+      }
+    });
   }
 
   private load(): void {

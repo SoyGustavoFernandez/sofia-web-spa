@@ -119,6 +119,92 @@
           </div>
         }
       </div>
+
+      @if (!isNew() && !isEditMode()) {
+        <div class="sofia-detail-card mt-3" id="precios-card">
+          <div
+            class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+            style="margin-bottom: 1rem">
+            <div>
+              <h4 class="mb-1">{{ t('precios.title') }}</h4>
+              <div class="search-info-text">{{ t('precios.subtitle') }}</div>
+            </div>
+            <div class="d-flex gap-2">
+              <button
+                *appPermiso="'RegistrarPrecioProveedor'"
+                mat-flat-button
+                color="primary"
+                id="registrar-precio-btn"
+                (click)="openRegistrarPrecio()">
+                {{ t('precios.register-btn') }}
+              </button>
+            </div>
+          </div>
+
+          <div class="sofia-table-container">
+            <table mat-table [dataSource]="precios()">
+              <ng-container matColumnDef="producto">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('precios.cols.producto') }}
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.productoNombre }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="costo">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('precios.cols.costo') }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  S/ {{ row.costoPorUnidadBase | number: '1.4-4' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="desde">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('precios.cols.desde') }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.fechaInicioVigencia | date: 'dd/MM/yyyy' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="hasta">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ t('precios.cols.hasta') }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  @if (row.fechaFinVigencia) {
+                    {{ row.fechaFinVigencia | date: 'dd/MM/yyyy' }}
+                  } @else {
+                    {{ t('precios.vigente') }}
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="preciosColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: preciosColumns"></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td
+                  class="mat-cell"
+                  [attr.colspan]="preciosColumns.length"
+                  style="text-align: center; padding: 2rem">
+                  @if (!loadingPrecios()) {
+                    {{ t('precios.empty') }}
+                  }
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <mat-paginator
+            [length]="preciosTotal()"
+            [pageIndex]="preciosPageIndex()"
+            [pageSize]="preciosPageSize()"
+            [pageSizeOptions]="[5, 10, 25]"
+            [showFirstLastButtons]="true"
+            (page)="onPreciosPageChange($event)" />
+        </div>
+      }
     }
   </div>
 </ng-container>

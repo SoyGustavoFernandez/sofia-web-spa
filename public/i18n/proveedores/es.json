@@ -98,5 +98,39 @@
     "razonSocial": "Razón Social",
     "taxId": "RUC / Tax ID",
     "tasaCumplimiento": "Tasa de Cumplimiento"
+  },
+  "precios": {
+    "title": "Precios de compra",
+    "subtitle": "Costo por unidad base que te cobra este proveedor, con su descuento ya aplicado. Cada producto tiene un solo precio vigente y los anteriores quedan en el historial.",
+    "register-btn": "Registrar precio",
+    "empty": "Este proveedor aún no tiene precios registrados.",
+    "load-error": "Error al cargar los precios del proveedor",
+    "vigente": "Vigente",
+    "cols": {
+      "producto": "Producto",
+      "costo": "Costo por unidad base",
+      "desde": "Vigente desde",
+      "hasta": "Vigente hasta"
+    },
+    "dialog": {
+      "title": "Registrar precio de compra",
+      "hint": "El nuevo precio reemplaza al vigente de este producto con este proveedor; el anterior queda en el historial.",
+      "producto": "Producto",
+      "producto-placeholder": "Escribe para buscar un producto",
+      "no-results": "Sin resultados",
+      "precio": "Precio de compra por unidad base (S/)",
+      "descuento": "Descuento (%)",
+      "costo-neto": "Costo neto por unidad base",
+      "success": "Precio registrado correctamente",
+      "save-error": "Error al registrar el precio",
+      "errors": {
+        "producto": "Selecciona un producto de la lista",
+        "precio-min": "Debe ser mayor que 0",
+        "precio-max": "El precio es demasiado alto",
+        "descuento-rango": "Debe estar entre 0 y 100",
+        "proveedor-not-found": "El proveedor ya no existe.",
+        "medicamento-not-found": "El producto seleccionado ya no existe."
+      }
+    }
   }
 }
