@@ -15,11 +15,14 @@ import { ErrorNotifierService } from '@core/services/shared/error-notifier.servi
 // Mirrors the backend limits of the employee record created for the admin
 const NAME_MAX_LENGTH = 75;
 const EMAIL_MAX_LENGTH = 254;
+// Mirrors the Sucursal.Direccion_Fisica column
+const ADDRESS_MAX_LENGTH = 255;
 
 // Backend codes that have a specific message instead of the generic error
 const ERROR_KEYS: Record<string, string> = {
   'Empresa.RUC.Duplicado': 'empresa.notifications.rucDuplicado',
   'Auth.DuplicateUsername': 'empresa.notifications.usuarioDuplicado',
+  'RegistrarEmpresaCommand.DireccionSede': 'empresa.notifications.direccionSedeInvalida',
 };
 
 @Component({
@@ -54,6 +57,7 @@ export class EmpresaRegisterComponent {
   readonly form = this.fb.nonNullable.group({
     nombreEmpresa: ['', [Validators.required, Validators.maxLength(200)]],
     ruc: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
+    direccionSede: ['', [Validators.required, Validators.maxLength(ADDRESS_MAX_LENGTH), Validators.pattern(/\S/)]],
     adminNombres: ['', [Validators.required, Validators.maxLength(NAME_MAX_LENGTH)]],
     adminApellidoPaterno: ['', [Validators.required, Validators.maxLength(NAME_MAX_LENGTH)]],
     adminApellidoMaterno: ['', [Validators.maxLength(NAME_MAX_LENGTH)]],
@@ -73,6 +77,7 @@ export class EmpresaRegisterComponent {
     this.service.register({
       nombreEmpresa: v.nombreEmpresa.trim(),
       ruc: v.ruc.trim(),
+      direccionSede: v.direccionSede.trim(),
       adminNombres: v.adminNombres.trim(),
       adminApellidoPaterno: v.adminApellidoPaterno.trim(),
       adminApellidoMaterno: v.adminApellidoMaterno.trim() || null,

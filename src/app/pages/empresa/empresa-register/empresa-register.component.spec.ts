@@ -13,6 +13,7 @@ const URL = `${environment.api.baseurl}/api/v1/empresas/registrar`;
 const VALID = {
   nombreEmpresa: ' Botica Central ',
   ruc: '20123456789',
+  direccionSede: ' Av. Los Olivos 123, Lima ',
   adminNombres: ' Ana Maria ',
   adminApellidoPaterno: ' Quispe ',
   adminApellidoMaterno: '  ',
@@ -42,6 +43,7 @@ describe('EmpresaRegisterComponent', () => {
 
     const c = component.form.controls;
     expect(c.ruc.hasError('required')).toBeTrue();
+    expect(c.direccionSede.hasError('required')).toBeTrue();
     expect(c.adminNombres.hasError('required')).toBeTrue();
     expect(c.adminApellidoPaterno.hasError('required')).toBeTrue();
     expect(c.adminEmail.hasError('required')).toBeTrue();
@@ -67,6 +69,7 @@ describe('EmpresaRegisterComponent', () => {
     expect(req.request.body).toEqual({
       nombreEmpresa: 'Botica Central',
       ruc: '20123456789',
+      direccionSede: 'Av. Los Olivos 123, Lima',
       adminNombres: 'Ana Maria',
       adminApellidoPaterno: 'Quispe',
       adminApellidoMaterno: null,
@@ -74,6 +77,37 @@ describe('EmpresaRegisterComponent', () => {
       usuario: 'anaq',
       password: 'Segura123',
     });
+  });
+
+  it('is invalid without the main branch address and valid once it is filled', () => {
+    const { component, httpMock } = setup();
+    component.form.setValue({ ...VALID, direccionSede: '' });
+    expect(component.form.valid).toBeFalse();
+
+    component.form.patchValue({ direccionSede: '   ' });
+    expect(component.form.controls.direccionSede.invalid).toBeTrue();
+    component.submit();
+    httpMock.expectNone(URL);
+
+    component.form.patchValue({ direccionSede: 'Av. Los Olivos 123, Lima' });
+    expect(component.form.valid).toBeTrue();
+  });
+
+  it('rejects an address longer than 255 characters', () => {
+    const { component } = setup();
+    component.form.patchValue({ direccionSede: 'a'.repeat(256) });
+
+    expect(component.form.controls.direccionSede.hasError('maxlength')).toBeTrue();
+  });
+
+  it('shows a specific message when the backend rejects the address', () => {
+    const { component, httpMock, notifier } = setup();
+    component.form.setValue(VALID);
+
+    component.submit();
+    httpMock.expectOne(URL).flush({ code: 'RegistrarEmpresaCommand.DireccionSede' }, { status: 400, statusText: 'Bad Request' });
+
+    expect(notifier.showError).toHaveBeenCalledWith('empresa.notifications.direccionSedeInvalida');
   });
 
   it('shows a specific message when the ruc is already registered', () => {

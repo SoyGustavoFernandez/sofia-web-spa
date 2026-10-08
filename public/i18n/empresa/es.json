@@ -9,6 +9,9 @@
     "usuario": "Usuario Administrador",
     "password": "Contraseña",
     "ruc": "RUC",
+    "direccionSede": "Dirección de la sede principal",
+    "direccionSedePlaceholder": "Av. Los Olivos 123, Lima",
+    "direccionSedeHint": "Aparecerá en el encabezado de tus boletas",
     "submit": "Registrar Empresa",
     "hasAccount": "¿Ya tienes cuenta?",
     "login": "Iniciar sesión",
@@ -72,6 +75,7 @@
     "maxLength75": "Máximo 75 caracteres",
     "maxLength50": "Máximo 50 caracteres",
     "maxLength254": "Máximo 254 caracteres",
+    "maxLength255": "Máximo 255 caracteres",
     "emailFormat": "Ingresa un correo electrónico válido"
   },
   "notifications": {
@@ -82,7 +86,8 @@
     "registerSuccess": "Empresa registrada correctamente. ¡Bienvenido!",
     "registerError": "Error al registrar la empresa",
     "rucDuplicado": "Ya existe una empresa registrada con este RUC",
-    "usuarioDuplicado": "El usuario ya está en uso. Elige otro."
+    "usuarioDuplicado": "El usuario ya está en uso. Elige otro.",
+    "direccionSedeInvalida": "Ingresa la dirección de la sede principal (máximo 255 caracteres)"
   },
   "help": {
     "nombre": "Nombre comercial o legal de la empresa.",

@@ -9,6 +9,9 @@
     "usuario": "Admin Username",
     "password": "Password",
     "ruc": "Tax ID",
+    "direccionSede": "Main branch address",
+    "direccionSedePlaceholder": "e.g. 123 Los Olivos Ave, Lima",
+    "direccionSedeHint": "It will appear in the header of your receipts",
     "submit": "Register Company",
     "hasAccount": "Already have an account?",
     "login": "Sign in",
@@ -72,6 +75,7 @@
     "maxLength75": "Maximum 75 characters",
     "maxLength50": "Maximum 50 characters",
     "maxLength254": "Maximum 254 characters",
+    "maxLength255": "Maximum 255 characters",
     "emailFormat": "Enter a valid email address"
   },
   "notifications": {
@@ -82,7 +86,8 @@
     "registerSuccess": "Company registered successfully. Welcome!",
     "registerError": "Error registering company",
     "rucDuplicado": "A company with this tax ID is already registered",
-    "usuarioDuplicado": "This username is already taken. Choose another one."
+    "usuarioDuplicado": "This username is already taken. Choose another one.",
+    "direccionSedeInvalida": "Enter the main branch address (maximum 255 characters)"
   },
   "help": {
     "nombre": "Commercial or legal name of the company.",

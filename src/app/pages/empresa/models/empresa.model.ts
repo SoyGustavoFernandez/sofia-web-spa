@@ -38,6 +38,7 @@ export interface RegistrarEmpresaRequest {
   adminApellidoPaterno: string;
   adminApellidoMaterno: string | null;
   adminEmail: string;
+  direccionSede: string;
   usuario: string;
   password: string;
 }

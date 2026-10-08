@@ -76,6 +76,26 @@
             }
           </mat-form-field>
 
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('register.direccionSede') }}</mat-label>
+            <mat-icon matPrefix>location_on</mat-icon>
+            <input
+              matInput
+              formControlName="direccionSede"
+              [placeholder]="t('register.direccionSedePlaceholder')"
+              autocomplete="street-address" />
+            <mat-hint>{{ t('register.direccionSedeHint') }}</mat-hint>
+            @if (
+              form.controls.direccionSede.hasError('required') ||
+              form.controls.direccionSede.hasError('pattern')
+            ) {
+              <mat-error>{{ t('form.required') }}</mat-error>
+            }
+            @if (form.controls.direccionSede.hasError('maxlength')) {
+              <mat-error>{{ t('form.maxLength255') }}</mat-error>
+            }
+          </mat-form-field>
+
           <p class="form-section-title">{{ t('register.sections.admin') }}</p>
 
           <mat-form-field appearance="outline" class="full-width">
