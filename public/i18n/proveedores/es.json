@@ -83,6 +83,7 @@
     "duplicate-razon-social": "Ya existe un proveedor con esa razón social.",
     "delete-success": "Proveedor eliminado correctamente",
     "delete-error": "Error al eliminar el proveedor",
+    "delete-in-use": "No puedes eliminar este proveedor porque tiene precios de compra registrados.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Estás seguro de que deseas eliminar este proveedor?",
     "load-error": "Error al cargar el proveedor"

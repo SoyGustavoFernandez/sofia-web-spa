@@ -83,6 +83,7 @@
     "duplicate-razon-social": "A supplier with that business name already exists.",
     "delete-success": "Supplier deleted successfully",
     "delete-error": "Error deleting supplier",
+    "delete-in-use": "You cannot delete this supplier because it has purchase prices registered.",
     "delete-confirm-title": "Confirm deletion",
     "delete-confirm-message": "Are you sure you want to delete this supplier?",
     "load-error": "Error loading supplier"

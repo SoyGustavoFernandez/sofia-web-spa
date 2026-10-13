@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
@@ -302,9 +303,12 @@ export class MedicamentosDetailComponent implements OnInit {
         this.notifier.showSuccess(this.transloco.translate('medicamentos.detail.delete-success'));
         this.router.navigate(['/medicamentos']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.deleting.set(false);
-        this.notifier.showError(this.transloco.translate('medicamentos.detail.delete-error'));
+        const key = err instanceof HttpErrorResponse && err.status === 409
+          ? 'medicamentos.detail.delete-in-use'
+          : 'medicamentos.detail.delete-error';
+        this.notifier.showError(this.transloco.translate(key));
       },
     });
   }

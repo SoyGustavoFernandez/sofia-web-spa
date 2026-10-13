@@ -1,5 +1,6 @@
 ﻿import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
@@ -232,9 +233,12 @@ export class ProveedoresDetailComponent implements OnInit {
         this.notifier.showSuccess(this.transloco.translate('proveedores.detail.delete-success'));
         this.router.navigate(['/proveedores']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.deleting.set(false);
-        this.notifier.showError(this.transloco.translate('proveedores.detail.delete-error'));
+        const key = err instanceof HttpErrorResponse && err.status === 409
+          ? 'proveedores.detail.delete-in-use'
+          : 'proveedores.detail.delete-error';
+        this.notifier.showError(this.transloco.translate(key));
       },
     });
   }

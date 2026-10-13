@@ -11,6 +11,7 @@
     "duplicate-licencia": "A branch with that license number already exists.",
     "delete-success": "Branch deleted successfully",
     "delete-error": "Error deleting branch",
+    "delete-in-use": "You cannot delete this branch because it has employees, users, roles, stock, sales or other records associated with it.",
     "delete-confirm-title": "Confirm deletion",
     "delete-confirm-message": "Are you sure you want to delete this branch?",
     "load-error": "Error loading branch"

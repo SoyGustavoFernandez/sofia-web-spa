@@ -82,6 +82,7 @@
     "duplicate-documento": "Ya existe un paciente con ese documento de identidad.",
     "delete-success": "Paciente eliminado correctamente",
     "delete-error": "Error al eliminar el paciente",
+    "delete-in-use": "No puedes eliminar este paciente porque tiene recetas, ventas u otros registros asociados.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Estás seguro de que deseas eliminar este paciente?",
     "load-error": "Error al cargar el paciente",

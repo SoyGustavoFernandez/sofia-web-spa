@@ -82,6 +82,7 @@
     "duplicate-documento": "A patient with that identity document already exists.",
     "delete-success": "Patient deleted successfully",
     "delete-error": "Error deleting patient",
+    "delete-in-use": "You cannot delete this patient because it has prescriptions, sales or other records associated with it.",
     "delete-confirm-title": "Confirm deletion",
     "delete-confirm-message": "Are you sure you want to delete this patient?",
     "load-error": "Error loading patient",

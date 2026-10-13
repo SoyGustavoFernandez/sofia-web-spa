@@ -13,6 +13,7 @@
     "duplicate-codigo": "A medication with that national code already exists.",
     "delete-success": "Medication deleted successfully",
     "delete-error": "Error deleting medication",
+    "delete-in-use": "You cannot delete this medication because it has batches, presentations or other records associated with it.",
     "delete-confirm-title": "Confirm deletion",
     "delete-confirm-message": "Are you sure you want to delete this medication?",
     "load-error": "Error loading medication",

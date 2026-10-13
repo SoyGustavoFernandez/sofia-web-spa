@@ -13,6 +13,7 @@
     "duplicate-codigo": "Ya existe un medicamento con ese código nacional.",
     "delete-success": "Medicamento eliminado correctamente",
     "delete-error": "Error al eliminar el medicamento",
+    "delete-in-use": "No puedes eliminar este medicamento porque tiene lotes, presentaciones u otros registros asociados.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Estás seguro de que deseas eliminar este medicamento?",
     "load-error": "Error al cargar el medicamento",

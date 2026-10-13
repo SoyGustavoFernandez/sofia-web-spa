@@ -11,6 +11,7 @@
     "duplicate-licencia": "Ya existe una sucursal con ese número de licencia.",
     "delete-success": "Sucursal eliminada correctamente",
     "delete-error": "Error al eliminar la sucursal",
+    "delete-in-use": "No puedes eliminar esta sucursal porque tiene empleados, usuarios, roles, stock, ventas u otros registros asociados.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Estás seguro de que deseas eliminar esta sucursal?",
     "load-error": "Error al cargar la sucursal"

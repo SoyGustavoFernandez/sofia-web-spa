@@ -13,6 +13,7 @@
     "duplicate-dci": "An active ingredient with that INN already exists.",
     "delete-success": "Active ingredient deleted successfully",
     "delete-error": "Error deleting active ingredient",
+    "delete-in-use": "You cannot delete this active ingredient because it is part of clinical formulations.",
     "delete-confirm-title": "Confirm deletion",
     "delete-confirm-message": "Are you sure you want to delete this active ingredient?",
     "load-error": "Error loading active ingredient"

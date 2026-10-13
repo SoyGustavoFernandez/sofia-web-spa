@@ -13,6 +13,7 @@
     "duplicate-dci": "Ya existe un ingrediente activo con esa denominación DCI.",
     "delete-success": "Ingrediente activo eliminado correctamente",
     "delete-error": "Error al eliminar el ingrediente activo",
+    "delete-in-use": "No puedes eliminar este ingrediente activo porque está incluido en formulaciones clínicas.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Estás seguro de que deseas eliminar este ingrediente activo?",
     "load-error": "Error al cargar el ingrediente activo"

@@ -13,6 +13,7 @@
     "duplicate-registro": "Ya existe un profesional de salud con ese número de registro.",
     "delete-success": "Profesional de salud eliminado correctamente",
     "delete-error": "Error al eliminar el profesional de salud",
+    "delete-in-use": "No puedes eliminar este profesional de salud porque tiene recetas asociadas.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Estás seguro de que deseas eliminar este profesional de salud?",
     "load-error": "Error al cargar el profesional de salud"
