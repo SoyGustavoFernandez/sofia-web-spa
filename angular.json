@@ -92,7 +92,7 @@
               ]
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -140,10 +140,10 @@
           "options": {
             "lintFilePatterns": [
               "src/app/core/**/*.ts",
-              "src/app/modules/**/*.ts",
+              "src/app/pages/**/*.ts",
               "src/app/shared/**/*.ts",
               "src/app/core/**/*.html",
-              "src/app/modules/**/*.html",
+              "src/app/pages/**/*.html",
               "src/app/shared/**/*.html"
             ]
           }
