@@ -31,6 +31,7 @@
     "roles": "Roles Asignados",
     "sucursales": "Sucursales Asignadas",
     "forzarCambioClave": "Forzar Cambio de Contraseña",
+    "forzarCambioClaveActivo": "Ya requiere cambio de clave; se quita cuando el usuario la cambie.",
     "resetearIntentos": "Resetear Intentos Fallidos"
   },
   "roles": {

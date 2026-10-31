@@ -149,6 +149,45 @@ describe('CuentasDetailComponent — roles', () => {
   });
 });
 
+describe('CuentasDetailComponent — force password change switch', () => {
+  it('loads on and locked when the account already requires a password change', () => {
+    const { component } = loadWith(cuenta({ requiereCambioClave: true }));
+
+    const control = component.editForm.controls.forzarCambioClave;
+    expect(control.value).toBeTrue();
+    expect(control.disabled).toBeTrue();
+  });
+
+  it('loads off and editable when the account does not require a password change', () => {
+    const { component } = loadWith(cuenta({ requiereCambioClave: false }));
+
+    const control = component.editForm.controls.forzarCambioClave;
+    expect(control.value).toBeFalse();
+    expect(control.enabled).toBeTrue();
+  });
+
+  it('keeps the locked state after cancelling an edit', () => {
+    const { component } = loadWith(cuenta({ requiereCambioClave: true }));
+    component.enterEditMode();
+
+    component.cancelEdit();
+
+    expect(component.editForm.controls.forzarCambioClave.value).toBeTrue();
+    expect(component.editForm.controls.forzarCambioClave.disabled).toBeTrue();
+  });
+
+  it('does not send the force flag on save when the account already requires the change', () => {
+    const { component, httpMock } = loadWith(cuenta({ requiereCambioClave: true }));
+    component.enterEditMode();
+
+    component.save();
+
+    const req = httpMock.expectOne(r => r.method === 'PUT' && r.url === `${BASE}/cta-1`);
+    expect(req.request.body.forzarCambioClave).toBeUndefined();
+    req.flush(null);
+  });
+});
+
 describe('CuentasDetailComponent — create errors', () => {
   function failCreateWith(code: string | null): jasmine.Spy {
     const { fixture, component, httpMock } = setup(ALL_PERMISSIONS, {});

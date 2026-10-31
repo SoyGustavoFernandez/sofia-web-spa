@@ -130,11 +130,7 @@ export class CuentasDetailComponent implements OnInit {
     this.service.getById(this.entityId!).subscribe({
       next: data => {
         this.entity.set(data);
-        this.editForm.patchValue({
-          cuentaActiva: data.cuentaActiva,
-          forzarCambioClave: false,
-          resetearIntentos: false,
-        });
+        this.syncEditForm(data);
         this.loading.set(false);
       },
       error: (err: unknown) => {
@@ -149,6 +145,18 @@ export class CuentasDetailComponent implements OnInit {
     if (emp) this.empleadoError.set(false);
   }
 
+  // The force-change switch mirrors the account: once required it stays on and locked until the user changes the password
+  private syncEditForm(data: CuentaDto): void {
+    this.editForm.patchValue({
+      cuentaActiva: data.cuentaActiva,
+      forzarCambioClave: data.requiereCambioClave,
+      resetearIntentos: false,
+    });
+    const forzar = this.editForm.controls.forzarCambioClave;
+    if (data.requiereCambioClave) forzar.disable();
+    else forzar.enable();
+  }
+
   enterEditMode(): void {
     this.isEditMode.set(true);
   }
@@ -160,13 +168,7 @@ export class CuentasDetailComponent implements OnInit {
       this.isEditMode.set(false);
       this.pendingRol.set(null);
       const data = this.entity();
-      if (data) {
-        this.editForm.patchValue({
-          cuentaActiva: data.cuentaActiva,
-          forzarCambioClave: false,
-          resetearIntentos: false,
-        });
-      }
+      if (data) this.syncEditForm(data);
     }
   }
 
