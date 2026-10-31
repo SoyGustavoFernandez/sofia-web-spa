@@ -59,7 +59,9 @@
     "admin-reservado": "Only an administrator can assign or remove the Admin role",
     "admin-protegida": "Only an administrator can modify or delete an administrator account",
     "cuenta-not-found": "The account does not exist",
-    "sucursal-not-found": "The branch does not exist"
+    "sucursal-not-found": "The branch does not exist",
+    "duplicate-account": "This employee already has a linked user account.",
+    "duplicate-username": "An account with that username already exists."
   },
   "table": {
     "nombreUsuario": "Username",

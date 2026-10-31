@@ -10,6 +10,7 @@ import { environment } from '@environment/environment';
 import { activatedRouteStub } from '@shared/testing/activated-route-stub';
 import { providePermissions } from '@shared/testing/permissions-testing.providers';
 import { stubRouterUrl } from '@shared/testing/router-url-stub';
+import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { AutocompleteInputComponent } from '@shared/components/autocomplete-input/autocomplete-input.component';
 import { CuentaDto } from '../models/cuenta.model';
 import { RolResponse } from '../../roles/models/rol.model';
@@ -40,7 +41,7 @@ function cuenta(overrides: Partial<CuentaDto> = {}): CuentaDto {
 
 const ALL_PERMISSIONS = ['Seguridad:Leer', 'Seguridad:Actualizar', 'Seguridad:Eliminar', 'Seguridad:AsignarRoles'];
 
-function setup(permisos: string[] = ALL_PERMISSIONS) {
+function setup(permisos: string[] = ALL_PERMISSIONS, routeParams: Record<string, string> = { id: 'cta-1' }) {
   TestBed.configureTestingModule({
     imports: [CuentasDetailComponent],
     providers: [
@@ -56,7 +57,7 @@ function setup(permisos: string[] = ALL_PERMISSIONS) {
         }),
       ),
       providePermissions(permisos),
-      { provide: ActivatedRoute, useValue: activatedRouteStub({ id: 'cta-1' }) },
+      { provide: ActivatedRoute, useValue: activatedRouteStub(routeParams) },
     ],
   });
   stubRouterUrl('/cuentas/cta-1');
@@ -145,6 +146,42 @@ describe('CuentasDetailComponent — roles', () => {
     httpMock.expectNone(r => r.url.includes('/roles/'));
     httpMock.expectOne(`${BASE}/cta-1`).flush(cuenta({ roles: [CAJERO] }));
     expect(component.isEditMode()).toBeFalse();
+  });
+});
+
+describe('CuentasDetailComponent — create errors', () => {
+  function failCreateWith(code: string | null): jasmine.Spy {
+    const { fixture, component, httpMock } = setup(ALL_PERMISSIONS, {});
+    fixture.detectChanges();
+    const showServerError = spyOn(TestBed.inject(ErrorNotifierService), 'showServerError');
+    component.onEmpleadoSelected({ id: 'emp-1', nombre_Completo: 'Ana Pérez' });
+    component.createForm.patchValue({ nombreUsuario: 'aperez', password: 'Clave-Segura-1' });
+
+    component.save();
+    httpMock.expectOne(r => r.method === 'POST' && r.url === BASE).flush(
+      code ? { status: 409, code } : null,
+      { status: 409, statusText: 'Conflict' },
+    );
+
+    return showServerError;
+  }
+
+  it('shows the specific message when the employee already has a linked account', () => {
+    const showServerError = failCreateWith('Auth.DuplicateAccount');
+
+    expect(showServerError).toHaveBeenCalledWith(jasmine.anything(), 'cuentas.errors.duplicate-account');
+  });
+
+  it('shows the specific message when the username is already taken', () => {
+    const showServerError = failCreateWith('Auth.DuplicateUsername');
+
+    expect(showServerError).toHaveBeenCalledWith(jasmine.anything(), 'cuentas.errors.duplicate-username');
+  });
+
+  it('shows the generic message when the error code has no specific one', () => {
+    const showServerError = failCreateWith('Otro.Codigo');
+
+    expect(showServerError).toHaveBeenCalledWith(jasmine.anything(), 'cuentas.detail.save-error');
   });
 });
 

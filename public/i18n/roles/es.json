@@ -12,8 +12,11 @@
     "save-success": "Rol guardado correctamente",
     "save-error": "Error al guardar el rol",
     "permisos-propios-error": "No se pueden ampliar los permisos de un rol que la propia cuenta tiene asignado",
+    "duplicate-name": "Ya existe un rol con ese nombre.",
+    "permiso-duplicado": "Ese permiso ya está asignado al rol.",
     "delete-success": "Rol eliminado correctamente",
     "delete-error": "Error al eliminar el rol",
+    "delete-in-use": "No se puede eliminar el rol porque tiene cuentas de usuario vinculadas.",
     "delete-confirm-title": "Confirmar eliminación",
     "delete-confirm-message": "¿Estás seguro de que deseas eliminar este rol?",
     "load-error": "Error al cargar el rol"

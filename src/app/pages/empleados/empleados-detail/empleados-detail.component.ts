@@ -20,6 +20,7 @@ const SAVE_ERROR_KEYS: Record<string, string> = {
   'Empleado.LicenciaProf.Duplicado': 'empleados.detail.duplicate-licencia',
   'Empleado.Email.Duplicado': 'empleados.detail.duplicate-email',
   'Empleado.Email.Invalido': 'empleados.detail.invalid-email',
+  'Empleado.SucursalBase.AutoAsignacion': 'empleados.detail.sucursal-base-auto-asignacion',
 };
 import { SucursalService } from '../../sucursales/services/sucursal.service';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';

@@ -12,6 +12,7 @@
     "duplicate-licencia": "Ya existe un empleado con esa licencia profesional.",
     "duplicate-email": "Ya existe un empleado con ese correo electrónico en tu empresa.",
     "invalid-email": "Ingresa un correo electrónico válido.",
+    "sucursal-base-auto-asignacion": "No puedes cambiar tu propia sucursal base.",
     "delete-success": "Empleado eliminado correctamente",
     "delete-error": "Error al eliminar el empleado",
     "delete-manager": "No se puede eliminar un empleado que gerencia una sucursal. Asigna otro gerente primero.",

@@ -59,7 +59,9 @@
     "admin-reservado": "Solo un administrador puede asignar o quitar el rol Admin",
     "admin-protegida": "Solo un administrador puede modificar o eliminar la cuenta de un administrador",
     "cuenta-not-found": "La cuenta no existe",
-    "sucursal-not-found": "La sucursal no existe"
+    "sucursal-not-found": "La sucursal no existe",
+    "duplicate-account": "Este empleado ya tiene una cuenta de usuario vinculada.",
+    "duplicate-username": "Ya existe una cuenta con ese nombre de usuario."
   },
   "table": {
     "nombreUsuario": "Usuario",

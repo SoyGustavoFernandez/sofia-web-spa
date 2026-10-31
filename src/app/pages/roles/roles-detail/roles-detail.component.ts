@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -18,6 +17,19 @@ import { RolService } from '../services/rol.service';
 import { RolResponse, PermisoCatalogGroup, PermisoRolDto, SucursalRolItem } from '../models/rol.model';
 import { buildMenuPreview } from '../models/menu-preview';
 import { PermisoDirective } from '@shared/directives/permiso.directive';
+import { saveErrorKey } from '@shared/utils/save-error-key.util';
+
+// Backend business-rule codes that have a specific message instead of the generic save error
+const SAVE_ERROR_KEYS: Record<string, string> = {
+  'Rol.DuplicateName': 'roles.detail.duplicate-name',
+  'Rol.PermisosPropios': 'roles.detail.permisos-propios-error',
+  'Permiso.Duplicate': 'roles.detail.permiso-duplicado',
+};
+
+// Backend business-rule codes that have a specific message instead of the generic delete error
+const DELETE_ERROR_KEYS: Record<string, string> = {
+  'Rol.InUse': 'roles.detail.delete-in-use',
+};
 
 @Component({
   selector: 'app-roles-detail',
@@ -276,9 +288,9 @@ export class RolesDetailComponent implements OnInit {
           this.notifier.showSuccess(this.transloco.translate('roles.detail.save-success'));
           this.router.navigate(['/roles']);
         },
-        error: () => {
+        error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showError(this.transloco.translate('roles.detail.save-error'));
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'roles.detail.save-error')));
         },
       });
     } else {
@@ -298,10 +310,7 @@ export class RolesDetailComponent implements OnInit {
         },
         error: (err: unknown) => {
           this.saving.set(false);
-          const permisosPropios = err instanceof HttpErrorResponse && err.error?.code === 'Rol.PermisosPropios';
-          this.notifier.showError(
-            this.transloco.translate(permisosPropios ? 'roles.detail.permisos-propios-error' : 'roles.detail.save-error')
-          );
+          this.notifier.showError(this.transloco.translate(saveErrorKey(err, SAVE_ERROR_KEYS, 'roles.detail.save-error')));
         },
       });
     }
@@ -327,9 +336,9 @@ export class RolesDetailComponent implements OnInit {
         this.notifier.showSuccess(this.transloco.translate('roles.detail.delete-success'));
         this.router.navigate(['/roles']);
       },
-      error: () => {
+      error: (err: unknown) => {
         this.deleting.set(false);
-        this.notifier.showError(this.transloco.translate('roles.detail.delete-error'));
+        this.notifier.showError(this.transloco.translate(saveErrorKey(err, DELETE_ERROR_KEYS, 'roles.detail.delete-error')));
       },
     });
   }

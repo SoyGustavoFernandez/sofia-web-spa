@@ -6,6 +6,7 @@ import { ActivatedRoute, provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
+import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { activatedRouteStub } from '@shared/testing/activated-route-stub';
 import { Empleado } from '../models/empleado.model';
 import { SucursalListItem } from '../../sucursales/models/sucursal.model';
@@ -87,6 +88,21 @@ describe('EmpleadosDetailComponent — optional second surname', () => {
     const req = httpMock.expectOne(BASE);
     expect(req.request.body).toEqual(jasmine.objectContaining({ apellido_Materno: 'Rojas' }));
     req.flush('emp-1');
+  });
+
+  it('shows the specific message when the user tries to change their own base branch', () => {
+    const { component, httpMock } = setup({});
+    const showError = spyOn(TestBed.inject(ErrorNotifierService), 'showError');
+    component.form.patchValue({ nombres: 'Ana', apellidoPaterno: 'Quispe' });
+    component.selectSucursal(SUCURSAL);
+
+    component.save();
+    httpMock.expectOne(BASE).flush(
+      { status: 403, code: 'Empleado.SucursalBase.AutoAsignacion' },
+      { status: 403, statusText: 'Forbidden' },
+    );
+
+    expect(showError).toHaveBeenCalledWith('empleados.detail.sucursal-base-auto-asignacion');
   });
 
   it('shows an empty second surname in view mode when the employee has none', () => {

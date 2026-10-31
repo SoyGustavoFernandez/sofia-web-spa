@@ -26,6 +26,8 @@ const ERROR_KEYS: Record<string, string> = {
   'Cuenta.AdminProtegida': 'cuentas.errors.admin-protegida',
   'Auth.CuentaNotFound': 'cuentas.errors.cuenta-not-found',
   'Sucursal.NotFound': 'cuentas.errors.sucursal-not-found',
+  'Auth.DuplicateAccount': 'cuentas.errors.duplicate-account',
+  'Auth.DuplicateUsername': 'cuentas.errors.duplicate-username',
 };
 
 @Component({
@@ -183,7 +185,7 @@ export class CuentasDetailComponent implements OnInit {
         },
         error: (err: unknown) => {
           this.saving.set(false);
-          this.notifier.showServerError(err, this.transloco.translate('cuentas.detail.save-error'));
+          this.notifier.showServerError(err, this.errorMessage(err, 'cuentas.detail.save-error'));
         },
       });
     } else {

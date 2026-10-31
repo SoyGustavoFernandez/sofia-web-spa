@@ -12,6 +12,7 @@
     "duplicate-licencia": "An employee with that professional license already exists.",
     "duplicate-email": "An employee with that email already exists in your company.",
     "invalid-email": "Enter a valid email address.",
+    "sucursal-base-auto-asignacion": "You cannot change your own base branch.",
     "delete-success": "Employee deleted successfully",
     "delete-error": "Error deleting the employee",
     "delete-manager": "An employee who manages a branch cannot be deleted. Assign another manager first.",

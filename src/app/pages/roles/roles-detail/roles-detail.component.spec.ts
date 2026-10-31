@@ -5,7 +5,10 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
+import { of } from 'rxjs';
 import { TranslocoTestingModule } from '@jsverse/transloco';
+import { ErrorNotifierService } from '@core/services/shared/error-notifier.service';
 import { environment } from '@environment/environment';
 import { provideTranslocoTesting } from '@shared/testing/transloco-testing.providers';
 import { activatedRouteStub } from '@shared/testing/activated-route-stub';
@@ -94,6 +97,53 @@ describe('RolesDetailComponent — /nueva (create mode)', () => {
     expect(component.isEditMode()).toBeTrue();
     expect(component.form.enabled).toBeTrue();
     httpMock.expectNone(r => r.url === BASE);
+  });
+});
+
+describe('RolesDetailComponent — business-rule errors', () => {
+  function openWithErrorSpy(routeParams: Record<string, string>) {
+    const { fixture, httpMock } = setup(routeParams);
+    const showError = spyOn(TestBed.inject(ErrorNotifierService), 'showError');
+    fixture.detectChanges();
+    return { fixture, component: fixture.componentInstance, httpMock, showError };
+  }
+
+  it('shows the specific message when the role name already exists', () => {
+    const { component, httpMock, showError } = openWithErrorSpy({});
+    component.form.patchValue({ nombreRol: 'Cajero', nivelJerarquia: 3 });
+
+    component.save();
+    httpMock.expectOne(r => r.method === 'POST' && r.url === BASE).flush(
+      { status: 409, code: 'Rol.DuplicateName' },
+      { status: 409, statusText: 'Conflict' },
+    );
+
+    expect(showError).toHaveBeenCalledWith('roles.detail.duplicate-name');
+  });
+
+  it('shows the generic message when the save error code has no specific one', () => {
+    const { component, httpMock, showError } = openWithErrorSpy({});
+    component.form.patchValue({ nombreRol: 'Cajero', nivelJerarquia: 3 });
+
+    component.save();
+    httpMock.expectOne(r => r.method === 'POST' && r.url === BASE).flush(null, { status: 500, statusText: 'Server Error' });
+
+    expect(showError).toHaveBeenCalledWith('roles.detail.save-error');
+  });
+
+  it('shows the specific message when the role still has linked accounts', () => {
+    const { fixture, component, httpMock, showError } = openWithErrorSpy({ id: 'rol-1' });
+    httpMock.expectOne(`${BASE}/rol-1`).flush({ id: 'rol-1', nombreRol: 'Cajero', descripcion: null, nivelJerarquia: 3, createdAt: '2026-01-01' });
+    httpMock.match(r => r.url.startsWith(`${BASE}/`)).forEach(r => r.flush([]));
+    spyOn(fixture.debugElement.injector.get(MatDialog), 'open').and.returnValue({ afterClosed: () => of(true) } as ReturnType<MatDialog['open']>);
+
+    component.confirmDelete();
+    httpMock.expectOne({ method: 'DELETE', url: `${BASE}/rol-1` }).flush(
+      { status: 409, code: 'Rol.InUse' },
+      { status: 409, statusText: 'Conflict' },
+    );
+
+    expect(showError).toHaveBeenCalledWith('roles.detail.delete-in-use');
   });
 });
 
